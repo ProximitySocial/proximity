@@ -14,7 +14,7 @@ var jwt            = require('express-jwt');
 // console.log(process.env.NODE_ENV + ' :::: Environment');
 
 // // config files
-// var db = require('./config/db');
+var db = require('./config/db');
 console.log('DB: ' + db.url);
 
 // set our port

@@ -2,9 +2,10 @@
   "name": "proximity",
   "version": "0.1.0",
   "description": "Connect people around a topic, activity or within a group within the community.  One week max duration for people to get together.  App will connect with others with same interests and suggest places within the community to meet.",
-  "main": "scripts/script.js",
+  "main": "server.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,16 @@
     "gulp-rimraf": "^0.2.0",
     "gulp-watch": "^4.3.5",
     "mocha": "^2.4.5",
-    "path": "^0.12.7",
     "uglify": "^0.1.5"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "express-flash": "0.0.2",
+    "express-jwt": "^3.3.0",
+    "express-session": "^1.13.0",
+    "method-override": "^2.3.5",
+    "mongoose": "^4.4.13",
+    "path": "^0.12.7"
   }
 }
