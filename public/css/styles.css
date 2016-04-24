@@ -1,0 +1,17 @@
+.head{
+  display: -webkit-flex;
+  display: flex;
+  width: 100%;
+  background-color: #CCC;
+}
+
+.nav{
+
+}
+.profile {
+  flex: flex;
+  max-width: 200px;
+}
+.main {
+  width: 100%;
+}

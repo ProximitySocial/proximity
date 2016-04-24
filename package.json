@@ -1,0 +1,35 @@
+{
+  "name": "proximity",
+  "version": "0.1.0",
+  "description": "Connect people around a topic, activity or within a group within the community.  One week max duration for people to get together.  App will connect with others with same interests and suggest places within the community to meet.",
+  "main": "scripts/script.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brayzen/proximity.git"
+  },
+  "keywords": [
+    "mobile"
+  ],
+  "author": "Brian Ray",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brayzen/proximity/issues"
+  },
+  "homepage": "https://github.com/brayzen/proximity#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-jshint": "^2.0.0",
+    "gulp-less": "^3.0.5",
+    "gulp-nodemon": "^2.0.6",
+    "gulp-rimraf": "^0.2.0",
+    "gulp-watch": "^4.3.5",
+    "mocha": "^2.4.5",
+    "path": "^0.12.7",
+    "uglify": "^0.1.5"
+  }
+}
