@@ -21,17 +21,17 @@ console.log('DB: ' + db.url);
 var port = process.env.PORT || 5447;
 
 // connect to mongoDB database
-// mongoose.connect(db.url);
+mongoose.connect(db.url);
 
 // // SET VIEW ENGINE.....could be JADE
-// app.set('view engine', 'html');
+app.set('view engine', 'html');
 // // get all data/stuff of the body (POST) parameters
 // // parse application/json
-// app.use(express.static(__dirname + '/public'));
-// app.use(bodyParser.json());
-// app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(methodOverride('X-HTTP-Method-Override'));
+app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json());
+app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('X-HTTP-Method-Override'));
 // app.use(session({
 //   secret: process.env.SESSION_SECRET || 'secret',
 //   resave: false,
@@ -41,11 +41,9 @@ var port = process.env.PORT || 5447;
 // app.use(passport.initialize());
 // app.use(passport.session());
 // app.use(flash());
-// app.on('listening', function(){
-//   console.log('ok, server is running');
-// })
-
-
+app.on('listening', function(){
+  console.log('ok, server is running');
+})
 
 app.get('/', function(req, res) {
   res.sendfile('public/index.html'); // load our public/index.html file
