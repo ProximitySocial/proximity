@@ -1,4 +1,4 @@
-nst path = require('path');
+const path = require('path');
 const merge = require('webpack-merge');
 const TARGET = process.env.npm_lifecycle_event;
 const webpack = require('webpack');
