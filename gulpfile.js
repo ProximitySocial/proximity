@@ -8,7 +8,7 @@ var watch = require('gulp-watch');
 var minifyCss = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
 var lessify = require('gulp-less');
-var jadeify = require('gulp-jade');
+// var jadeify = require('gulp-jade');
 var path = require('path');
 
 //Path variables
@@ -19,7 +19,7 @@ var publicDir = {
   img: '/public/img/',
   css: '/public/css/',
   less: '/public/less/',
-  js:  '/public/scripts/',
+  js:  '/public/js/',
   views: '/public/views/'
 }
 
@@ -30,7 +30,7 @@ var bowerDir = curr + '/public/libs/';
 var appFiles = {
   vendor:   [bowerDir + 'jquery/dist/*.min.js', bowerDir + '**/*.min.js'],
   js:       curr + publicDir.js + '**/*.js',
-  combinedjs: ["./public/libs/jquery/dist/*.min.js","./public/libs/**/*.min.js", "./public/scripts/**/*.js"],
+  combinedjs: ["./public/libs/jquery/dist/*.min.js","./public/libs/**/*.min.js", "./public/js/**/*.js"],
   css:      bowerDir + '**/*.min.css',
   less:     'public/less/*.less',
   misc:     [curr + '/app/**', curr + '/config/**'],
@@ -53,7 +53,7 @@ gulp.task('lessify', function(){
 });
 
 gulp.task('jshint', function(){
-  gulp.src([appFiles.server, './public/scripts/**/*.js']) //only js files, server
+  gulp.src([appFiles.server, './public/js/**/*.js']) //only js files, server
       .pipe(jshint())
       .pipe(jshint.reporter('default'));
   gulp.src(appFiles.misc)
@@ -70,7 +70,7 @@ gulp.task('start', function () {
 
 gulp.task('watch', function() {
   gulp.watch('./public/less/*.less', ['lessify', 'start'])
-  gulp.watch('./public/scripts/**', ['jshint', 'start']);
+  gulp.watch('./public/js/**', ['jshint', 'start']);
   gulp.watch('.app/**/*.js', ['jshint', 'start']);
 });
 
@@ -78,9 +78,10 @@ gulp.task('concat', function() {
   gulp.src(appFiles.combinedjs)// + ',' + appFiles.vendor)
     .pipe(concat('only.js'))
     .pipe(uglify())
-    .pipe(gulp.dest('./dist/public/scripts/'));
+    .pipe(gulp.dest('./dist/public/js/'));
 });
 
 
 gulp.task('default', ['jshint', 'clean', 'lessify', 'start', 'watch']);
 gulp.task('produce', ['lessify', 'start'])
+
