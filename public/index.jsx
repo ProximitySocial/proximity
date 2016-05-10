@@ -10,7 +10,7 @@ const App = require(__dirname + '/components/app');
 
 require('font-awesome/css/font-awesome.css')
 require('normalize-css');
-require(__dirname + "/sass/entry.scss");
+require(__dirname + "/sass/main.scss");
 
 
 render((
