@@ -49,16 +49,7 @@ const common = {
             'file?hash=sha512&digest=hex&name=[hash].[ext]',
             'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
         ]
-      },
-      {
-          test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/, // Include `v=` for Font Awesome support
-          loader: 'url?limit=10000&minetype=application/font-woff'
-        },
-        {
-          test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, // Include `v=` for Font Awesome support
-          loader: 'file'
-        }
-
+      }
     ]
   },
   postcss: function() {
