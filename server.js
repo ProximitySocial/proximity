@@ -27,7 +27,7 @@ mongoose.connect(db.url);
 app.set('view engine', 'html');
 // // get all data/stuff of the body (POST) parameters
 // // parse application/json
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/build'));
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -46,7 +46,7 @@ app.on('listening', function(){
 })
 
 app.get('/', function(req, res) {
-  res.sendfile('public/index.html'); // load our public/index.html file
+  res.sendfile('./build/');
 });
 
 app.listen(port);
