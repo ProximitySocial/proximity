@@ -1,4 +1,4 @@
-const mongoose = require(mongoose)
+const mongoose = require('mongoose')
 
 var eventSchema = new mongoose.Schema({
     title:        String,
@@ -11,7 +11,7 @@ var eventSchema = new mongoose.Schema({
     _attendees:   Array,
     _creator:     String,
     picture:      String,
-    invites:      Array
+    invitees:     Array
 })
 
 module.exports = exports = mongoose.model('Event', eventSchema)
