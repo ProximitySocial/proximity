@@ -11,7 +11,7 @@ const mongoose       = require('mongoose')
 
 
 //// configuration ===========================================
-// console.log(process.env.NODE_ENV + ' :::: Environment');
+console.log(process.env.NODE_ENV + ' :::: Environment');
 
 // // config files
 var db = require('./config/db');
@@ -48,6 +48,7 @@ app.on('listening', function(){
 })
 
 app.get('/', function(req, res) {
+  console.log('************ gets root route ************')
   res.sendfile('./public/index.html')
 })
 
