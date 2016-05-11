@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/brayzen/proximity#readme",
   "dependencies": {
+    "body-parser": "^1.15.1",
     "express": "^4.13.4",
     "express-history-api-fallback": "^2.0.0",
     "font-awesome": "^4.6.1",
