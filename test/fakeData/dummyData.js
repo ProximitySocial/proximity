@@ -1,6 +1,5 @@
 // First run this file in node, then copy, the go to Mongo Shell:
-// var = arr;  arr.forEach(function(obj){db.customers.insert(obj)})
-
+// var = arr;  arr.forEach(function(obj){db.users.insert(obj)})
 const Faker = require('faker')
 const hoods = ['Belltown', 'Queen Anne', 'Capitol Hill']
 const interests = ['golf', 'running', 'stretching', 'cooking', 'coding', 'lifting', 'drivingRange', 'talking', 'happyHour']
@@ -34,7 +33,7 @@ var User = function(){
   this.rating     = genRandNum(10)
 }
 
-// NUMBER OF USERS
+// NUMBER OF USERS 300
 
 for (var i = 1; i < 300; i++){
   finalArr.push(new User)
