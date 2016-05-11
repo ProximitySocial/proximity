@@ -1,13 +1,11 @@
-var mongoose       = require('mongoose')
-  , path           = require('path')
-  , express        = require('express')
-  , app            = express()
-  // , session        = require('express-session')
-  // , flash          = require('express-flash')
-  , bodyParser     = require('body-parser')
-  , methodOverride = require('method-override')
-  , userRouter     = require(__dirname + '/routes/user_routes')
-  , eventRouter    = require(__dirname + '/routes/event_routes')
+const mongoose       = require('mongoose')
+    , path           = require('path')
+    , express        = require('express')
+    , app            = express()
+    , bodyParser     = require('body-parser')
+    , methodOverride = require('method-override')
+    , userRouter     = require(__dirname + '/routes/user_routes')
+    , eventRouter    = require(__dirname + '/routes/event_routes')
 // var passport       = require('./config/passport');
 // var jwt            = require('express-jwt');
 
