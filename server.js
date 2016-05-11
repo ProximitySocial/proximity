@@ -23,6 +23,13 @@ var port = process.env.PORT || 5447;
 // connect to mongoDB database
 mongoose.connect(db.url);
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:' + port);
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  next();
+});
+
 // // SET VIEW ENGINE.....could be JADE
 // app.set('view engine', 'html');
 // // get all data/stuff of the body (POST) parameters
