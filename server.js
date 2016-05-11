@@ -48,7 +48,7 @@ app.on('listening', function(){
 })
 
 app.get('/', function(req, res) {
-  res.sendfile('./build/')
+  res.sendfile('./public/index.html')
 })
 
 app.listen(port)
