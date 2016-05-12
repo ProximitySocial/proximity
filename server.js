@@ -20,11 +20,12 @@ console.log('DB: ' + db.url);
 // set our port
 var port = process.env.PORT || 5447;
 
+var localhost = 'http://localhost:' + port
 // connect to mongoDB database
 mongoose.connect(db.url);
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:' + port);
+  res.header('Access-Control-Allow-Origin', localhost);
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
@@ -34,7 +35,7 @@ app.use((req, res, next) => {
 // app.set('view engine', 'html');
 // // get all data/stuff of the body (POST) parameters
 // // // parse application/json
-// app.use(express.static(__dirname + '/build'));
+app.use(express.static(__dirname + '/build'));
 app.use(bodyParser.json());
 // app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -50,13 +51,12 @@ app.use(methodOverride('X-HTTP-Method-Override'));
 // app.use(flash());
 app.use('/api', userRouter)
 app.use('/api', eventRouter)
-app.on('listening', function(){
+app.on('listening', () => {
   console.log('ok, server is running')
 })
 
-app.get('/', function(req, res) {
-  console.log('************ gets root route ************')
-  res.sendfile('./public/index.html')
+app.get('/', (req, res) => {
+  res.sendfile('./build')
 })
 
 app.listen(port)
