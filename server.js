@@ -14,7 +14,7 @@ var passport         = require('passport')
 
 
 //// configuration ===========================================
-// console.log(process.env.NODE_ENV + ' :::: Environment');
+console.log(process.env.NODE_ENV + ' :::: Environment');
 
 // // config files
 var db = require('./config/db');
@@ -25,7 +25,6 @@ var port = process.env.PORT || 5447;
 
 // connect to mongoDB database
 mongoose.connect(db.url);
-
 
 // passport.use('facebook', new OAuth2Strategy({
 //   authorizationURL: 'https://graph.facebook.com/oauth/authorize', // facebook authURL
@@ -41,11 +40,10 @@ mongoose.connect(db.url);
 //   }
 // ))
 
-
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:' + port);
-  // res.header('Access-Control-Allow-Headers', 'Content-Type');
-  // res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
 });
 
@@ -75,7 +73,7 @@ app.on('listening', function(){
 })
 
 app.get('/', function(req, res) {
-  res.sendfile('./build/')
+  res.sendfile('./public/index.html')
 })
 
 app.listen(port)

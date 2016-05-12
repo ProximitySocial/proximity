@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV === "production") {
-  var modeUrl = process.env.MONGOLAB_URI;
+  var modeUrl = process.env.MONGODB_URI;
 } else if (process.env.NODE_ENV === "test") {
   var modeUrl = 'mongodb://127.0.0.1/test';
 } else {
