@@ -30,7 +30,7 @@ userRouter.post('/user/new', (req, res) => {
 userRouter.get('/user/:id', (req, res) => {
   User.findOne({_id: req.params.id}, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
-    res.status(200).json({msg: 'Retrieved individual user'})
+    res.status(200).json(result)
   })
 })
 
