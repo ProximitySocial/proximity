@@ -39,9 +39,11 @@ mongoose.connect(db.url);
 //     })
 //   }
 // ))
+console.log('LOOK AT MEEEEEE');
+console.log('http://localhost:' + port);
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:' + port);
+  res.header('Access-Control-Allow-Origin', '/*/');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
@@ -51,7 +53,7 @@ app.use((req, res, next) => {
 // app.set('view engine', 'html');
 // // get all data/stuff of the body (POST) parameters
 // // // parse application/json
-// app.use(express.static(__dirname + '/build'));
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 // app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -72,9 +74,9 @@ app.on('listening', function(){
   console.log('ok, server is running')
 })
 
-app.get('/', function(req, res) {
-  res.sendfile('./public/index.html')
-})
+// app.get('/', function(req, res) {
+//   res.sendfile('./public/index.html')
+// })
 
 app.listen(port)
 
