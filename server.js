@@ -39,7 +39,7 @@ mongoose.connect(db.url);
 //     })
 //   }
 // ))
-
+console.log('http:localhost:' + port + '  this is the allowed host');
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:' + port);
   res.header('Access-Control-Allow-Headers', 'Content-Type');

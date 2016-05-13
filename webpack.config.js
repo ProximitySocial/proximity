@@ -39,9 +39,9 @@ const common = {
       // },
       {
         test: /\.jsx?$/,
-        loaders: ['babel?cacheDirectory'],
+        loaders: ['babel'],
 // Include accepts either a path or an array of paths.
-        include: PATHS.app
+        include: ['./public/components', './public/main.jsx']
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
