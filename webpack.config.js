@@ -2,6 +2,7 @@ const path = require('path');
 const merge = require('webpack-merge');
 const TARGET = process.env.npm_lifecycle_event;
 const webpack = require('webpack');
+const jsxloader = require('jsx-loader');
 
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 const precss = require('precss');
@@ -39,7 +40,7 @@ const common = {
       // },
       {
         test: /\.jsx?$/,
-        loaders: ['babel'],
+        loaders: ['babel?cacheDirectory', 'jsx-loader'],
 // Include accepts either a path or an array of paths.
         include: ['./public/components', './public/main.jsx']
       },

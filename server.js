@@ -39,17 +39,24 @@ mongoose.connect(db.url);
 //     })
 //   }
 // ))
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', 'http://localhost:' + port);
-//   res.header('Access-Control-Allow-Headers', 'Content-Type');
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//   next();
-// });
+
+console.log('LOOK AT MEEEEEE');
+console.log('http://localhost:' + port);
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '/*/');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  next();
+});
+
 
 // // SET VIEW ENGINE.....could be JADE
 // app.set('view engine', 'html');
 // // get all data/stuff of the body (POST) parameters
 // // // parse application/json
+
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 // app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
