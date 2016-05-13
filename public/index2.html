@@ -1,0 +1,199 @@
+<html>
+<head>
+  <title>Proximity</title>
+  <link rel="stylesheet" type="text/css" href="./styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Common Radar</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+
+          <li class="active"><a href="">Interests</a></li>
+          <li><a href="">Activities</a></li>
+          <li><a href="">Settings</a></li>
+
+
+          <!-- <li class="active"><a href="#">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li> -->
+          <!-- <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li role="separator" class="divider"></li>
+              <li class="dropdown-header">Nav header</li>
+              <li><a href="#">Separated link</a></li>
+              <li><a href="#">One more separated link</a></li>
+            </ul>
+          </li> -->
+        </ul>
+        <!-- <ul class="nav navbar-nav navbar-right">
+          <li><a href="../navbar/">Default</a></li>
+          <li><a href="../navbar-static-top/">Static top</a></li>
+          <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+        </ul> -->
+      </div><!--/.nav-collapse -->
+    </div>
+  </nav>
+
+  <div class="container row">
+    <div class="col-lg-4 profile">
+      <h2>Profile</h2>
+      <div class='photo'><img src="img/profile-photo.jpg" alt="profile photo"/> </div>
+      <p><a class="btn btn-primary fb-login" href="#" role="button">Facebook &raquo;</a></p>
+    </div>
+    <div class="col-lg-4 events" id="eventList">
+      <h2>Events</h2>
+   </div>
+    <div class="col-lg-4 favs">
+      <h2>Favorites</h2>
+    </div>
+  </div> <!-- /container -->
+
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->
+  <!-- <script type='text/babel'>
+    var sampleEvents = [{
+    	// "_id" : ObjectId("573373698026b52b5f052e57"),
+    	"created_at" : "Thu Dec 24 2015 00:22:12 GMT-0800 (PST)",
+    	"title" : "Architect Cotton redundant",
+    	"description" : "Praesentium tenetur sequi mollitia qui omnis iste illo quia minus. Labore dolor et ut officia iure. Aliquid totam voluptatibus repellat expedita ex quod. Odio ex inventore aperiam tempora.",
+    	"interestTags" : "drivingRange",
+    	"startTime" : "Sun Jan 31 2016 14:25:51 GMT-0800 (PST)",
+    	"endTime" : "Wed Jun 14 2023 18:25:54 GMT-0700 (PDT)",
+    	"address" : "404 Mohamed Springs",
+    	"addressName" : "pl",
+    	"_attendees" : [
+    		"5732af6c9a014b99ce613595",
+    		"5732af6c9a014b99ce61359d",
+    		"5732af6c9a014b99ce61359f",
+    		"5732af6c9a014b99ce613589",
+    		"5732af6c9a014b99ce61358e",
+    		"5732af6c9a014b99ce6135a9",
+    		"5732af6c9a014b99ce613598",
+    		"573253822503f4d80bd7862b",
+    		"5732af6c9a014b99ce6135a5"
+    	],
+    	"_creator" : "5732af6c9a014b99ce613594",
+    	"picture" : "http://lorempixel.com/640/480/transport",
+    	"invitees" : [
+    		"5732af6c9a014b99ce613590",
+    		"5732af6c9a014b99ce61357d",
+    		"5732af6c9a014b99ce613588",
+    		"5732af6c9a014b99ce61357f",
+    		"5732af6c9a014b99ce61357a",
+    		"5732af6c9a014b99ce61357b",
+    		"5732af6c9a014b99ce6135ad",
+    		"5732af6c9a014b99ce6135ac",
+    		"5732af6c9a014b99ce613598"
+    	]
+    },
+    {
+    	// "_id" : ObjectId("573373698026b52b5f052e53"),
+    	"created_at" : "Fri Oct 02 2015 14:11:45 GMT-0700 (PDT)",
+    	"title" : "Infrastructure",
+    	"description" : "At perferendis qui iusto aut consectetur. Sint autem dolorem. Error maxime sed officia sit.",
+    	"interestTags" : "cooking",
+    	"startTime" : "Tue Dec 01 2015 08:18:08 GMT-0800 (PST)",
+    	"endTime" : "Wed Oct 29 2025 20:22:23 GMT-0700 (PDT)",
+    	"address" : "5915 Bethel Brook",
+    	"addressName" : "id_ID",
+    	"_attendees" : [
+    		"5732af6c9a014b99ce61357d",
+    		"5732af6c9a014b99ce61358a",
+    		"5732af6c9a014b99ce613598"
+    	],
+    	"_creator" : "5732af6c9a014b99ce613575",
+    	"picture" : "http://lorempixel.com/640/480/business",
+    	"invitees" : [
+    		"5732af6c9a014b99ce6135a5",
+    		"5732af6c9a014b99ce613593",
+    		"5732af6c9a014b99ce61358c",
+    		"5732af6c9a014b99ce6135a7",
+    		"5732af6c9a014b99ce61359b",
+    		"5732af6c9a014b99ce613589",
+    		"5732af6c9a014b99ce613586"
+    	]
+    }];
+
+    var SingleEvent = React.createClass({
+      render: function() {
+        return (
+          <li>
+            <h3>{this.state.event.title}</h3>
+            <p>{this.state.event.description}</p>
+            <p><strong>Address:</strong> {this.state.event.address}</p>
+            <p><strong>Start:</strong> {this.state.event.startTime}</p>
+            <p><strong>End:</strong> {this.state.event.endTime}</p>
+            <p>{this.state.event._attendees.length} attendees</p>
+          </li>
+        )
+      }
+    })
+
+    var EventList = React.createClass({
+      getInitialState: function() {
+        return {events: []};
+      },
+      componentDidMount: function() {
+        $.ajax({
+          url: this.props.url,
+          dataType: 'json',
+          cache: false,
+          success: function(data) {
+            this.setState({events: data});
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
+      },
+      render: function() {
+
+        var rows = [];
+        // var lastCategory = null;
+        this.state.events.forEach(function(event) {
+          // if (event.category !== lastCategory) {
+          //   rows.push(<ProductCategoryRow category={product.category} key={product.category} />);
+          // }
+          rows.push(<SingleEvent event={event} key={event.created_at}/>);
+          // lastCategory = product.category;
+        });
+
+        return (
+          <div className="eventList">
+            <ul>
+              {rows}
+            </ul>
+          </div>
+        );
+      }
+    });
+
+    // ReactDOM.render(
+    //   <EventList events={sampleEvents}/>,
+    //   document.getElementById('eventList')
+    // );
+
+    ReactDOM.render(
+      <EventList url="https://proximitysocial.herokuapp.com/api/events"/>,
+      document.getElementById('eventList')
+    );
+
+  </script> -->
+  <script type="text/javaScript" src="./bundle.js"></script>
+</body>
+</html>
