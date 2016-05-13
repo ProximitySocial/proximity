@@ -15,8 +15,7 @@ const PATHS = {
 
 const common = {
   entry: {
-    app: PATHS.app + '/index.jsx',
-    html: "./public/index.html"
+    app: PATHS.app
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
@@ -32,10 +31,6 @@ const common = {
         loaders: ['style', 'css'],
       },
       {
-        test: /\.html$/,
-        loader: "file?name=index.html",
-      },
-      {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract('style-loader', ['css-loader', 'postcss-loader', 'sass-loader'])
       },
@@ -47,15 +42,15 @@ const common = {
         test: /\.jsx?$/,
         loaders: ['babel?cacheDirectory', 'jsx-loader'],
 // Include accepts either a path or an array of paths.
-        include: PATHS.app
+        include: ['./public/components', './public/main.jsx']
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loaders: [
+            'file?hash=sha512&digest=hex&name=[hash].[ext]',
+            'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
+        ]
       }
-      // ,{
-      //   test: /\.(jpe?g|png|gif|svg)$/i,
-      //   loaders: [
-      //       'file?hash=sha512&digest=hex&name=[hash].[ext]',
-      //       'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
-      //   ]
-      // }
     ]
   },
   postcss: function() {

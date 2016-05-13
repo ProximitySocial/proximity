@@ -39,6 +39,7 @@ mongoose.connect(db.url);
 //     })
 //   }
 // ))
+
 console.log('LOOK AT MEEEEEE');
 console.log('http://localhost:' + port);
 
@@ -49,10 +50,12 @@ app.use((req, res, next) => {
   next();
 });
 
+
 // // SET VIEW ENGINE.....could be JADE
 // app.set('view engine', 'html');
 // // get all data/stuff of the body (POST) parameters
 // // // parse application/json
+
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 // app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
@@ -67,9 +70,11 @@ app.use(methodOverride('X-HTTP-Method-Override'));
 // app.use(passport.initialize());
 // app.use(passport.session());
 // app.use(flash());
+
 app.use('/api', authRouter)
 app.use('/api', userRouter)
 app.use('/api', eventRouter)
+// app.use(express.static(__dirname + '/build'));
 app.on('listening', function(){
   console.log('ok, server is running')
 })
