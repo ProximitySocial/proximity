@@ -47,20 +47,76 @@
   </nav>
 
   <div class="container row">
-    <div class="col-lg-4 profile" id="userProfile">
+    <div class="col-lg-4 profile">
       <h2>Profile</h2>
-      <div class='photo'><img src="img/profile-photo.jpg" alt="profile photo"/> </div>
+      <div class='photo'><img src="" alt="profile photo"/> </div>
       <p><a class="btn btn-primary fb-login" href="#" role="button">Facebook &raquo;</a></p>
     </div>
     <div class="col-lg-4 events" id="eventList">
       <h2>Events</h2>
    </div>
-    <div class="col-lg-4 favs">
+    <div class="col-lg-4 form" id="form">
       <h2>Favorites</h2>
     </div>
   </div> <!-- /container -->
 
 
-  <script type="text/javaScript" src="./bundle.js"></script>
+
+  <script type="text/babel">
+    var CreateEventForm = React.createClass({
+        displayName: 'CreateEventForm',
+        getInitialState: function() {
+          return({title: '', description: '', addressName: ''});
+        },
+        handleTitleChange: function(e) {
+          this.setState({title: e.target.value});
+        },
+        handleDescriptionChange: function(e) {
+          this.setState({description: e.target.value});
+        },
+        handleAddressNameChange: function(e) {
+          this.setState({addressName: e.target.value});
+        },
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var title = this.state.title.trim()
+          var description = this.state.description.trim();
+          var addressName = this.state.addressName.trim();
+          if (!title || !description || !addressName) return;
+          this.onFormSubmit({title: title, description: description, addressName: addressName});
+          this.setState({title: '', description: '', addressName: ''});
+        },
+        onFormSubmit: function(newEvent) {
+          $.ajax({
+            type: 'POST',
+            url: 'http://localhost:6060/api/event/new',
+            data: JSON.stringify(newEvent),
+            contentType: 'application/json',
+            success: function(data){
+              console.log(data)
+              console.log('SUCCESS')
+            },
+            error: function(data, status, jqXHR){
+              console.log(data)
+              console.log(status)
+              console.log(jqXHR)
+            }
+          })
+        },
+        render: function() {
+          return (
+            <form className="createEventForm" onSubmit={this.handleSubmit} >
+              <input type="text" placeholder="event title" value={this.state.title}  onChange={this.handleTitleChange} />
+              <input type="text" placeholder="description" value={this.state.description} onChange={this.handleDescriptionChange} />
+              <input type="text" placeholder="address Name" value={this.state.addressName} onChange={this.handleAddressNameChange} />
+              <input type="text" placeholder="address Name" value={this.state.addressName} onChange={this.handleAddressNameChange} />
+              <input type="submit" value="Create Event" />
+            </form>
+          );
+        }
+      });
+
+      ReactDOM.render( <CreateEventForm />, document.getElementById('form'))
+  </script>
   </body>
 </html>

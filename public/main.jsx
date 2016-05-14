@@ -6,9 +6,7 @@ const ReactDOM = require('react-dom')
 
 const EventList = require(__dirname + '/components/event_list.jsx')
 const DisplayUser = require(__dirname + '/components/display_user.jsx')
-// const Contact = require(__dirname + '/components/contact');
-// const InfiniteScroll = require(__dirname + '/components/infinite-scroll');
-// const ProgramHighlights = require(__dirname + '/components/program-highlights');
+const CreateEventForm = require(__dirname + '/components/event_form.jsx')
 
 // require('font-awesome/css/font-awesome.css')
 require('normalize-css')
@@ -31,3 +29,4 @@ ReactDOM.render( <EventList />, document.getElementById('eventList'))
 ReactDOM.render(
    <DisplayUser url="http://localhost:" + port + "/api/user/573373c18026b52b5f052ea0"/>,
    document.getElementById('userProfile'))
+ReactDOM.render( <CreateEventForm />, document.getElementById('form'))

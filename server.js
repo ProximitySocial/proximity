@@ -40,8 +40,7 @@ mongoose.connect(db.url);
 //   }
 // ))
 
-console.log('LOOK AT MEEEEEE');
-console.log('http://localhost:' + port);
+
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '/*/');
@@ -80,7 +79,7 @@ app.on('listening', function(){
 })
 
 // app.get('/', function(req, res) {
-//   res.sendfile('./public/index.html')
+//   res.sendfile('./public')
 // })
 
 app.listen(port)
