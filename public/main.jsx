@@ -35,9 +35,6 @@ var eventsUrl = "/api/events"
 //  </Router>
 //), document.getElementById('root'))
 
-ReactDOM.render(
-   <DisplayUser url={userUrl}/>,
-   document.getElementById('userProfile'))
+ReactDOM.render( <DisplayUser url={userUrl}/>, document.getElementById('userProfile'))
 ReactDOM.render( <EventList url={eventsUrl} />, document.getElementById('eventList'))
-
 ReactDOM.render( <CreateEventForm />, document.getElementById('eventForm'))

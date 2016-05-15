@@ -2,121 +2,47 @@
 <head>
   <title>Proximity</title>
   <!-- <link rel="stylesheet" type="text/css" href="./main.css"> -->
-  <link rel="stylesheet" type="text/css" href="./styles.css">
+  <link rel="stylesheet" type="text/css" href="./main.css">
   <!-- <script type="text/javaScript" src="./scripts/index.js"></script> -->
-<!--   // <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.2/react.js"></script>
-  // <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.2/react-dom.js"></script>
-  // <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script> -->
+  <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.2/react.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.2/react-dom.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 </head>
 <body>
-
-
-  <!-- <header class='container-full'>
-    <section class='head'>
-      <img src="img/profile.png" class='profile'>
-      <div class='filler'></div>
-      <div class='logo'><div class="text">Radar</div></div>
-      <div class='filler'></div>
-      <img src="img/handshake.png" class='meet'/>
-    </section>
-  </header> -->
-
   <!-- Fixed navbar -->
-  <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Common Radar</a>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Common Radar</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+
+            <li class="active"><a href="">Interests</a></li>
+            <li><a href="">Search</a></li>
+            <li><a href="/auth/facebook">Facebook Login &raquo;</a></p>
+  </a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
       </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
+    </nav>
 
-          <li class="active"><a href="">Interests</a></li>
-          <li><a href="">Activities</a></li>
-          <li><a href="">Settings</a></li>
-        </ul>
-      </div><!--/.nav-collapse -->
+    <div class="container row">
+      <!-- <h2>Profile</h2> -->
+      <div class="col-lg-4 profile" id="userProfile"></div>
+      <!-- <h2>Events</h2> -->
+      <div class="col-lg-4 events" id="eventList"></div>
+      <!-- <h2>CreateEvent</h2> -->
+      <div class="col-lg-4 form" id="eventForm"></div>
     </div>
-  </nav>
-
-  <div class="container row">
-    <div class="col-lg-4 profile" id="userProfile">
-      <h2>Profile</h2>
-      <div class='photo'><img src="" alt="profile photo"/> </div>
-      <p><a class="btn btn-primary fb-login" href="#" role="button">Facebook &raquo;</a></p>
-    </div>
-    <div class="col-lg-4 events" id="eventList">
-      <h2>Events</h2>
-   </div>
-    <div class="col-lg-4 form" id="eventForm">
-      <h2>Favorites</h2>
-    </div>
-  </div> <!-- /container -->
-
-
-
-  <script src='./bundle.js'>
-  //   var CreateEventForm = React.createClass({
-  //       displayName: 'CreateEventForm',
-  //       getInitialState: function() {
-  //         return({title: '', description: '', addressName: ''});
-  //       },
-  //       handleTitleChange: function(e) {
-  //         this.setState({title: e.target.value});
-  //       },
-  //       handleDescriptionChange: function(e) {
-  //         this.setState({description: e.target.value});
-  //       },
-  //       handleAddressNameChange: function(e) {
-  //         this.setState({addressName: e.target.value});
-  //       },
-  //       handleSubmit: function(e) {
-  //         e.preventDefault();
-  //         var title = this.state.title.trim()
-  //         var description = this.state.description.trim();
-  //         var addressName = this.state.addressName.trim();
-  //         if (!title || !description || !addressName) return;
-  //         this.onFormSubmit({title: title, description: description, addressName: addressName});
-  //         this.setState({title: '', description: '', addressName: ''});
-  //       },
-  //       onFormSubmit: function(newEvent) {
-  //         $.ajax({
-  //           type: 'POST',
-  //           url: 'http://localhost:6060/api/event/new',
-  //           data: JSON.stringify(newEvent),
-  //           contentType: 'application/json',
-  //           success: function(data){
-  //             console.log(data)
-  //             console.log('SUCCESS')
-  //           },
-  //           error: function(data, status, jqXHR){
-  //             console.log(data)
-  //             console.log(status)
-  //             console.log(jqXHR)
-  //           }
-  //         })
-  //       },
-  //       render: function() {
-  //         return (
-  //           <form className="createEventForm" onSubmit={this.handleSubmit} >
-  //             <input type="text" placeholder="event title" value={this.state.title}  onChange={this.handleTitleChange} />
-  //             <input type="text" placeholder="description" value={this.state.description} onChange={this.handleDescriptionChange} />
-  //             <input type="text" placeholder="address Name" value={this.state.addressName} onChange={this.handleAddressNameChange} />
-  //             <input type="text" placeholder="address Name" value={this.state.addressName} onChange={this.handleAddressNameChange} />
-  //             <input type="submit" value="Create Event" />
-  //           </form>
-  //         );
-  //       }
-  //     });
-
-  //     ReactDOM.render( <CreateEventForm />, document.getElementById('eventForm'))
-  </script>
+    <script src="./bundle.js"></script>
   </body>
 </html>
