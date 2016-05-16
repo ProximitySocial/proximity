@@ -1,6 +1,14 @@
 @primary: #00F1AE; //green
 @secondary: #F6ECDA; //white-gray
-@import: "profile.less";
+@import: "./profile.less";
+
+// for rem
+html {
+  font-size: 10px;
+}
+h3 {
+  margin-top: 0;
+}
 
 #root {
   width: 100%;
@@ -25,8 +33,9 @@
    width: 100%;
  }
  .profile, .events, .favs {
-   border: 1px solid;
-   height: 100%;
+   border-left: 1px solid;
+   border-right: 1px solid;
+   height: 1000px;
  }
 
  .createEventForm {
@@ -34,18 +43,77 @@
      width: 100%;
    }
  }
-
+ #userProfile {
+   text-align: center;
+   margin: auto;
+   img {
+     border-radius: 100%;
+   }
+   .userName {
+     margin: 1em auto;
+   }
+   .interests {
+     width: 100%;
+     padding: 1rem;
+     display: inline-block;
+     li {
+       font-size: 1.5rem;
+       list-style-type: none;
+       display: inline-block;
+       margin: 1rem;
+       border: 1px solid black;
+       padding: .2em;
+       padding-left: 0.8em;
+       border-top-left-radius: .5em;
+       border-bottom-left-radius: .5em;
+       background-color: rgba(185, 225, 50, .5);
+     }
+   }
+ }
 
 #eventList {
   margin: 0;
   ul {
+    margin: .7rem 0;
+    padding: 0;
+    width: 100%;
     list-style-type: none;
     li{
-
+      margin: 0;
+      border: 2px solid #CCC;
+      vertical-align: bottom;
+      .eventPicture {
+        margin: 0 !important;
+        min-width: 100%;
+        max-height: 250px !important;
+        vertical-align: bottom !important;
+        .eventTitle {
+          min-height: 250px;
+          h3 {
+            margin: 0 !important;
+            padding: .1rem;
+            min-height: 250px;
+          }
+          background: rgba(9, 9, 9, .6);
+          color: #BBB;
+          padding: .7rem;
+        }
+      }
+      .eventDetails{
+        // display: none;
+        display:inline-block;
+        p {
+          display: inline-block;
+        }
+      }
     }
   }
 }
 
+.eventAttCount{
+  display: inline-block;
+  margin: 0;
+}
 .userPic {
  border-radius: 100%;
 }

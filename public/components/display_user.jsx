@@ -24,13 +24,16 @@ module.exports = React.createClass({
      });
    },
    componentWillMount: function() {
-      this.loadUserFromServer();
+      this.loadUserFromServer()
+   },
+   handleUpdate: function(){
+     console.log('make a request to handleUpdate')
    },
    handleInterests: function(data) {
      console.log(data.interests);
      var rows = [];
      data.interests.forEach(function(interest, index) {
-       rows.push(<li key={index}>#{interest}</li>);
+       rows.push(<li key={index}><a>#{interest}</a></li>);
      });
      this.setState({interests: rows});
    },

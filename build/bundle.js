@@ -20248,60 +20248,75 @@
 	module.exports = React.createClass({
 	  displayName: 'exports',
 
-
+	  getInitialState: function getInitialState() {
+	    return { event: this.props.event };
+	  },
+	  handleTimeTill: function handleTimeTill() {
+	    this.setState({ timeTill: 'NOW' });
+	  },
 	  render: function render() {
-	    var divStyle = { backgroundImage: "url(" + this.props.event.picture + ")" };
+	    if (!this.props.event.picture) {
+	      this.props.event.picture = "http://lorempixel.com/640/480/transport";
+	    }
+	    var divStyle = { background: "url(" + this.props.event.picture + ") center center",
+	      minHeight: "25rem",
+	      margin: 0,
+	      verticalAlign: "bottom" };
+	    this.handleTimeTill();
+
 	    return React.createElement(
 	      'li',
-	      { style: divStyle },
+	      null,
 	      React.createElement(
-	        'h3',
-	        null,
-	        this.props.event.title
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        this.props.event.description
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
+	        'div',
+	        { className: 'eventPicture', style: divStyle },
 	        React.createElement(
-	          'strong',
-	          null,
-	          'Address:'
-	        ),
-	        ' ',
-	        this.props.event.address
+	          'div',
+	          { className: 'eventTitle' },
+	          React.createElement(
+	            'h3',
+	            { style: { marginTop: 0 } },
+	            this.props.event.title
+	          )
+	        )
 	      ),
 	      React.createElement(
-	        'p',
-	        null,
+	        'div',
+	        { className: 'eventDetails' },
 	        React.createElement(
-	          'strong',
+	          'p',
 	          null,
-	          'Start:'
+	          React.createElement(
+	            'strong',
+	            null,
+	            '@ '
+	          ),
+	          this.props.event.addressName
 	        ),
-	        ' ',
-	        this.props.event.startTime
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
 	        React.createElement(
-	          'strong',
+	          'p',
 	          null,
-	          'End:'
+	          React.createElement(
+	            'strong',
+	            null,
+	            'Starts:'
+	          ),
+	          this.state.timeTill
 	        ),
-	        ' ',
-	        this.props.event.endTime
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        this.props.event._attendees.length,
-	        ' attendees'
+	        React.createElement(
+	          'div',
+	          { className: 'eventAttCount' },
+	          React.createElement(
+	            'h3',
+	            null,
+	            this.props.event._attendees.length
+	          ),
+	          React.createElement(
+	            'p',
+	            null,
+	            'attendees'
+	          )
+	        )
 	      )
 	    );
 	  }
@@ -20343,6 +20358,9 @@
 	  componentWillMount: function componentWillMount() {
 	    this.loadUserFromServer();
 	  },
+	  handleUpdate: function handleUpdate() {
+	    console.log('make a request to handleUpdate');
+	  },
 	  handleInterests: function handleInterests(data) {
 	    console.log(data.interests);
 	    var rows = [];
@@ -20350,8 +20368,12 @@
 	      rows.push(React.createElement(
 	        'li',
 	        { key: index },
-	        '#',
-	        interest
+	        React.createElement(
+	          'a',
+	          null,
+	          '#',
+	          interest
+	        )
 	      ));
 	    });
 	    this.setState({ interests: rows });

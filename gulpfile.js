@@ -54,9 +54,9 @@ gulp.task('copy'), function(){
 };
 
 gulp.task('lessify', function(){
-  return gulp.src('./public/less/main.less')
+  return gulp.src(curr + publicDir.less)
     .pipe(lessify())
-    .pipe(minifyCss())
+    // .pipe(minifyCss())
     .pipe(gulp.dest(dest))
 });
 
