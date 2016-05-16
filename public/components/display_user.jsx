@@ -14,7 +14,7 @@ module.exports = React.createClass({
        cache: false,
        success: function(data) {
          console.log(data.lastName)
-         this.setState({user: data,
+         this.setState({user:        data,
                         lastInitial: data.lastName.charAt(0)});
          this.handleInterests(data);
        }.bind(this),

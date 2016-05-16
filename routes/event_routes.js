@@ -6,6 +6,7 @@ const eventRouter = module.exports = exports = express.Router()
 
 //index of events
 eventRouter.get('/events', (req, res) => {
+  console.log('request for ALL events')
   Event.find({}, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     res.status(200).json(result)

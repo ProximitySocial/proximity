@@ -5,7 +5,7 @@ module.exports = React.createClass({
   getInitialState: function(){
     return {event: this.props.event}
   },
-  handleTimeTill: function(){
+  componentDidMount: function(){
     this.setState({timeTill: 'NOW'})
   },
   render: function() {
@@ -16,8 +16,7 @@ module.exports = React.createClass({
                     minHeight: "25rem",
                     margin: 0,
                     verticalAlign: "bottom"}
-    this.handleTimeTill()
-    
+
     return (
       <li>
         <div className="eventPicture" style={divStyle}>

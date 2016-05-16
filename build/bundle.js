@@ -59,7 +59,6 @@
 	// for testing purposes
 	var userId = "5732af6c9a014b99ce613583";
 	var userUrl = "http://localhost:6060/api/user/" + userId;
-	console.log(userUrl);
 	var eventId = "57325f56bbeeba1e0d9bb353";
 	var eventsUrl = "/api/events";
 	// var eventUrl = "http://localhost:6060/api/event/" + eventId
@@ -20251,7 +20250,7 @@
 	  getInitialState: function getInitialState() {
 	    return { event: this.props.event };
 	  },
-	  handleTimeTill: function handleTimeTill() {
+	  componentDidMount: function componentDidMount() {
 	    this.setState({ timeTill: 'NOW' });
 	  },
 	  render: function render() {
@@ -20262,7 +20261,6 @@
 	      minHeight: "25rem",
 	      margin: 0,
 	      verticalAlign: "bottom" };
-	    this.handleTimeTill();
 
 	    return React.createElement(
 	      'li',
