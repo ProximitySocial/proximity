@@ -1,17 +1,14 @@
 const React = require('react')
 const ReactDOM = require('react-dom')
-var SingleEvent = require(__dirname + '/single_event')
+var SingleEvent = require(__dirname + '/single_event.jsx')
 var port = process.env.PORT
 
 
-var EventList = React.createClass({
+module.exports = React.createClass({
   getInitialState: function() {
-    console.log('Getting initial state');
     return {events: []}
   },
   componentDidMount: function() {
-    console.log('Mounting.....')
-    console.log(this.props.url)
     $.ajax({
       type: 'GET',
       url: this.props.url,
@@ -19,31 +16,27 @@ var EventList = React.createClass({
       cache: false,
       success: function(data) {
         console.log('Successfully retrieved DATA');
-        console.log(typeof data)
         this.setState({events: data})
+        this.handleEvents(this.state.events)
       }.bind(this),
       error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString())
+        console.error(this.props.url, status, err)
       }.bind(this)
     })
   },
-  render: function() {
-
+  handleEvents: function(events){
     var rows = []
-    // var lastCategory = null;
-    this.state.events.forEach(function(event) {
-      // if (event.category !== lastCategory) {
-      //   rows.push(<ProductCategoryRow category={product.category} key={product.category} />);
-      // }
-      rows.push(<SingleEvent event={event} key={event.created_at}/>)
-      // lastCategory = product.category;
+    events.forEach(function(event, index) {
+      rows.push(<SingleEvent event={event} key={index} />)
     })
     console.log('Rendering Event List')
-    console.log(this.props)
+    this.setState({rowes: rows})
+  },
+  render: function() {
     return (
       <div className="eventList">
         <ul>
-          {rows}
+          {this.state.rowes}
         </ul>
       </div>
     )

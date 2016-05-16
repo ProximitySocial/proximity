@@ -1,4 +1,4 @@
-const port = process.env.PORT
+const port = process.env.PORT || 8080
 const React = require('react')
 const ReactDOM = require('react-dom')
 
@@ -6,13 +6,21 @@ const ReactDOM = require('react-dom')
 
 const EventList = require(__dirname + '/components/event_list.jsx')
 const DisplayUser = require(__dirname + '/components/display_user.jsx')
-// const Contact = require(__dirname + '/components/contact');
-// const InfiniteScroll = require(__dirname + '/components/infinite-scroll');
-// const ProgramHighlights = require(__dirname + '/components/program-highlights');
+const CreateEventForm = require(__dirname + '/components/event_form.jsx')
+
+// for testing purposes
+var userId = "5732af6c9a014b99ce613583"
+var userUrl = "http://localhost:6060/api/user/" + userId
+var eventId = "57325f56bbeeba1e0d9bb353"
+var eventsUrl = "/api/events"
+// var eventUrl = "http://localhost:6060/api/event/" + eventId
+
+
 
 // require('font-awesome/css/font-awesome.css')
-require('normalize-css')
-require(__dirname + "/sass/main.scss")
+// require('normalize-css')
+
+// require(__dirname + "/sass/main.scss")
 
 
 //render((
@@ -26,8 +34,6 @@ require(__dirname + "/sass/main.scss")
 //  </Router>
 //), document.getElementById('root'))
 
-ReactDOM.render( <EventList />, document.getElementById('eventList'))
-
-ReactDOM.render(
-   <DisplayUser url="http://localhost:" + port + "/api/user/573373c18026b52b5f052ea0"/>,
-   document.getElementById('userProfile'))
+ReactDOM.render( <DisplayUser url={userUrl}/>, document.getElementById('userProfile'))
+ReactDOM.render( <EventList url={eventsUrl} />, document.getElementById('eventList'))
+ReactDOM.render( <CreateEventForm />, document.getElementById('eventForm'))

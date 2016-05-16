@@ -31,8 +31,10 @@ userRouter.post('/user/new', (req, res) => {
 })
 
 userRouter.get('/user/:id', (req, res) => {
+  console.log("GETTING REQUEST for a specific user")
   User.findOne({_id: req.params.id}, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
+    if (result === null) return res.status(400).json({msg: "bad request, user doesn't exist"})
     res.status(200).json(result)
   })
 })

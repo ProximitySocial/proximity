@@ -1,0 +1,10 @@
+{
+    "node": true,
+    "jquery" : true,
+    "esversion": 6,
+    "asi": true,
+    "globals": {
+      "MyProject": true
+    }
+
+}
