@@ -4,8 +4,9 @@ const ReactDOM = require('react-dom')
 module.exports = React.createClass({
 
   render: function() {
+    var divStyle = {backgroundImage: "url(" + this.props.event.picture + ")"}
     return (
-      <li>
+      <li style={divStyle}>
         <h3>{this.props.event.title}</h3>
         <p>{this.props.event.description}</p>
         <p><strong>Address:</strong> {this.props.event.address}</p>

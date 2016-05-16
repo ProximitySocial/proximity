@@ -20250,9 +20250,10 @@
 
 
 	  render: function render() {
+	    var divStyle = { backgroundImage: "url(" + this.props.event.picture + ")" };
 	    return React.createElement(
 	      'li',
-	      null,
+	      { style: divStyle },
 	      React.createElement(
 	        'h3',
 	        null,
@@ -20319,6 +20320,9 @@
 	module.exports = React.createClass({
 	  displayName: 'exports',
 
+	  getInitialState: function getInitialState() {
+	    return { user: {} };
+	  },
 	  loadUserFromServer: function loadUserFromServer() {
 	    $.ajax({
 	      type: 'GET',
@@ -20326,7 +20330,9 @@
 	      dataType: 'json',
 	      cache: false,
 	      success: function (data) {
-	        this.setState({ user: data });
+	        console.log(data.lastName);
+	        this.setState({ user: data,
+	          lastInitial: data.lastName.charAt(0) });
 	        this.handleInterests(data);
 	      }.bind(this),
 	      error: function (xhr, status, err) {
@@ -20334,10 +20340,7 @@
 	      }.bind(this)
 	    });
 	  },
-	  getInitialState: function getInitialState() {
-	    return { user: {} };
-	  },
-	  componentDidMount: function componentDidMount() {
+	  componentWillMount: function componentWillMount() {
 	    this.loadUserFromServer();
 	  },
 	  handleInterests: function handleInterests(data) {
@@ -20347,23 +20350,26 @@
 	      rows.push(React.createElement(
 	        'li',
 	        { key: index },
+	        '#',
 	        interest
 	      ));
 	    });
 	    this.setState({ interests: rows });
 	  },
 	  render: function render() {
+
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement('img', { src: this.state.user.pic }),
 	      React.createElement(
 	        'h3',
-	        null,
+	        { className: 'userName' },
 	        this.state.user.firstName,
 	        ' ',
-	        this.state.user.lastName
+	        this.state.lastInitial,
+	        '.'
 	      ),
+	      React.createElement('img', { className: 'userPic', src: this.state.user.pic }),
 	      React.createElement(
 	        'p',
 	        null,
@@ -20396,7 +20402,7 @@
 	      ),
 	      React.createElement(
 	        'ul',
-	        null,
+	        { className: 'interests' },
 	        this.state.interests
 	      )
 	    );
