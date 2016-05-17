@@ -55,12 +55,13 @@
 	var EventList = __webpack_require__(168);
 	var DisplayUser = __webpack_require__(170);
 	var CreateEventForm = __webpack_require__(171);
+	var CreateUserForm = __webpack_require__(172);
 
 	// for testing purposes
-	var userId = "5732af6c9a014b99ce613583";
+	var userId = "573373c18026b52b5f052ea0";
 	var userUrl = "/api/user/" + userId;
-	var eventId = "57325f56bbeeba1e0d9bb353";
-	var eventsUrl = "/api/events/" + userId;
+	var eventId = "573373698026b52b5f052e57";
+	var eventsUrl = "/api/events/";
 	// var eventUrl = "http://localhost:6060/api/event/" + eventId
 
 	// require('font-awesome/css/font-awesome.css')
@@ -80,6 +81,7 @@
 	//), document.getElementById('root'))
 
 	ReactDOM.render(React.createElement(DisplayUser, { url: userUrl }), document.getElementById('userProfile'));
+	ReactDOM.render(React.createElement(CreateUserForm, null), document.getElementById('userForm'));
 	ReactDOM.render(React.createElement(EventList, { url: eventsUrl }), document.getElementById('eventList'));
 	ReactDOM.render(React.createElement(CreateEventForm, null), document.getElementById('eventForm'));
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
@@ -20451,6 +20453,7 @@
 	      title: '',
 	      description: '',
 	      addressName: '',
+	      address: '',
 	      file: '',
 	      imagePreviewUrl: '' };
 	  },
@@ -20462,6 +20465,9 @@
 	  },
 	  handleAddressNameChange: function handleAddressNameChange(e) {
 	    this.setState({ addressName: e.target.value });
+	  },
+	  handleAddressChange: function handleAddressChange(e) {
+	    this.setState({ address: e.target.value });
 	  },
 	  handleImageChange: function handleImageChange(e) {
 	    var _this = this;
@@ -20506,20 +20512,22 @@
 	    var title = this.state.title.trim();
 	    var description = this.state.description.trim();
 	    var addressName = this.state.addressName.trim();
+	    var address = this.state.address.trim();
 	    var picture = this.state.file;
-	    if (!title || !description || !addressName) return;
+	    if (!title || !description || !addressName || !address) return;
 	    this.onFormSubmit({
 	      title: title,
 	      description: description,
 	      addressName: addressName,
+	      address: address,
 	      picture: picture
 	    });
-	    this.setState({ title: '', description: '', addressName: '', file: '', imagePreviewUrl: '' });
+	    this.setState({ title: '', description: '', addressName: '', address: '', file: '', imagePreviewUrl: '' });
 	  },
 	  onFormSubmit: function onFormSubmit(newEvent) {
 	    $.ajax({
 	      type: 'POST',
-	      url: 'http://localhost:6060/api/event/new',
+	      url: 'http://localhost:5447/api/event/new',
 	      data: JSON.stringify(newEvent),
 	      contentType: 'application/json',
 	      success: function success(data) {
@@ -20556,19 +20564,25 @@
 	          { 'for': 'title' },
 	          'Title:'
 	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'event title', value: this.state.title, onChange: this.handleTitleChange }),
+	        React.createElement('input', { type: 'text', placeholder: 'Title', value: this.state.title, onChange: this.handleTitleChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'description' },
 	          'Description:'
 	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'description', value: this.state.description, onChange: this.handleDescriptionChange }),
+	        React.createElement('input', { type: 'text', placeholder: 'Description', value: this.state.description, onChange: this.handleDescriptionChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'Address Name' },
 	          'Address Name:'
 	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'address Name', value: this.state.addressName, onChange: this.handleAddressNameChange }),
+	        React.createElement('input', { type: 'text', placeholder: 'Address Name', value: this.state.addressName, onChange: this.handleAddressNameChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'Address' },
+	          'Address:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Address', value: this.state.address, onChange: this.handleAddressChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'Image' },
@@ -20599,6 +20613,106 @@
 	          'div',
 	          null,
 	          this.imagePreviewUrl
+	        )
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 172 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(2);
+	var ReactDOM = __webpack_require__(33);
+
+	module.exports = React.createClass({
+	  displayName: 'CreateUserForm',
+	  getInitialState: function getInitialState() {
+	    return {
+	      firstName: '',
+	      lastName: '',
+	      email: '' };
+	  },
+	  handleFirstChange: function handleFirstChange(e) {
+	    console.log('First Name ' + e.target.value);
+	    this.setState({ firstName: e.target.value });
+	  },
+	  handleLastChange: function handleLastChange(e) {
+	    console.log('Last Name ' + e.target.value);
+	    this.setState({ lastName: e.target.value });
+	  },
+	  handleEmailChange: function handleEmailChange(e) {
+	    console.log('Email ' + e.target.value);
+	    this.setState({ email: e.target.value });
+	  },
+	  handleSubmit: function handleSubmit(e) {
+	    e.preventDefault();
+	    var firstName = this.state.firstName.trim();
+	    var lastName = this.state.lastName.trim();
+	    var email = this.state.email.trim();
+	    // var picture = this.state.file
+	    if (!firstName || !lastName || !email) return;
+	    this.onFormSubmit({
+	      firstName: firstName,
+	      lastName: lastName,
+	      email: email
+	    });
+	    this.setState({ firstName: '', lastName: '', email: '' });
+	  },
+	  onFormSubmit: function onFormSubmit(newUser) {
+	    $.ajax({
+	      type: 'POST',
+	      url: 'http://localhost:5447/api/user/new',
+	      data: JSON.stringify(newUser),
+	      contentType: 'application/json',
+	      success: function success(data) {
+	        console.log(data);
+	        console.log('SUCCESS');
+	      },
+	      error: function error(data, status, jqXHR) {
+	        console.log(data);
+	        console.log(status);
+	        console.log(jqXHR);
+	      }
+	    });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Create User'
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'createUserForm', onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'label',
+	          { 'for': 'firstName' },
+	          'First Name:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'First', value: this.state.firstName, onChange: this.handleFirstChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'lastName' },
+	          'Last Name:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Last', value: this.state.lastName, onChange: this.handleLastChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'email' },
+	          'Email:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Email', value: this.state.email, onChange: this.handleEmailChange }),
+	        React.createElement(
+	          'button',
+	          { type: 'submit' },
+	          'Create User!'
 	        )
 	      )
 	    );

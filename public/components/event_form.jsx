@@ -8,6 +8,7 @@ module.exports = React.createClass({
                 title: '',
                 description: '',
                 addressName: '',
+                address: '',
                 file: '',
                 imagePreviewUrl: ''});
       },
@@ -19,6 +20,9 @@ module.exports = React.createClass({
       },
       handleAddressNameChange: function(e) {
         this.setState({addressName: e.target.value});
+      },
+      handleAddressChange: function(e) {
+        this.setState({address: e.target.value});
       },
       handleImageChange: function(e){
         e.preventDefault();
@@ -62,20 +66,22 @@ module.exports = React.createClass({
         var title = this.state.title.trim()
         var description = this.state.description.trim()
         var addressName = this.state.addressName.trim()
+        var address = this.state.address.trim()
         var picture = this.state.file
-        if (!title || !description || !addressName) return
+        if (!title || !description || !addressName || !address) return
         this.onFormSubmit({
            title: title,
            description: description,
            addressName: addressName,
+           address: address,
            picture: picture
         });
-        this.setState({title: '', description: '', addressName: '', file: '', imagePreviewUrl: ''});
+        this.setState({title: '', description: '', addressName: '', address: '', file: '', imagePreviewUrl: ''});
       },
       onFormSubmit: function(newEvent) {
         $.ajax({
           type: 'POST',
-          url: 'http://localhost:6060/api/event/new',
+          url: 'http://localhost:5447/api/event/new',
           data: JSON.stringify(newEvent),
           contentType: 'application/json',
           success: function(data){
@@ -100,11 +106,13 @@ module.exports = React.createClass({
             <h2>Create Event</h2>
             <form className="createEventForm" onSubmit={this.handleSubmit} >
               <label for="title">Title:</label>
-              <input type="text" placeholder="event title" value={this.state.title}  onChange={this.handleTitleChange} />
+              <input type="text" placeholder="Title" value={this.state.title}  onChange={this.handleTitleChange} />
               <label for="description">Description:</label>
-              <input type="text" placeholder="description" value={this.state.description} onChange={this.handleDescriptionChange} />
+              <input type="text" placeholder="Description" value={this.state.description} onChange={this.handleDescriptionChange} />
               <label for="Address Name">Address Name:</label>
-              <input type="text" placeholder="address Name" value={this.state.addressName} onChange={this.handleAddressNameChange} />
+              <input type="text" placeholder="Address Name" value={this.state.addressName} onChange={this.handleAddressNameChange} />
+              <label for="Address">Address:</label>
+              <input type="text" placeholder="Address" value={this.state.address} onChange={this.handleAddressChange} />
               <label for="Image">Image:</label>
               <button type="submit" onClick={this.srcImg}>Google Image</button>
               <input type="file" onChange={this.handleImageChange} />

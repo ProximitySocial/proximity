@@ -4,7 +4,7 @@ var jshint = require('gulp-jshint') || null;
 var packageJSON = require('./package');
 var concat = require('gulp-concat');
 var nodemon = require('gulp-nodemon');
-// var livereload = require('gulp-livereload');
+var livereload = require('gulp-livereload');
 var watch = require('gulp-watch');
 var minifyCss = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
@@ -12,6 +12,7 @@ var lessify = require('gulp-less');
 var webpack = require('webpack-stream');
 var rename = require('gulp-rename');
 var jshintJSX = require('jshint-jsx')
+var util = require('gulp-util');
 // var jadeify = require('gulp-jade');
 var path = require('path');
 
@@ -43,24 +44,28 @@ var appFiles = {
 // TASKS ========================================================================
 
 gulp.task('clean', function(){
+  console.log('CLEANING');
   return gulp.src(dest, {read: false})
       .pipe(clean())
       .pipe(gulp.dest(dest))
 });
 
-gulp.task('copy'), function(){
+gulp.task('copy', function(){
+  console.log('MOVING INDEX');
   return gulp.src('./public/index.html')
           .pipe(gulp.dest(dest))
-};
+});
 
 gulp.task('lessify', function(){
+  console.log('LESSIFYING');
   return gulp.src('./public/less/*.less')
-    .pipe(lessify())
+    .pipe(lessify().on('error', util.log))
     .pipe(minifyCss())
     .pipe(gulp.dest(dest))
 });
 
 gulp.task('bundleit', function(){
+  console.log('BUNDLING');
   return gulp.src('public/main.jsx')
       .pipe(webpack({
         watch: true,
@@ -100,6 +105,7 @@ gulp.task('start', function () {
 })
 
 gulp.task('watch', function() {
+  livereload.listen();
   gulp.watch('./public/less/*.less', ['lessify', 'start'])
   gulp.watch('./public/js/**', ['jshint', 'start']);
   gulp.watch(appFiles.js, ['jshint', 'start']);
@@ -114,5 +120,5 @@ gulp.task('watch', function() {
 // });
 
 
-gulp.task('default', ['lessify', 'bundleit', 'jshint', 'start', 'watch', 'copy']);
+gulp.task('default', ['lessify', 'copy', 'bundleit', 'jshint', 'start', 'watch']);
 gulp.task('produce', ['lessify', 'start'])

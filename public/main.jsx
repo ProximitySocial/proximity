@@ -7,12 +7,14 @@ const ReactDOM = require('react-dom')
 const EventList = require(__dirname + '/components/event_list.jsx')
 const DisplayUser = require(__dirname + '/components/display_user.jsx')
 const CreateEventForm = require(__dirname + '/components/event_form.jsx')
+const CreateUserForm = require(__dirname + '/components/user_form.jsx')
+
 
 // for testing purposes
-var userId = "5732af6c9a014b99ce613583"
+var userId = "573373c18026b52b5f052ea0"
 var userUrl = "/api/user/" + userId
-var eventId = "57325f56bbeeba1e0d9bb353"
-var eventsUrl = "/api/events/" + userId
+var eventId = "573373698026b52b5f052e57"
+var eventsUrl = "/api/events/"
 // var eventUrl = "http://localhost:6060/api/event/" + eventId
 
 
@@ -35,5 +37,6 @@ var eventsUrl = "/api/events/" + userId
 //), document.getElementById('root'))
 
 ReactDOM.render( <DisplayUser url={userUrl}/>, document.getElementById('userProfile'))
+ReactDOM.render( <CreateUserForm />, document.getElementById('userForm'))
 ReactDOM.render( <EventList url={eventsUrl} />, document.getElementById('eventList'))
 ReactDOM.render( <CreateEventForm />, document.getElementById('eventForm'))
