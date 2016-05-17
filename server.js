@@ -12,7 +12,6 @@ var passport         = require('passport')
     , OAuth2Strategy = require('passport-oauth').OAuth2Strategy
 // var jwt            = require('express-jwt');
 
-
 //// configuration ===========================================
 console.log(process.env.NODE_ENV + ' :::: Environment');
 
@@ -40,8 +39,6 @@ mongoose.connect(db.url);
 //     })
 //   }
 // ))
-
-
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -78,11 +75,6 @@ app.use('/api', eventRouter)
 app.on('listening', () => {
   console.log('ok, server is running')
 })
-
-// app.get('/', (req, res) => {
-//   res.sendfile('./build')
-// })
-
 
 app.listen(port)
 

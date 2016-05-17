@@ -10,9 +10,9 @@ const CreateEventForm = require(__dirname + '/components/event_form.jsx')
 
 // for testing purposes
 var userId = "5732af6c9a014b99ce613583"
-var userUrl = "http://localhost:6060/api/user/" + userId
+var userUrl = "/api/user/" + userId
 var eventId = "57325f56bbeeba1e0d9bb353"
-var eventsUrl = "/api/events"
+var eventsUrl = "/api/events/" + userId
 // var eventUrl = "http://localhost:6060/api/event/" + eventId
 
 
