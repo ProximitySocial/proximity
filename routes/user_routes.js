@@ -40,12 +40,17 @@ userRouter.get('/user/:id', (req, res) => {
 })
 
 
-userRouter.put('/user/:id', (req, res) => {
+userRouter.post('/user/:id', (req, res) => {
   var newData = req.body
-  delete newData._id
-  User.update({_id: req.params.id}, newData, (err, result) => {
+  console.log(newData);
+  console.log(req.params.id);
+
+  // delete newData._id
+  User.update({_id: req.params.id}, {$set: newData}, (err, doc) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
-    res.status(200).json({msg: 'Successfully updated User'})
+    console.log(doc)
+
+    res.status(200).json({docs: doc, msg: 'changed User details' })
   })
 })
 
