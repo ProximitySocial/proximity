@@ -31,19 +31,26 @@ userRouter.post('/user/new', (req, res) => {
 })
 
 userRouter.get('/user/:id', (req, res) => {
+  console.log("GETTING REQUEST for a specific user")
   User.findOne({_id: req.params.id}, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
+    if (result === null) return res.status(400).json({msg: "bad request, user doesn't exist"})
     res.status(200).json(result)
   })
 })
 
 
-userRouter.put('/user/:id', (req, res) => {
+userRouter.post('/user/:id', (req, res) => {
   var newData = req.body
-  delete newData._id
-  User.update({_id: req.params.id}, newData, (err, result) => {
+  console.log(newData);
+  console.log(req.params.id);
+
+  // delete newData._id
+  User.update({_id: req.params.id}, {$set: newData}, (err, doc) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
-    res.status(200).json({msg: 'Successfully updated User'})
+    console.log(doc)
+
+    res.status(200).json({docs: doc, msg: 'changed User details' })
   })
 })
 
