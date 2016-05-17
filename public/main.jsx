@@ -8,13 +8,15 @@ const EventList = require(__dirname + '/components/event_list.jsx')
 const DisplayUser = require(__dirname + '/components/display_user.jsx')
 const CreateEventForm = require(__dirname + '/components/event_form.jsx')
 const CreateUserForm = require(__dirname + '/components/user_form.jsx')
+const UpdateEventForm = require(__dirname + '/components/event_update.jsx')
+const UpdateUserForm = require(__dirname + '/components/user_update.jsx')
 
 
 // for testing purposes
 var userId = "573373c18026b52b5f052ea0"
 var userUrl = "/api/user/" + userId
-var eventId = "573373698026b52b5f052e57"
-var eventsUrl = "/api/events/"
+var eventId = "573ba9c094a5424e3fc77b51"
+var eventUrl = "/api/event/" + eventId
 // var eventUrl = "http://localhost:6060/api/event/" + eventId
 
 
@@ -38,5 +40,9 @@ var eventsUrl = "/api/events/"
 
 ReactDOM.render( <DisplayUser url={userUrl}/>, document.getElementById('userProfile'))
 ReactDOM.render( <CreateUserForm />, document.getElementById('userForm'))
-ReactDOM.render( <EventList url={eventsUrl} />, document.getElementById('eventList'))
+ReactDOM.render( <UpdateUserForm url={userUrl}/>, document.getElementById('userUpdate'))
+
+ReactDOM.render( <EventList />, document.getElementById('eventList'))
+
 ReactDOM.render( <CreateEventForm />, document.getElementById('eventForm'))
+ReactDOM.render( <UpdateEventForm url={eventUrl}/>, document.getElementById('eventUpdate'))

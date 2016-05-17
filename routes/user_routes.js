@@ -40,7 +40,8 @@ userRouter.get('/user/:id', (req, res) => {
 })
 
 
-userRouter.post('/user/:id', (req, res) => {
+userRouter.put('/user/:id', (req, res) => {
+  console.log('SERVER UPDATE USER ROUTE')
   var newData = req.body
   console.log(newData);
   console.log(req.params.id);
