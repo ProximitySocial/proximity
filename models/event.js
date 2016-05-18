@@ -5,10 +5,8 @@ var eventSchema = new mongoose.Schema({
     neighborhood: {type: String},
     description:  {type: String},
     interestTags: {type: Array},
-    // interestTags: {type: Array, required: true},
     startTime:    {type: Date, default: Date.now},
     endTime:      {type: Date},
-    // address:      {type: String, required: true},
     locationData: {type: Object},
     address:      {type: String},
     addressName:  {type: String},
@@ -20,3 +18,4 @@ var eventSchema = new mongoose.Schema({
 })
 
 module.exports = exports = mongoose.model('Event', eventSchema)
+
