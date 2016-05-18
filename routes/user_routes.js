@@ -42,9 +42,6 @@ userRouter.get('/user/:id', (req, res) => {
 
 userRouter.post('/user/:id', (req, res) => {
   var newData = req.body
-  console.log(newData);
-  console.log(req.params.id);
-
   // delete newData._id
   User.update({_id: req.params.id}, {$set: newData}, (err, doc) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
