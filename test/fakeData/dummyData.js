@@ -35,8 +35,7 @@ var User = function(){
 
 // NUMBER OF USERS 300
 for (var i = 1; i < 300; i++){
-  finalArr.push(user)
+  finalArr.push(new User())
 }
 
 console.log(finalArr)
-

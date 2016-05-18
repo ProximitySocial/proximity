@@ -45,7 +45,7 @@ var Event = function(){
 // NUMBER OF USERS 300
 
 for (var i = 1; i < 74; i++){
-  finalArr.push(new Event)
+  finalArr.push(new Event())
 }
 
 console.log(finalArr)
