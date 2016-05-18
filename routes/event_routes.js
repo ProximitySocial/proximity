@@ -11,7 +11,7 @@ const getAndSendUserLocalEvents = require('../public/libs/getEventsPerUser')
 eventRouter.get('/events', (req, res) => {
   console.log('request for ALL events')
   Event.find({}, (err, result) => {
-    if (err) return res.status(500).json({msg: 'Server Error'})
+    if (err || results == null) return res.status(500).json({msg: 'Server Error'})
     res.status(200).json(result)
   })
 })
@@ -35,6 +35,7 @@ eventRouter.post('/event/new', (req, res) => {
       eventData.locationData = data
       console.log(eventData)
       new Event(eventData).save((err, result) => {
+        if (err || results == null) return res.status(500).json({msg: 'Server Error'})
         res.status(200).json({msg: 'event created', data: result})
       })
     })
@@ -47,6 +48,7 @@ eventRouter.post('/event/new', (req, res) => {
 eventRouter.get('/event/:id', (req, res) => {
   Event.findOne({_id: req.params.id}, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
+    else if (result === null) res.status(400).json({msg: 'Bad request...event Id likely invalid'})
     res.status(200).json(result)
   })
 })

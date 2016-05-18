@@ -6,6 +6,7 @@ const Event = require(__dirname + '/../../models/event')
 function getAndSendUserLocalEvents(userId, res) {
     User.findOne({_id: userId}, {neighborhoods: true}, (err, data) => {
       if (err) {return res.status(500).json({msg: 'Server Error'})}
+      else if (data === null) res.status(400).json({msg: 'Bad request...user Id likely invalid'})
       else {getEventsPerHood(null, data, res)}
     })
 }
