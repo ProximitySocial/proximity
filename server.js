@@ -11,7 +11,7 @@ const mongoose       = require('mongoose')
 var passport         = require('passport')
     , OAuth2Strategy = require('passport-oauth').OAuth2Strategy
 // var jwt            = require('express-jwt');
-
+const User = require(__dirname + '/models/user')
 //// configuration ===========================================
 console.log(process.env.NODE_ENV + ' :::: Environment');
 
@@ -20,25 +20,67 @@ var db = require('./config/db');
 console.log('DB: ' + db.url);
 
 // set our port
-var port = process.env.PORT || 5447;
+var port = process.env.PORT || 2323;
 
 var localhost = 'http://localhost:' + port
 // connect to mongoDB database
 mongoose.connect(db.url);
 
-// passport.use('facebook', new OAuth2Strategy({
-//   authorizationURL: 'https://graph.facebook.com/oauth/authorize', // facebook authURL
-//   tokenURL: 'https://graph.facebook.com/oauth/access_token',  // from facebook
-//   clientID: process.env.PROXIMITY_FB_ID,
-//   clientSecret: process.env.PROXIMITY_FB_SECRET,
-//   callbackURL: 'where to redirect after auth'
-// },
-//   function(accessToken, refreshToken, profile, done) {
-//     User.findOrCreate(..., function(err, user) {
-//       done(err, user)
-//     })
-//   }
-// ))
+passport.use('facebook', new OAuth2Strategy({
+  authorizationURL: 'https://graph.facebook.com/oauth/authorize', // facebook authURL
+  tokenURL: 'https://graph.facebook.com/oauth/access_token/',  // from facebook
+  clientID: process.env.PROXIMITY_FB_ID,
+  clientSecret: process.env.PROXIMITY_FB_SECRET,
+  callbackURL: 'http://localhost:2323/api/auth/facebook/callback/'
+},
+
+function(accessToken, refreshToken, profile, done) {
+        console.log('OAUTH CALLBACK RETURNED PROFILE')
+        console.log(accessToken)
+        console.log(refreshToken)
+        console.log(profile)
+        //check user table for anyone with a facebook ID of profile.id
+        User.findOne({
+            'facebook.id': profile.id
+        }, function(err, user) {
+            if (err) {
+                return done(err);
+            }
+            //No user was found... so create a new user with values from Facebook (all the profile. stuff)
+            if (!user) {
+                user = new User({
+                    name: profile.displayName,
+                    email: profile.emails[0].value,
+                    username: profile.username,
+                    provider: 'facebook',
+                    //now in the future searching on User.findOne({'facebook.id': profile.id } will match because of this next line
+                    facebook: profile._json
+                });
+                user.save(function(err) {
+                    if (err) console.log(err);
+                    console.log('CREATED USER')
+                    console.log(user)
+                    return done(err, user);
+                });
+            } else {
+                //found user. Return
+                console.log('FOUND USER')
+                console.log(user)
+                return done(err, user);
+            }
+        });
+    }
+
+
+
+  // function(accessToken, refreshToken, profile, done) {
+  //   User.findOrCreate({...}, function(err, user) {
+  //     if (err) return console.log('Could not find or create user')
+  //     console.log(user)
+  //     done(err, user)
+  //   })
+  // }
+))
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');

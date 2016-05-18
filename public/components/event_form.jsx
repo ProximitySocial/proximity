@@ -81,7 +81,7 @@ module.exports = React.createClass({
       onFormSubmit: function(newEvent) {
         $.ajax({
           type: 'POST',
-          url: 'http://localhost:5447/api/event/new',
+          url: 'http://localhost:2323/api/event/new',
           data: JSON.stringify(newEvent),
           contentType: 'application/json',
           success: function(data){

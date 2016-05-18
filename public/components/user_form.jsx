@@ -38,7 +38,7 @@ module.exports = React.createClass({
       onFormSubmit: function(newUser) {
         $.ajax({
           type: 'POST',
-          url: 'http://localhost:5447/api/user/new',
+          url: 'http://localhost:2323/api/user/new',
           data: JSON.stringify(newUser),
           contentType: 'application/json',
           success: function(data){

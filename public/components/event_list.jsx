@@ -11,7 +11,7 @@ module.exports = React.createClass({
   componentDidMount: function() {
     $.ajax({
       type: 'GET',
-      url: 'http://localhost:5447/api/events',
+      url: 'http://localhost:2323/api/events',
       dataType: 'json',
       cache: false,
       success: function(data) {

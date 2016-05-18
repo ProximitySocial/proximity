@@ -1,4 +1,3 @@
-const port = process.env.PORT || 8080
 const React = require('react')
 const ReactDOM = require('react-dom')
 
@@ -13,9 +12,9 @@ const UpdateUserForm = require(__dirname + '/components/user_update.jsx')
 
 
 // for testing purposes
-var userId = "573373c18026b52b5f052ea0"
+var userId = "573ca6f8522a732dff9cb619"
 var userUrl = "/api/user/" + userId
-var eventId = "573ba9c094a5424e3fc77b51"
+var eventId = "573ca742522a732dff9cb6e0"
 var eventUrl = "/api/event/" + eventId
 // var eventUrl = "http://localhost:6060/api/event/" + eventId
 
