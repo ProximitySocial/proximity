@@ -62,18 +62,10 @@ eventRouter.put('/event/:id', (req, res) => {
   console.log(address);
   callGoogle(address)
     .then((data) => {
-      console.log('inside Call Google success');
-      console.log(data);
-      console.log(newData);
       newData.neighborhood = data.results[0].address_components[2].long_name
       newData.locationData = data
       Event.update({_id: req.params.id}, newData, (err, result) => {
-        console.log('^^^^^^^^^^^^^')
-        console.log('^^^^^^^^^^^^^')
-        console.log('^^^^^^^^^^^^^')
-        console.log(result);
-        console.log(err);
-        // console.log(result)
+        if (err) return res.status(500).json({msg: 'Server Error'})
         res.status(200).json({msg: 'Successfully updated event'})
       })
     })
@@ -81,10 +73,6 @@ eventRouter.put('/event/:id', (req, res) => {
       console.log('inside call google error');
       throw err;
     })
-  // Event.update({_id: req.params.id}, newData, (err, result) => {
-  //   if (err) return res.status(500).json({msg: 'Server Error'})
-  //   res.status(200).json({msg: 'Successfully updated event'})
-  // })
 })
 
 //add attendee
