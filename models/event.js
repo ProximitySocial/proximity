@@ -14,8 +14,8 @@ var eventSchema = new mongoose.Schema({
     _creator:     {type: String},
     picture:      {type: String},
     invitees:     {type: Array},
-    created_at:   {type: Date, required: true, default: Date.now}
+    created_at:   {type: Date, required: true, default: Date.now},
+    locationData: {type: Object}
 })
 
 module.exports = exports = mongoose.model('Event', eventSchema)
-
