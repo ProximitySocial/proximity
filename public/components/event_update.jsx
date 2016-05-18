@@ -2,7 +2,7 @@ const React = require('react');
 const ReactDOM = require('react-dom')
 
 module.exports = React.createClass({
-      displayName: 'CreateEventForm',
+      displayName: 'UpdateEventForm',
       getInitialState: function() {
         return({
                 title: '',
@@ -80,8 +80,8 @@ module.exports = React.createClass({
       },
       onFormSubmit: function(newEvent) {
         $.ajax({
-          type: 'POST',
-          url: 'http://localhost:5447/api/event/new',
+          type: 'PUT',
+          url: this.props.url,
           data: JSON.stringify(newEvent),
           contentType: 'application/json',
           success: function(data){
@@ -103,8 +103,8 @@ module.exports = React.createClass({
         }
         return (
           <div>
-            <h2>Create Event</h2>
-            <form className="createEventForm" onSubmit={this.handleSubmit} >
+            <h2>Update Your Event</h2>
+            <form className="updateEventForm" onSubmit={this.handleSubmit} >
               <label for="title">Title:</label>
               <input type="text" placeholder="Title" value={this.state.title}  onChange={this.handleTitleChange} />
               <label for="description">Description:</label>
@@ -116,7 +116,7 @@ module.exports = React.createClass({
               <label for="Image">Image:</label>
               <button type="submit" onClick={this.srcImg}>Google Image</button>
               <input type="file" onChange={this.handleImageChange} />
-              <button type="submit" onClick={this.handleSubmit}>Create Event!</button>
+              <button type="submit" onClick={this.handleSubmit}>Update Event</button>
               <div>{$imagePreview }</div>
               <div>{this.file}</div>
               <div>{this.imagePreviewUrl}</div>
