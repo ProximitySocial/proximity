@@ -2,7 +2,10 @@ const React = require('react')
 const ReactDOM = require('react-dom')
 var port = process.env.PORT
 
-var DisplayUser = React.createClass({
+module.exports = React.createClass({
+   getInitialState: function() {
+     return {user: {}}
+   },
    loadUserFromServer: function() {
      $.ajax({
        type: 'GET',
@@ -10,7 +13,9 @@ var DisplayUser = React.createClass({
        dataType: 'json',
        cache: false,
        success: function(data) {
-         this.setState({user: data});
+         console.log(data.lastName)
+         this.setState({user:        data,
+                        lastInitial: data.lastName.charAt(0)});
          this.handleInterests(data);
        }.bind(this),
        error: function(xhr, status, err) {
@@ -18,31 +23,32 @@ var DisplayUser = React.createClass({
        }.bind(this)
      });
    },
-   getInitialState: function() {
-     return {user: {}}
+   componentWillMount: function() {
+      this.loadUserFromServer()
    },
-   componentDidMount: function() {
-      this.loadUserFromServer();
+   handleUpdate: function(){
+     console.log('make a request to handleUpdate')
    },
    handleInterests: function(data) {
      console.log(data.interests);
      var rows = [];
      data.interests.forEach(function(interest, index) {
-       rows.push(<li key={index}>{interest}</li>);
+       rows.push(<li key={index}><a>#{interest}</a></li>);
      });
-     this.setState({intrts: rows});
+     this.setState({interests: rows});
    },
    render: function() {
+
      return (
        <div>
-         <img src={this.state.user.pic}/>
-         <h3>{this.state.user.firstName} {this.state.user.lastName}</h3>
+         <h3 className="userName">{this.state.user.firstName} {this.state.lastInitial}.</h3>
+         <img className="userPic" src={this.state.user.pic}/>
          <p><strong>Email: </strong>{this.state.user.email}</p>
          <p><strong>Member since: </strong>{this.state.user.created_at}</p>
          <p>{this.state.user.bio}</p>
          <h3>Interests:</h3>
-         <ul>
-           {this.state.intrsts}
+         <ul className="interests">
+           {this.state.interests}
          </ul>
        </div>
      )
@@ -53,56 +59,3 @@ var DisplayUser = React.createClass({
  //   <DisplayUser url="http://localhost:" + port + "/api/user/573373c18026b52b5f052ea0"/>,
  //   document.getElementById('userProfile')
  // );
-=======
-var DisplayUser = React.createClass({
-  loadUserFromServer: function() {
-    $.ajax({
-      type: 'GET',
-      url: this.props.url,
-      dataType: 'json',
-      cache: false,
-      success: function(data) {
-        this.setState({user: data});
-        this.handleInterests(data);
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
-  },
-  getInitialState: function() {
-    return {user: {}}
-  },
-  componentDidMount: function() {
-     this.loadUserFromServer();
-  },
-  handleInterests: function(data) {
-    console.log(data.interests);
-    var rows = [];
-    data.interests.forEach(function(interest, index) {
-      rows.push(<li key={index}>{interest}</li>);
-    });
-    this.setState({chris: rows});
-  },
-  render: function() {
-    return (
-      <div>
-        <img src={this.state.user.pic}/>
-        <h3>{this.state.user.firstName} {this.state.user.lastName}</h3>
-        <p><strong>Email: </strong>{this.state.user.email}</p>
-        <p><strong>Member since: </strong>{this.state.user.created_at}</p>
-        <p>{this.state.user.bio}</p>
-        <h3>Interests:</h3>
-        <ul>
-          {this.state.chris}
-        </ul>
-      </div>
-    )
-  }
-})
-
-// ReactDOM.render(
-//   <DisplayUser url="http://localhost:" + port + "/api/user/573373c18026b52b5f052ea0"/>,
-//   document.getElementById('userProfile')
-// );
-

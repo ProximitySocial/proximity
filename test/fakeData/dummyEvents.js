@@ -38,13 +38,14 @@ var Event = function(){
   this._attendees   = genRandSelectArray(people, 10),
   this._creator     = people[genRandNum(people.length)],
   this.picture      = Faker.image.image(),
-  this.invitees     = genRandSelectArray(people, 10)
+  this.invitees     = genRandSelectArray(people, 10),
+  this.neighborhood = genRandSelectArray(hoods, 1).toString()
 }
 
 // NUMBER OF USERS 300
 
 for (var i = 1; i < 74; i++){
-  finalArr.push(new Event)
+  finalArr.push(new Event())
 }
 
 console.log(finalArr)

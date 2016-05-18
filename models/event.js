@@ -2,11 +2,13 @@ const mongoose = require('mongoose')
 
 var eventSchema = new mongoose.Schema({
     title:        {type: String, required: true},
+    neighborhood: {type: String},
     description:  {type: String},
-    interestTags: {type: Array, required: true},
+    interestTags: {type: Array},
     startTime:    {type: Date, default: Date.now},
     endTime:      {type: Date},
-    address:      {type: String, required: true},
+    locationData: {type: Object},
+    address:      {type: String},
     addressName:  {type: String},
     _attendees:   {type: Array},
     _creator:     {type: String},
@@ -16,3 +18,4 @@ var eventSchema = new mongoose.Schema({
 })
 
 module.exports = exports = mongoose.model('Event', eventSchema)
+

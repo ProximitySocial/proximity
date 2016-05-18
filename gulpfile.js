@@ -1,26 +1,31 @@
 var gulp = require('gulp');
 var clean = require('gulp-rimraf');
 var jshint = require('gulp-jshint') || null;
+var packageJSON = require('./package');
 var concat = require('gulp-concat');
 var nodemon = require('gulp-nodemon');
-// var livereload = require('gulp-livereload');
+var livereload = require('gulp-livereload');
 var watch = require('gulp-watch');
 var minifyCss = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
 var lessify = require('gulp-less');
+var webpack = require('webpack-stream');
+var rename = require('gulp-rename');
+var jshintJSX = require('jshint-jsx')
+var util = require('gulp-util');
 // var jadeify = require('gulp-jade');
 var path = require('path');
 
 //Path variables
 var curr = '.';
-var dest = './dist';
+var dest = './build';
 
 var publicDir = {
-  img: '/public/img/',
-  css: '/public/css/',
-  less: '/public/less/',
-  js:  '/public/js/',
-  views: '/public/views/'
+  imgs:   '/public/imgs/',
+  less:   '/public/less/',
+  static: '/public/index.html',
+  js:     '/public/scripts',
+  jsx:    ['/public/components', '/public/main.jsx']
 }
 
 //Vendor path var
@@ -29,37 +34,68 @@ var bowerDir = curr + '/public/libs/';
 //BEFORE File type collected vars
 var appFiles = {
   vendor:   [bowerDir + 'jquery/dist/*.min.js', bowerDir + '**/*.min.js'],
-  js:       curr + publicDir.js + '**/*.js',
-  combinedjs: ["./public/libs/jquery/dist/*.min.js","./public/libs/**/*.min.js", "./public/js/**/*.js"],
-  css:      bowerDir + '**/*.min.css',
+  routes:   'routes/**/*.js',
+  js:       ['./config/**/*.js', 'routes/**/*.js', 'models/**/*.js', 'public/**/*.js', 'test/**/*.js'],
   less:     'public/less/*.less',
   misc:     [curr + '/app/**', curr + '/config/**'],
   server:   './server.js',
-  views:    './public/views/**/*.html',
-  jade:     [!curr + 'public/index.jade', curr + 'public/views/**/*.jade']
 };
 
 // TASKS ========================================================================
 
 gulp.task('clean', function(){
-  return gulp.src(dest + '/public/', {read: false}).pipe(clean());
+  console.log('CLEANING');
+  return gulp.src(dest, {read: false})
+      .pipe(clean())
+      .pipe(gulp.dest(dest))
+});
+
+gulp.task('copy', function(){
+  console.log('MOVING INDEX');
+  return gulp.src('./public/index.html')
+          .pipe(gulp.dest(dest))
 });
 
 gulp.task('lessify', function(){
-  return gulp.src('./public/less/main.less')
-    .pipe(lessify())
+  console.log('LESSIFYING');
+  return gulp.src('./public/less/*.less')
+    .pipe(lessify().on('error', util.log))
     .pipe(minifyCss())
-    .pipe(gulp.dest('./public/css/'))
+    .pipe(gulp.dest(dest))
+});
+
+gulp.task('bundleit', function(){
+  console.log('BUNDLING');
+  return gulp.src('public/main.jsx')
+      .pipe(webpack({
+        watch: true,
+        output: {
+          filename: 'bundle.js'
+        },
+        module: {
+          loaders: [
+            {
+              test: /.jsx?$/,
+              loader: ['babel-loader'],
+              exclude: /node_modules/,
+              query: {
+                presets: ['es2015', 'react']
+              }
+            }
+          ]
+        }
+      }))
+      .pipe(gulp.dest(dest))
 });
 
 gulp.task('jshint', function(){
-  gulp.src([appFiles.server, './public/js/**/*.js']) //only js files, server
+  gulp.src(appFiles.js)
       .pipe(jshint())
-      .pipe(jshint.reporter('default'));
-  gulp.src(appFiles.misc)
-      .pipe(jshint())
-      .pipe(jshint.reporter('default'));
-});
+      .pipe(jshint.reporter('default'))
+  gulp.src(publicDir.jsx)
+      .pipe(jshint({ linter: require('jshint-jsx').JSXHINT }))
+      .pipe(jshint.reporter('default'))
+})
 
 gulp.task('start', function () {
   nodemon({
@@ -69,19 +105,20 @@ gulp.task('start', function () {
 })
 
 gulp.task('watch', function() {
+  livereload.listen();
   gulp.watch('./public/less/*.less', ['lessify', 'start'])
   gulp.watch('./public/js/**', ['jshint', 'start']);
-  gulp.watch('.app/**/*.js', ['jshint', 'start']);
+  gulp.watch(appFiles.js, ['jshint', 'start']);
+  gulp.watch('./public/index.html', ['copy', 'start']);
 });
 
-gulp.task('concat', function() {
-  gulp.src(appFiles.combinedjs)// + ',' + appFiles.vendor)
-    .pipe(concat('only.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('./dist/public/js/'));
-});
+// gulp.task('concat', function() {
+//   gulp.src(appFiles.combinedjs)// + ',' + appFiles.vendor)
+//     .pipe(concat('only.js'))
+//     .pipe(uglify())
+//     .pipe(gulp.dest('./dist/public/js/'));
+// });
 
 
-gulp.task('default', ['jshint', 'clean', 'lessify', 'start', 'watch']);
+gulp.task('default', ['lessify', 'copy', 'bundleit', 'jshint', 'start', 'watch']);
 gulp.task('produce', ['lessify', 'start'])
-

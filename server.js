@@ -12,7 +12,6 @@ var passport         = require('passport')
     , OAuth2Strategy = require('passport-oauth').OAuth2Strategy
 // var jwt            = require('express-jwt');
 
-
 //// configuration ===========================================
 console.log(process.env.NODE_ENV + ' :::: Environment');
 
@@ -23,6 +22,7 @@ console.log('DB: ' + db.url);
 // set our port
 var port = process.env.PORT || 5447;
 
+var localhost = 'http://localhost:' + port
 // connect to mongoDB database
 mongoose.connect(db.url);
 
@@ -40,11 +40,8 @@ mongoose.connect(db.url);
 //   }
 // ))
 
-console.log('LOOK AT MEEEEEE');
-console.log('http://localhost:' + port);
-
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '/*/');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
@@ -55,8 +52,8 @@ app.use((req, res, next) => {
 // app.set('view engine', 'html');
 // // get all data/stuff of the body (POST) parameters
 // // // parse application/json
+app.use(express.static(__dirname + '/build'));
 
-app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 // app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -74,14 +71,10 @@ app.use(methodOverride('X-HTTP-Method-Override'));
 app.use('/api', authRouter)
 app.use('/api', userRouter)
 app.use('/api', eventRouter)
-// app.use(express.static(__dirname + '/build'));
-app.on('listening', function(){
+
+app.on('listening', () => {
   console.log('ok, server is running')
 })
-
-// app.get('/', function(req, res) {
-//   res.sendfile('./public/index.html')
-// })
 
 app.listen(port)
 
