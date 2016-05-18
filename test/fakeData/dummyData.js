@@ -30,11 +30,12 @@ var User = function(){
   this.interests  = genRandSelectArray(interests, 5),
   this.pic        = Faker.image.avatar(),
   this.created_at = Faker.date.past().toString(),
-  this.rating     = genRandNum(10)
+  this.rating     = genRandNum(10),
+  this.neighborhoods = genRandSelectArray(hoods, 2)
 }
 
 // NUMBER OF USERS 300
-for (var i = 1; i < 300; i++){
+for (var i = 1; i < 200; i++){
   finalArr.push(new User())
 }
 
