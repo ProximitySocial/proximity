@@ -1,13 +1,10 @@
 const express = require('express')
-// const jsonParser = require('body-parser').json()
 const User = require(__dirname + '/../models/user')
 const Event = require(__dirname + '/../models/event')
 const eventRouter = module.exports = exports = express.Router()
 const http = require('http')
 const callGoogle = require('../public/libs/googleLocation')
-
-// const Promise = require('promise');
-// const requestProxy  = require('express-request-proxy')
+const getAndSendUserLocalEvents = require('../public/libs/getEventsPerUser')
 
 
 //index of events
@@ -19,28 +16,13 @@ eventRouter.get('/events', (req, res) => {
   })
 })
 
-
-//EVENTS specific to User's neighborhood
+//Get events, sorted by time per user specified neighborhoods
 eventRouter.get('/events/:userId', (req, res) => {
+  console.log('Events per USER has been requested')
   var userId = req.params.userId
-  var events;
-  User.find({_id: userId}, {neighborhoods: true}, (err, data) => {
-    if (err) return res.status(500).json({msg: 'Server Error'})
-    console.log(data)
-    data.forEach((hood, index) => {
-      Event.find({neighborhood: hood}, (err, arrayOfObjects) => {
-        if (err) return res.status(500).json({msg: 'Server Error'})
-        if (index == 1){
-          events.concat(arrayOfObjects)
-        } else {
-          events = arrayOfObjects
-        }
-      })
-    })
-    console.log(events)
-    res.status(200).json(events)
-  })
+  getAndSendUserLocalEvents(userId, res)
 })
+
   //create new event
 eventRouter.post('/event/new', (req, res) => {
   //add _creator from User _id
@@ -53,10 +35,6 @@ eventRouter.post('/event/new', (req, res) => {
       eventData.locationData = data
       console.log(eventData)
       new Event(eventData).save((err, result) => {
-        console.log('^^^^^^^^^^^^^')
-        console.log('^^^^^^^^^^^^^')
-        console.log('^^^^^^^^^^^^^')
-        // console.log(result)
         res.status(200).json({msg: 'event created', data: result})
       })
     })
@@ -110,7 +88,7 @@ eventRouter.put('/event/:id', (req, res) => {
 })
 
 //add attendee
-//body must contain {"userId": "494934930300030303"}, so that Event $addToSet make
+//body must contain {"userId": "494934930300030303"}, so that Event $addToSet will add user to _attendees array
 eventRouter.put('/event/:id/join', (req, res) => {
   var userId = req.body.userId
   Event.update({_id: req.params.id}, {$addToSet: {_attendees: userId}}, (err, result) => {
