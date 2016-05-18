@@ -1,15 +1,15 @@
-const mongoose       = require('mongoose')
-    , path           = require('path')
-    , express        = require('express')
-    , app            = express()
-    , bodyParser     = require('body-parser')
-    , methodOverride = require('method-override')
-    , userRouter     = require(__dirname + '/routes/user_routes')
-    , eventRouter    = require(__dirname + '/routes/event_routes')
-    , authRouter    = require(__dirname + '/routes/auth_routes')
+const mongoose         = require('mongoose')
+    , path             = require('path')
+    , express          = require('express')
+    , app              = express()
+    , bodyParser       = require('body-parser')
+    , methodOverride   = require('method-override')
+    , userRouter       = require(__dirname + '/routes/user_routes')
+    , eventRouter      = require(__dirname + '/routes/event_routes')
+    , authRouter       = require(__dirname + '/routes/auth_routes')
 
-var passport         = require('passport')
-    , OAuth2Strategy = require('passport-oauth').OAuth2Strategy
+var   passport         = require('passport')
+    , FacebookStrategy = require('passport-facebook').Strategy
 // var jwt            = require('express-jwt');
 const User = require(__dirname + '/models/user')
 //// configuration ===========================================
@@ -26,9 +26,9 @@ var localhost = 'http://localhost:' + port
 // connect to mongoDB database
 mongoose.connect(db.url);
 
-passport.use('facebook', new OAuth2Strategy({
-  authorizationURL: 'https://graph.facebook.com/oauth/authorize', // facebook authURL
-  tokenURL: 'https://graph.facebook.com/oauth/access_token/',  // from facebook
+passport.use('facebook', new FacebookStrategy({
+  // authorizationURL: 'https://graph.facebook.com/oauth/authorize', // facebook authURL
+  // tokenURL: 'https://graph.facebook.com/oauth/access_token/',  // from facebook
   clientID: process.env.PROXIMITY_FB_ID,
   clientSecret: process.env.PROXIMITY_FB_SECRET,
   callbackURL: 'http://localhost:2323/api/auth/facebook/callback/'
@@ -49,12 +49,11 @@ function(accessToken, refreshToken, profile, done) {
             //No user was found... so create a new user with values from Facebook (all the profile. stuff)
             if (!user) {
                 user = new User({
-                    name: profile.displayName,
-                    email: profile.emails[0].value,
-                    username: profile.username,
-                    provider: 'facebook',
+                    firstName: profile.displayName,
+                    email: profile.email,
+                    provider: 'facebook'
                     //now in the future searching on User.findOne({'facebook.id': profile.id } will match because of this next line
-                    facebook: profile._json
+                    // facebook: profile._json
                 });
                 user.save(function(err) {
                     if (err) console.log(err);

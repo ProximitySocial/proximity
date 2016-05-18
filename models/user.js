@@ -10,7 +10,7 @@ function interestsLimit(val) {
 
 var userSchema = new mongoose.Schema({
     firstName:     {type: String, required: true},
-    lastName:      {type: String, minlength: 1},
+    lastName:      {type: String},
     email:         {type: String, required: true},
     bio:           {type: String},
     interests:     {type: Array,
@@ -24,4 +24,3 @@ var userSchema = new mongoose.Schema({
 })
 
 module.exports = exports = mongoose.model('User', userSchema)
-
