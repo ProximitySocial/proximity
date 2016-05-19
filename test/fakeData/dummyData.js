@@ -3,7 +3,30 @@
 const Faker = require('faker')
 const hoods = ['Belltown', 'Queen Anne', 'Capitol Hill']
 const interests = ['golf', 'running', 'stretching', 'cooking', 'coding', 'lifting', 'drivingRange', 'talking', 'happyHour']
-var finalArr = []
+var finalArr = [
+{
+  "firstName":     "Imran",
+  "lastName":      "Aziz",
+  "email":         "imranaz@outlook.com",
+  "bio":           "Squash, golf and Viva City!",
+  "interests":     ["golf", "squash", "coding", "hiking", "happyhour"],
+  "neighborhoods": ["Belltown", "Queene Anne"],
+  "pic":          "https://yt3.ggpht.com/-0r-nSv_ZL24/AAAAAAAAAAI/AAAAAAAAAAA/uR3A4pGOlB4/s900-c-k-no-rj-c0xffffff/photo.jpg",
+  "rating":        5,
+  "_favorites":    []
+},
+{
+  "firstName":     "Brian",
+  "lastName":      "Ray",
+  "email":         "bray213@gmail.com",
+  "bio":           "VivaCity! Abundance and the moment are my games....get some!",
+  "interests":     ["golf", "business", "coding", "sailing", "happyhour"],
+  "neighborhoods": ["Belltown", "Capitol Hill"],
+  "pic":          "http://www.brianray.com/index.php/photos",
+  "rating":        5,
+  "_favorites":    []
+},
+]
 
 function genRandNum(limit) {
   return Math.floor(Math.random() * limit)
