@@ -5,13 +5,15 @@ const eventRouter = module.exports = exports = express.Router()
 const http = require('http')
 const callGoogle = require('../public/libs/googleLocation')
 const getAndSendUserLocalEvents = require('../public/libs/getEventsPerUser')
+const passport = require('../config/passport')
 
 
 //index of events
-eventRouter.get('/events', (req, res) => {
+eventRouter.get('/events', passport.authenticate('facebook'), (req, res) => {
   console.log('request for ALL events')
+  console.log(req)
   Event.find({}, (err, result) => {
-    if (err || results === null) return res.status(500).json({msg: 'Server Error'})
+    if (err || result === null) return res.status(500).json({msg: 'Server Error'})
     res.status(200).json(result)
   })
 })
