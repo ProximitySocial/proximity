@@ -9,7 +9,7 @@ const mongoose       = require('mongoose')
     , authRouter    = require(__dirname + '/routes/auth_routes')
 
 var passport         = require('passport')
-    , OAuth2Strategy = require('passport-oauth').OAuth2Strategy
+    // , OAuth2Strategy = require('passport-oauth').OAuth2Strategy
 // var jwt            = require('express-jwt');
 
 //// configuration ===========================================

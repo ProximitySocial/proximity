@@ -3,6 +3,25 @@ const express = require('express')
 const User = require(__dirname + '/../models/user')
 const Event = require(__dirname + '/../models/event')
 const userRouter = module.exports = exports = express.Router()
+const getS3SignedUrl = require('../config/aws')
+
+function findOrCreateUser(userData, res){
+  User.find({email: userData.email}, (err, data) => {
+    if (err) return res.status(500).json({msg: 'Server Error'})
+    if (data.length) {
+      console.log('no data found')
+      res.status(400).json({msg: 'User already exists, or bad request'})
+    } else {
+      new User(userData).save((err, result) => {
+        if(err) {return res.status(500).json({error: err})}
+        console.log('here it is in the events route')
+        console.log(userData);
+        var signedRequest = userData.awsData
+        res.status(200).json({msg: 'user created says I', signedRequest: signedRequest, url: result.pic})
+      })
+    }
+  })
+}
 
 userRouter.get('/users', (req, res) => {
   User.find({}, (err, result) => {
@@ -14,20 +33,14 @@ userRouter.get('/users', (req, res) => {
 userRouter.post('/user/new', (req, res) => {
   var userData = req.body
   console.log(userData)
-  User.find({email: req.body.email}, (err, data) => {
-    if (err) return res.status(500).json({msg: 'Server Error'})
-    if (data.length) {
-      console.log('no data found')
-      res.status(400).json({msg: 'User already exists'})
-    } else {
-      new User(userData).save((err, result) => {
-        console.log('here it is in the events route')
-        if(err) {return res.status(500).json({error: err})}
-        console.log(result)
-        res.status(200).json({msg: 'user created'})
-      })
-    }
-  })
+  if(userData.fileName && userData.fileType){
+    console.log('going to AWS for S3 signed URL')
+    getS3SignedUrl(userData, res, findOrCreateUser)
+  }
+  else {
+    console.log('No fileName or no fileType on the formData')
+    findOrCreateUser(userData, res)
+  }
 })
 
 userRouter.get('/user/:id', (req, res) => {

@@ -13,7 +13,7 @@ const UpdateUserForm = require(__dirname + '/components/user_update.jsx')
 
 
 // for testing purposes
-var userId = "573373c18026b52b5f052ea0"
+var userId = "573c10e075e9137b3f148ffa"
 var userUrl = "/api/user/" + userId
 var eventId = "573ba9c094a5424e3fc77b51"
 var eventUrl = "/api/event/" + eventId

@@ -25,4 +25,4 @@ function callGoogle(address, callback){
   })
 }
 
-module.exports = callGoogle
+module.exports = exports = callGoogle

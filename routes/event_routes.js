@@ -5,6 +5,7 @@ const eventRouter = module.exports = exports = express.Router()
 const http = require('http')
 const callGoogle = require('../public/libs/googleLocation')
 const getAndSendUserLocalEvents = require('../public/libs/getEventsPerUser')
+const getS3SignedUrl = require('../config/aws')
 
 
 //index of events

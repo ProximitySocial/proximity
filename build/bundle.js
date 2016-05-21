@@ -60,7 +60,7 @@
 	var UpdateUserForm = __webpack_require__(174);
 
 	// for testing purposes
-	var userId = "573373c18026b52b5f052ea0";
+	var userId = "573c10e075e9137b3f148ffa";
 	var userUrl = "/api/user/" + userId;
 	var eventId = "573ba9c094a5424e3fc77b51";
 	var eventUrl = "/api/event/" + eventId;
@@ -20629,18 +20629,25 @@
 /* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(33);
+	var port = process.env.PORT;
 
 	module.exports = React.createClass({
 	  displayName: 'CreateUserForm',
 	  getInitialState: function getInitialState() {
 	    return {
-	      firstName: '',
-	      lastName: '',
-	      email: '' };
+	      firstName: 'Brian',
+	      lastName: 'RayTEST',
+	      email: 'bray@gmail.com',
+	      file: '',
+	      imagePreviewUrl: '',
+	      fileName: '',
+	      fileType: '',
+	      picUrl: ''
+	    };
 	  },
 	  handleFirstChange: function handleFirstChange(e) {
 	    console.log('First Name ' + e.target.value);
@@ -20654,29 +20661,109 @@
 	    console.log('Email ' + e.target.value);
 	    this.setState({ email: e.target.value });
 	  },
+	  handleImageChange: function handleImageChange(e) {
+	    var _this = this;
+
+	    e.preventDefault();
+	    var reader = new FileReader();
+	    var fileUrl = e.target.files[0];
+	    console.log(fileUrl);
+
+	    reader.onloadend = function () {
+	      _this.setState({
+	        file: fileUrl,
+	        imagePreviewUrl: reader.result
+	      });
+	    };
+	    reader.readAsDataURL(fileUrl);
+	  },
+	  loadToS3: function loadToS3(signedRequest, done) {
+	    console.log('send off to S3');
+	    console.log(signedRequest);
+	    // var xhr = new XMLHttpRequest()
+	    // xhr.open("PUT", signedRequest)
+	    // xhr.setRequestHeader('x-amz-acl', 'public-read')
+	    // xhr.onload = function() {
+	    //   if (xhr.status === 200) {
+	    //     done()
+	    //   }
+	    // }
+
+	    // xhr.send(this.state.file)
+	    $.ajax({
+	      type: 'PUT',
+	      url: signedRequest,
+	      headers: { "x-amz-acl": "public-read",
+	        "Access-Control-Allow-Origin": "http://localhost:6060" },
+	      data: this.state.file,
+	      success: function success(data) {
+	        console.log(data);
+	        console.log('Success from S3');
+	      },
+	      error: function error(data, status, xhr) {
+	        console.log('Failure from S3');
+	        console.log(data);
+	        console.log(status);
+	        console.log(xhr);
+	      }
+
+	    });
+	  },
+	  srcImage: function srcImage(e) {
+	    console.log('trying to source image');
+	    var title = this.state.title.trim();
+	    var arr = title.split(' ');
+	    var length = arr.length;
+	    var query = arr.join('+');
+	    console.log(query);
+	    $.ajax({
+	      type: 'GET',
+	      url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
+	      dataType: 'application/json',
+	      success: function success(data) {
+	        console.log(data);
+	      },
+	      error: function error(data, status, xhr) {
+	        console.log(data);
+	        console.log(status);
+	        console.log(xhr);
+	      }
+
+	    });
+	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
 	    var firstName = this.state.firstName.trim();
 	    var lastName = this.state.lastName.trim();
 	    var email = this.state.email.trim();
-	    // var picture = this.state.file
+	    if (!this.state.picUrl) {
+	      // console.log('^^^^^^^^ here with no picUrl ... handle submit')
+	      var fileName = this.state.file.name;
+	      var fileType = this.state.file.type;
+	    } else {
+	      var picture = this.state.picUrl.trim();
+	    }
 	    if (!firstName || !lastName || !email) return;
 	    this.onFormSubmit({
 	      firstName: firstName,
 	      lastName: lastName,
-	      email: email
-	    });
-	    this.setState({ firstName: '', lastName: '', email: '' });
+	      email: email,
+	      pic: picture,
+	      fileName: fileName,
+	      fileType: fileType
+	    }, this.loadToS3);
+	    this.setState({ firstName: '', lastName: '', email: '', fileName: '', fileType: '', file: '' });
 	  },
-	  onFormSubmit: function onFormSubmit(newUser) {
+	  onFormSubmit: function onFormSubmit(newUser, callback) {
 	    $.ajax({
 	      type: 'POST',
-	      url: 'http://localhost:5447/api/user/new',
+	      url: 'https://proximitysocial.herokuapp.com/api/user/new',
 	      data: JSON.stringify(newUser),
 	      contentType: 'application/json',
 	      success: function success(data) {
 	        console.log(data);
-	        console.log('SUCCESS');
+	        console.log('SUCCESS for uploading data...now S3 upload');
+	        callback(data.signedRequest);
 	      },
 	      error: function error(data, status, jqXHR) {
 	        console.log(data);
@@ -20716,6 +20803,22 @@
 	        ),
 	        React.createElement('input', { type: 'text', placeholder: 'Email', value: this.state.email, onChange: this.handleEmailChange }),
 	        React.createElement(
+	          'label',
+	          { 'for': 'Image' },
+	          'Image:'
+	        ),
+	        React.createElement(
+	          'button',
+	          { type: 'submit', onClick: this.srcImg },
+	          'Google Image'
+	        ),
+	        React.createElement('input', { type: 'file', onChange: this.handleImageChange }),
+	        React.createElement(
+	          'button',
+	          { type: 'submit', onClick: this.handleSubmit },
+	          'Create Event!'
+	        ),
+	        React.createElement(
 	          'button',
 	          { type: 'submit' },
 	          'Create User!'
@@ -20724,6 +20827,7 @@
 	    );
 	  }
 	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
 /* 173 */
