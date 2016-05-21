@@ -13,7 +13,8 @@ module.exports = React.createClass({
                 imagePreviewUrl: '',
                 fileName: '',
                 fileType: '',
-                picUrl: ''
+                picUrl: '',
+                fileSize: ''
               });
       },
       handleFirstChange: function(e) {
@@ -31,48 +32,52 @@ module.exports = React.createClass({
       handleImageChange: function(e){
         e.preventDefault();
         let reader = new FileReader()
-        let fileUrl = e.target.files[0]
-        console.log(fileUrl)
+        let file = e.target.files[0]
+        console.log('here is the mark ^^^^^^^^^')
+        console.log(file)
 
         reader.onloadend = () => {
           this.setState({
-            file: fileUrl,
-            imagePreviewUrl: reader.result
+            file: file,
+            imagePreviewUrl: reader.result,
           })
         }
-        reader.readAsDataURL(fileUrl)
+        reader.readAsDataURL(file)
       },
       loadToS3: function(signedRequest, done){
         console.log('send off to S3')
         console.log(signedRequest)
-        // var xhr = new XMLHttpRequest()
-        // xhr.open("PUT", signedRequest)
-        // xhr.setRequestHeader('x-amz-acl', 'public-read')
-        // xhr.onload = function() {
-        //   if (xhr.status === 200) {
-        //     done()
-        //   }
-        // }
-
-        // xhr.send(this.state.file)
-        $.ajax({
-          type: 'PUT',
-          url: signedRequest,
-          headers: {"x-amz-acl": "public-read",
-                    "Access-Control-Allow-Origin": "http://localhost:6060"},
-          data: this.state.file,
-          success: (data) => {
-            console.log(data);
-            console.log('Success from S3')
-          },
-          error: (data, status, xhr) => {
-            console.log('Failure from S3')
-            console.log(data)
-            console.log(status)
-            console.log(xhr)
+        var xhr = new XMLHttpRequest()
+        xhr.open("PUT", signedRequest)
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            console.log("SUCCESSSSSSSSSSSS")
+            done()
           }
+        }
+        console.log('file here')
 
-        })
+        xhr.send(this.state.file)
+        // $.ajax({
+        //   type: 'PUT',
+        //   url: signedRequest,
+        //   processData: false,
+        //   data: this.state.file,
+        //   success: (data) => {
+        //     console.log(data);
+        //     console.log('Success from S3')
+        //     this.setState({
+        //       file: ''
+        //     })
+        //   },
+        //   error: (data, status, xhr) => {
+        //     console.log('Failure from S3')
+        //     console.log(data)
+        //     console.log(status)
+        //     console.log(xhr)
+        //   }
+
+        // })
 
       },
       srcImage: function(e){
@@ -85,7 +90,6 @@ module.exports = React.createClass({
         $.ajax({
           type: 'GET',
           url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
-          dataType: 'application/json',
           success: (data) => {
             console.log(data);
           },
@@ -106,6 +110,7 @@ module.exports = React.createClass({
           // console.log('^^^^^^^^ here with no picUrl ... handle submit')
           var fileName = this.state.file.name
           var fileType = this.state.file.type
+          var fileSize = this.state.file.size
         } else {
           var picture = this.state.picUrl.trim()
         }
@@ -116,14 +121,15 @@ module.exports = React.createClass({
            email: email,
            pic: picture,
            fileName: fileName,
-           fileType: fileType
+           fileType: fileType,
+           fileSize: fileSize
         }, this.loadToS3);
-        this.setState({firstName: '', lastName: '', email: '', fileName: '', fileType: '', file: ''});
+        this.setState({firstName: '', lastName: '', email: ''});
       },
       onFormSubmit: function(newUser, callback) {
         $.ajax({
           type: 'POST',
-          url: 'https://proximitysocial.herokuapp.com/api/user/new',
+          url: '/api/user/new',
           data: JSON.stringify(newUser),
           contentType: 'application/json',
           success: function(data){
@@ -139,6 +145,11 @@ module.exports = React.createClass({
         })
       },
       render: function() {
+        let {imagePreviewUrl} = this.state
+        let $imagePreview = null;
+        if (imagePreviewUrl) {
+          $imagePreview = (<img src={imagePreviewUrl} />)
+        }
         return (
           <div>
             <h2>Create User</h2>
@@ -150,11 +161,11 @@ module.exports = React.createClass({
               <label for="email">Email:</label>
               <input type="text" placeholder="Email" value={this.state.email} onChange={this.handleEmailChange} />
               <label for="Image">Image:</label>
-              <button type="submit" onClick={this.srcImg}>Google Image</button>
               <input type="file" onChange={this.handleImageChange} />
-              <button type="submit" onClick={this.handleSubmit}>Create Event!</button>
               <button type="submit">Create User!</button>
             </form>
+            {$imagePreview}
+            Above should be the preview
           </div>
         );
       }
