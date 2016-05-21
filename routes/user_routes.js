@@ -17,7 +17,7 @@ userRouter.post('/user/new', (req, res) => {
   User.find({email: req.body.email}, (err, data) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     if (data.length) {
-      console.log('no data found')
+      console.log('data already there, found')
       res.status(400).json({msg: 'User already exists'})
     } else {
       new User(userData).save((err, result) => {

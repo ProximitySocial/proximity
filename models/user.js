@@ -20,6 +20,8 @@ var userSchema = new mongoose.Schema({
     pic:           {type: String},
     rating:        {type: Number},
     _favorites:    {type: Array},
+    provider:      {type: String},
+    facebook:      {type: Object},
     created_at:    {type: Date, required: true, default: Date.now }
 })
 
