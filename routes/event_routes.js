@@ -9,9 +9,9 @@ const passport = require('../config/passport')
 
 
 //index of events
-eventRouter.get('/events', passport.authenticate('facebook'), (req, res) => {
+eventRouter.get('/events', (req, res) => {
   console.log('request for ALL events')
-  console.log(req)
+  // console.log(req)
   Event.find({}, (err, result) => {
     if (err || result === null) return res.status(500).json({msg: 'Server Error'})
     res.status(200).json(result)
@@ -37,7 +37,7 @@ eventRouter.post('/event/new', (req, res) => {
       eventData.locationData = data
       console.log(eventData)
       new Event(eventData).save((err, result) => {
-        if (err || results === null) return res.status(500).json({msg: 'Server Error'})
+        if (err || result === null) return res.status(500).json({msg: 'Server Error'})
         res.status(200).json({msg: 'event created', data: result})
       })
     })
@@ -58,6 +58,7 @@ eventRouter.get('/event/:id', (req, res) => {
 //update event  AUTH creator
 eventRouter.put('/event/:id', (req, res) => {
   console.log('SERVER UPDATE EVENT ROUTE');
+  console.log(req.body);
   //auth for creator
   var newData = req.body
   // delete newData._creator
@@ -70,7 +71,7 @@ eventRouter.put('/event/:id', (req, res) => {
       newData.locationData = data
       Event.update({_id: req.params.id}, newData, (err, result) => {
         if (err) return res.status(500).json({msg: 'Server Error'})
-        res.status(200).json({msg: 'Successfully updated event'})
+        res.status(200).json({msg: 'Successfully updated event', result: result})
       })
     })
     .catch((err) => {

@@ -25,14 +25,12 @@ var db = require('./config/db');
 console.log('DB: ' + db.url);
 
 // set our port
-var port = process.env.PORT || 5447;
+var port = process.env.PORT || 2323;
 
 var localhost = 'http://localhost:' + port
+
 // connect to mongoDB database
 mongoose.connect(db.url);
-
-
-
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -41,19 +39,16 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // // SET VIEW ENGINE.....could be JADE
 // app.set('view engine', 'html');
 
 app.use(express.static(__dirname + '/build'));
-
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(passport.initialize())
 app.use(passport.session())
-
 
 app.use('/api', authRouter)
 app.use('/api', userRouter)
@@ -71,10 +66,14 @@ app.on('listening', () => {
   console.log('ok, server is running')
 })
 
-app.listen(port)
+// app.listen(port)
 
 // shoutout to the user
 console.log('Magic happens on port ' + port);
 
 // expose app
-exports = module.exports = app;
+// exports = module.exports = app;
+module.exports = exports = (port2, cb) => {
+  return app.listen(port || port2,
+    cb || (() => console.log('Magic happens on port: ' + port)));
+};
