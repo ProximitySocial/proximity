@@ -13,7 +13,7 @@ const UpdateUserForm = require(__dirname + '/components/user_update.jsx')
 
 
 // for testing purposes
-var userId = "573c10e075e9137b3f148ffb"
+var userId = "573ca6f8522a732dff9cb616"
 var userUrl = "/api/user/" + userId
 var eventUrl = "/api/events/" + userId
 // var eventUrl = "http://localhost:6060/api/event/" + eventId
@@ -41,7 +41,7 @@ ReactDOM.render( <DisplayUser url={userUrl}/>, document.getElementById('userProf
 ReactDOM.render( <CreateUserForm />, document.getElementById('userForm'))
 ReactDOM.render( <UpdateUserForm url={userUrl}/>, document.getElementById('userUpdate'))
 
-ReactDOM.render( <EventList />, document.getElementById('eventList'))
+ReactDOM.render( <EventList url={userId}/>, document.getElementById('eventList'))
 
 ReactDOM.render( <CreateEventForm />, document.getElementById('eventForm'))
 ReactDOM.render( <UpdateEventForm url={eventUrl}/>, document.getElementById('eventUpdate'))
