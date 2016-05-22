@@ -34,7 +34,6 @@ eventRouter.post('/event/new', (req, res) => {
     .then((data) => {
       eventData.neighborhood = data.results[0].address_components[2].long_name
       eventData.locationData = data
-      console.log(eventData)
       new Event(eventData).save((err, result) => {
         if (err || results === null) return res.status(500).json({msg: 'Server Error'})
         res.status(200).json({msg: 'event created', data: result})

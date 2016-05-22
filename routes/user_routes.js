@@ -5,7 +5,7 @@ const Event = require(__dirname + '/../models/event')
 const userRouter = module.exports = exports = express.Router()
 const getS3SignedUrl = require('../config/aws')
 
-function findOrCreateUser(userData, res){
+function createUser(userData, res){
   User.find({email: userData.email}, (err, data) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     if (data.length) {
@@ -15,9 +15,8 @@ function findOrCreateUser(userData, res){
       new User(userData).save((err, result) => {
         if(err) {return res.status(500).json({error: err})}
         console.log('here it is in the events route')
-        console.log(userData);
-        var signedRequest = userData.awsData
-        res.status(200).json({msg: 'user created says I', signedRequest: signedRequest, url: result.pic})
+        // var signedRequest = userData.awsData
+        res.status(200).json({msg: 'user created says I', signedRequest: userData.awsData, url: result.pic})
       })
     }
   })
@@ -30,16 +29,22 @@ userRouter.get('/users', (req, res) => {
   })
 })
 
+
 userRouter.post('/user/new', (req, res) => {
   var userData = req.body
   console.log(userData)
   if(userData.fileName && userData.fileType){
     console.log('going to AWS for S3 signed URL')
-    getS3SignedUrl(userData, res, findOrCreateUser)
+    getS3SignedUrl(userData)
+      .then((data) => {
+        createUser(data, res)
+      })
+      .catch((err) => {
+        throw err;
+      })
   }
   else {
-    console.log('No fileName or no fileType on the formData')
-    findOrCreateUser(userData, res)
+    createUser(userData, res)
   }
 })
 
@@ -56,7 +61,6 @@ userRouter.get('/user/:id', (req, res) => {
 userRouter.put('/user/:id', (req, res) => {
   console.log('SERVER UPDATE USER ROUTE')
   var newData = req.body
-  // delete newData._id
   User.update({_id: req.params.id}, {$set: newData}, (err, doc) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     console.log(doc)

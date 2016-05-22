@@ -4,40 +4,29 @@ const AWS_SECRET_KEY = process.env.S3_SECRET_KEY
 const S3_BUCKET = process.env.VC_S3_BUCKET
 
 
-function getS3SignedUrl(userData, res, done){
+function getS3SignedUrl(dataObj, filePath, cb){
   aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY})
   var s3 = new aws.S3()
-  console.log('here is the filesize: ' + userData.fileSize)
   var options = {
     Bucket: S3_BUCKET,
-    Key: userData.fileName,   //// file name
+    Key: filePath + dataObj.fileName,   //// filePath should start and end with '/'  .....example: '/user/:id/pic/'
     Expires: 600,
-    ContentType: userData.fileType,
+    ContentType: dataObj.fileType,
     ACL: 'public-read'
   }
 
-  // return new Promise((resolve,reject) => {
-  //   s3.getSignedUrl('putObject', options, (err, data) => {
-  //     if (err) {
-  //       reject(err)
-  //       return cb(err)
-  //     }
-  //     userData.awsData = data
-  //     userData.pic = 'https://s3.amazonaws.com/' + S3_BUCKET + '/' + userData.fileName
-  //     resolve(userData);
-  //     return cb(null, data)
-  //   });
-  // })
-
-
-  s3.getSignedUrl('putObject', options, (err, data) => {
-    if (err) {
-      console.log('ERROR WITH s3')
-      return res.send('Error with S3')
-    }
-    userData.awsData = data
-    userData.pic = 'https://s3.amazonaws.com/' + S3_BUCKET + '/' + userData.fileName
-    done(userData, res)
+  return new Promise((resolve,reject) => {
+    s3.getSignedUrl('putObject', options, (err, data) => {
+      if (err) {
+        reject(err)
+        return cb(err)
+      }
+      dataObj.awsData = data
+      var index = data.indexOf('?')
+      dataObj.pic = data.slice(0, index)
+      resolve(dataObj);
+      return cb(null, data)
+    });
   })
 }
 

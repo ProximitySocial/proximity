@@ -56,7 +56,20 @@ var finalArr = [{
 "addressName": "Peso's Kitchen and Lounge",
 "_attendees": [],
 "picture": "http://pesoskitchenandlounge.com/media/Pesos-Logo.png"
-}]
+},
+{
+"title": "NBA Wannabes BBall Game",
+"neighborhood": "Belltown",
+"description":  "For those with hoop dreamz",
+"interestTags": ["Basketball"],
+"startTime":   "Sun Jan 31 2016 14:25:51 GMT-0800 (PST)",
+"endTime": "Wed Jun 14 2023 18:25:54 GMT-0700 (PDT)",
+"address": "2343 Jimbo Ave",
+"addressName":  "Jimbo's Gym",
+"_attendees":   [],
+"picture": "http://www.shcp.edu/wp-content/uploads/2015/10/basketball1a4907c298fb.jpg"
+}
+
 
 function genRandNum(limit) {
   return Math.floor(Math.random() * limit)
