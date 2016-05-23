@@ -3,9 +3,11 @@ const User = require(__dirname + '/../models/user')
 const Event = require(__dirname + '/../models/event')
 const eventRouter = module.exports = exports = express.Router()
 const http = require('http')
-const callGoogle = require('../public/libs/googleLocation')
-const getAndSendUserLocalEvents = require('../public/libs/getEventsPerUser')
+const callGoogle = require('../libs/googleLocation')
+const getAndSendUserLocalEvents = require('../libs/getEventsPerUser')
+const getS3SignedUrl = require('../config/aws')
 const passport = require('../config/passport')
+
 
 
 //index of events
@@ -35,7 +37,6 @@ eventRouter.post('/event/new', (req, res) => {
     .then((data) => {
       eventData.neighborhood = data.results[0].address_components[2].long_name
       eventData.locationData = data
-      console.log(eventData)
       new Event(eventData).save((err, result) => {
         if (err || result === null) return res.status(500).json({msg: 'Server Error'})
         res.status(200).json({msg: 'event created', data: result})

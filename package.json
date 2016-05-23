@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "autoprefixer": "^6.3.6",
+    "aws-sdk": "^2.3.13",
     "body-parser": "^1.15.1",
     "cryptojs": "^2.5.3",
     "express": "^4.13.4",

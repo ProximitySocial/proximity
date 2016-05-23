@@ -3,6 +3,8 @@ const express = require('express')
 const User = require(__dirname + '/../models/user')
 const Event = require(__dirname + '/../models/event')
 const userRouter = module.exports = exports = express.Router()
+const getS3SignedUrl = require('../config/aws')
+const createUser = require('../libs/userLib')
 
 userRouter.get('/users', (req, res) => {
   User.find({}, (err, result) => {
@@ -11,23 +13,20 @@ userRouter.get('/users', (req, res) => {
   })
 })
 
+
 userRouter.post('/user/new', (req, res) => {
+  console.log('NEW POST for a user')
   var userData = req.body
-  console.log(userData)
-  User.find({email: req.body.email}, (err, data) => {
-    if (err) return res.status(500).json({msg: 'Server Error'})
-    if (data.length) {
-      console.log('data already there, found')
-      res.status(400).json({msg: 'User already exists'})
-    } else {
-      new User(userData).save((err, result) => {
-        console.log('here it is in the events route')
-        if(err) {return res.status(500).json({error: err})}
-        console.log(result)
-        res.status(200).json({msg: 'user created'})
+  if(userData.fileName && userData.fileType){
+    getS3SignedUrl(userData)
+      .then((data) => {
+        createUser(data, res)
+      }).catch((err) => {
+        throw err;
       })
-    }
-  })
+  } else {
+    createUser(userData, res)
+  }
 })
 
 userRouter.get('/user/:id', (req, res) => {
@@ -43,7 +42,6 @@ userRouter.get('/user/:id', (req, res) => {
 userRouter.put('/user/:id', (req, res) => {
   console.log('SERVER UPDATE USER ROUTE')
   var newData = req.body
-  // delete newData._id
   User.update({_id: req.params.id}, {$set: newData}, (err, doc) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     console.log(doc)

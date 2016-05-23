@@ -10,12 +10,3 @@ authRouter.get('/auth/facebook', passport.authenticate('facebook', {scope: 'emai
 authRouter.get('/auth/facebook/callback',
   passport.authenticate('facebook', { successRedirect: '/',
                                       failureRedirect: '/login' }))
-
-
-
-
-
-//   passport.authenticate('facebook', {
-//   successRedirect: '/',
-//   failureRedirect: '/login'
-// }))

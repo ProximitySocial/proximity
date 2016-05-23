@@ -10,11 +10,6 @@ const mongoose       = require('mongoose')
 
 const User           = require(__dirname + '/models/user')
 var passport         = require('passport')
-  , FacebookStrategy = require('passport-facebook').Strategy;
-
-
-    // , OAuthStrategy  = require('passport-oauth').OAuthStrategy
-    // , OAuth2Strategy = require('passport-oauth').OAuth2Strategy
 // var jwt            = require('express-jwt');
 
 //// configuration ===========================================

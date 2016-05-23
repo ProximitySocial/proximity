@@ -28,7 +28,6 @@ module.exports = React.createClass({
         e.preventDefault();
         let reader = new FileReader()
         let fileUrl = e.target.files[0]
-        console.log(fileUrl)
 
         reader.onloadend = () => {
           this.setState({
@@ -51,7 +50,6 @@ module.exports = React.createClass({
           dataType: 'application/json',
           success: (data) => {
             console.log(data);
-
           },
           error: (data, status, xhr) => {
             console.log(data)
@@ -86,7 +84,6 @@ module.exports = React.createClass({
           contentType: 'application/json',
           success: function(data){
             console.log(data)
-            console.log('SUCCESS')
           },
           error: function(data, status, jqXHR){
             console.log(data)

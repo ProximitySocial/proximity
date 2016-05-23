@@ -14,13 +14,13 @@ module.exports = React.createClass({
       url: 'http://localhost:2323/api/events/' + this.props.url,
       dataType: 'json',
       cache: false,
-      success: function(data) {
+      success: function(data){
         console.log('Successfully retrieved DATA');
         console.log(data);
         this.setState({events: data.events})
         this.handleEvents(this.state.events)
       }.bind(this),
-      error: function(xhr, status, err) {
+      error: function(xhr, status, err){
         console.error(this.props.url, status, err)
       }.bind(this)
     })

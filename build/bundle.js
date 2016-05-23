@@ -60,7 +60,11 @@
 	var UpdateUserForm = __webpack_require__(174);
 
 	// for testing purposes
+<<<<<<< HEAD
+	var userId = "573c10e075e9137b3f148ffa";
+=======
 	var userId = "573ca6f8522a732dff9cb616";
+>>>>>>> dev
 	var userUrl = "/api/user/" + userId;
 	var eventUrl = "/api/events/" + userId;
 	// var eventUrl = "http://localhost:6060/api/event/" + eventId
@@ -20688,18 +20692,26 @@
 /* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(33);
+	var port = process.env.PORT;
 
 	module.exports = React.createClass({
 	  displayName: 'CreateUserForm',
 	  getInitialState: function getInitialState() {
 	    return {
-	      firstName: '',
-	      lastName: '',
-	      email: '' };
+	      firstName: 'Brian',
+	      lastName: 'RayTEST',
+	      email: 'bray@gmail.com',
+	      file: '',
+	      imagePreviewUrl: '',
+	      fileName: '',
+	      fileType: '',
+	      picUrl: '',
+	      fileSize: ''
+	    };
 	  },
 	  handleFirstChange: function handleFirstChange(e) {
 	    console.log('First Name ' + e.target.value);
@@ -20713,29 +20725,114 @@
 	    console.log('Email ' + e.target.value);
 	    this.setState({ email: e.target.value });
 	  },
+	  handleImageChange: function handleImageChange(e) {
+	    var _this = this;
+
+	    e.preventDefault();
+	    var reader = new FileReader();
+	    var file = e.target.files[0];
+	    console.log('here is the mark ^^^^^^^^^');
+	    console.log(file);
+
+	    reader.onloadend = function () {
+	      _this.setState({
+	        file: file,
+	        imagePreviewUrl: reader.result
+	      });
+	    };
+	    reader.readAsDataURL(file);
+	  },
+	  loadToS3: function loadToS3(signedRequest, done) {
+	    console.log('send off to S3');
+	    console.log(signedRequest);
+	    var xhr = new XMLHttpRequest();
+	    xhr.open("PUT", signedRequest);
+	    xhr.onload = function () {
+	      if (xhr.status === 200) {
+	        console.log("SUCCESSSSSSSSSSSS");
+	        done();
+	      }
+	    };
+	    console.log('file here');
+
+	    xhr.send(this.state.file);
+	    // $.ajax({
+	    //   type: 'PUT',
+	    //   url: signedRequest,
+	    //   processData: false,
+	    //   data: this.state.file,
+	    //   success: (data) => {
+	    //     console.log(data);
+	    //     console.log('Success from S3')
+	    //     this.setState({
+	    //       file: ''
+	    //     })
+	    //   },
+	    //   error: (data, status, xhr) => {
+	    //     console.log('Failure from S3')
+	    //     console.log(data)
+	    //     console.log(status)
+	    //     console.log(xhr)
+	    //   }
+
+	    // })
+	  },
+	  srcImage: function srcImage(e) {
+	    console.log('trying to source image');
+	    var title = this.state.title.trim();
+	    var arr = title.split(' ');
+	    var length = arr.length;
+	    var query = arr.join('+');
+	    console.log(query);
+	    $.ajax({
+	      type: 'GET',
+	      url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
+	      success: function success(data) {
+	        console.log(data);
+	      },
+	      error: function error(data, status, xhr) {
+	        console.log(data);
+	        console.log(status);
+	        console.log(xhr);
+	      }
+
+	    });
+	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
 	    var firstName = this.state.firstName.trim();
 	    var lastName = this.state.lastName.trim();
 	    var email = this.state.email.trim();
-	    // var picture = this.state.file
+	    if (!this.state.picUrl) {
+	      // console.log('^^^^^^^^ here with no picUrl ... handle submit')
+	      var fileName = this.state.file.name;
+	      var fileType = this.state.file.type;
+	      var fileSize = this.state.file.size;
+	    } else {
+	      var picture = this.state.picUrl.trim();
+	    }
 	    if (!firstName || !lastName || !email) return;
 	    this.onFormSubmit({
 	      firstName: firstName,
 	      lastName: lastName,
-	      email: email
-	    });
+	      email: email,
+	      pic: picture,
+	      fileName: fileName,
+	      fileType: fileType,
+	      fileSize: fileSize
+	    }, this.loadToS3);
 	    this.setState({ firstName: '', lastName: '', email: '' });
 	  },
-	  onFormSubmit: function onFormSubmit(newUser) {
+	  onFormSubmit: function onFormSubmit(newUser, callback) {
 	    $.ajax({
 	      type: 'POST',
-	      url: 'http://localhost:5447/api/user/new',
+	      url: '/api/user/new',
 	      data: JSON.stringify(newUser),
 	      contentType: 'application/json',
 	      success: function success(data) {
 	        console.log(data);
-	        console.log('SUCCESS');
+	        console.log('SUCCESS for uploading data...now S3 upload');
+	        callback(data.signedRequest);
 	      },
 	      error: function error(data, status, jqXHR) {
 	        console.log(data);
@@ -20745,6 +20842,12 @@
 	    });
 	  },
 	  render: function render() {
+	    var imagePreviewUrl = this.state.imagePreviewUrl;
+
+	    var $imagePreview = null;
+	    if (imagePreviewUrl) {
+	      $imagePreview = React.createElement('img', { src: imagePreviewUrl });
+	    }
 	    return React.createElement(
 	      'div',
 	      null,
@@ -20775,14 +20878,23 @@
 	        ),
 	        React.createElement('input', { type: 'text', placeholder: 'Email', value: this.state.email, onChange: this.handleEmailChange }),
 	        React.createElement(
+	          'label',
+	          { 'for': 'Image' },
+	          'Image:'
+	        ),
+	        React.createElement('input', { type: 'file', onChange: this.handleImageChange }),
+	        React.createElement(
 	          'button',
 	          { type: 'submit' },
 	          'Create User!'
 	        )
-	      )
+	      ),
+	      $imagePreview,
+	      'Above should be the preview'
 	    );
 	  }
 	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
 /* 173 */
