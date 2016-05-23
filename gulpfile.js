@@ -1,20 +1,21 @@
-var gulp = require('gulp');
-var clean = require('gulp-rimraf');
-var jshint = require('gulp-jshint') || null;
-var packageJSON = require('./package');
-var concat = require('gulp-concat');
-var nodemon = require('gulp-nodemon');
-var livereload = require('gulp-livereload');
-var watch = require('gulp-watch');
-var minifyCss = require('gulp-minify-css');
-var uglify = require('gulp-uglify');
-var lessify = require('gulp-less');
-var webpack = require('webpack-stream');
-var rename = require('gulp-rename');
-var jshintJSX = require('jshint-jsx')
-var util = require('gulp-util');
-// var jadeify = require('gulp-jade');
-var path = require('path');
+const gulp = require('gulp');
+const mocha = require('gulp-mocha');
+const clean = require('gulp-rimraf');
+const jshint = require('gulp-jshint') || null;
+const packageJSON = require('./package');
+const concat = require('gulp-concat');
+const nodemon = require('gulp-nodemon');
+const livereload = require('gulp-livereload');
+const watch = require('gulp-watch');
+const minifyCss = require('gulp-minify-css');
+const uglify = require('gulp-uglify');
+const lessify = require('gulp-less');
+const webpack = require('webpack-stream');
+const rename = require('gulp-rename');
+const jshintJSX = require('jshint-jsx')
+const util = require('gulp-util');
+// const jadeify = require('gulp-jade');
+const path = require('path');
 
 //Path variables
 var curr = '.';
@@ -42,6 +43,11 @@ var appFiles = {
 };
 
 // TASKS ========================================================================
+
+gulp.task('test:server', () => {
+  gulp.src('./test-server/*.js')
+    .pipe(mocha());
+});
 
 gulp.task('clean', function(){
   console.log('CLEANING');

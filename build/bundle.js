@@ -60,10 +60,13 @@
 	var UpdateUserForm = __webpack_require__(174);
 
 	// for testing purposes
+<<<<<<< HEAD
 	var userId = "573c10e075e9137b3f148ffa";
+=======
+	var userId = "573ca6f8522a732dff9cb616";
+>>>>>>> dev
 	var userUrl = "/api/user/" + userId;
-	var eventId = "573ba9c094a5424e3fc77b51";
-	var eventUrl = "/api/event/" + eventId;
+	var eventUrl = "/api/events/" + userId;
 	// var eventUrl = "http://localhost:6060/api/event/" + eventId
 
 	// require('font-awesome/css/font-awesome.css')
@@ -86,7 +89,7 @@
 	ReactDOM.render(React.createElement(CreateUserForm, null), document.getElementById('userForm'));
 	ReactDOM.render(React.createElement(UpdateUserForm, { url: userUrl }), document.getElementById('userUpdate'));
 
-	ReactDOM.render(React.createElement(EventList, null), document.getElementById('eventList'));
+	ReactDOM.render(React.createElement(EventList, { url: userId }), document.getElementById('eventList'));
 
 	ReactDOM.render(React.createElement(CreateEventForm, null), document.getElementById('eventForm'));
 	ReactDOM.render(React.createElement(UpdateEventForm, { url: eventUrl }), document.getElementById('eventUpdate'));
@@ -20203,12 +20206,13 @@
 	  componentDidMount: function componentDidMount() {
 	    $.ajax({
 	      type: 'GET',
-	      url: 'http://localhost:5447/api/events',
+	      url: 'http://localhost:2323/api/events/' + this.props.url,
 	      dataType: 'json',
 	      cache: false,
 	      success: function (data) {
 	        console.log('Successfully retrieved DATA');
-	        this.setState({ events: data });
+	        console.log(data);
+	        this.setState({ events: data.events });
 	        this.handleEvents(this.state.events);
 	      }.bind(this),
 	      error: function (xhr, status, err) {
@@ -20299,6 +20303,7 @@
 	          ),
 	          this.props.event.addressName
 	        ),
+	        '// ',
 	        React.createElement(
 	          'p',
 	          null,
@@ -20308,6 +20313,36 @@
 	            'Starts:'
 	          ),
 	          this.state.timeTill
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          React.createElement(
+	            'strong',
+	            null,
+	            'Starts:'
+	          ),
+	          this.props.event.startTime
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          React.createElement(
+	            'strong',
+	            null,
+	            'Tags:'
+	          ),
+	          this.props.event.interestTags
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          React.createElement(
+	            'strong',
+	            null,
+	            'Neighborhood:'
+	          ),
+	          this.props.event.neighborhood
 	        ),
 	        React.createElement(
 	          'div',
@@ -20355,6 +20390,7 @@
 	        this.setState({ user: data,
 	          lastInitial: data.lastName.charAt(0) });
 	        this.handleInterests(data);
+	        this.handleNeighborhoods(data);
 	      }.bind(this),
 	      error: function (xhr, status, err) {
 	        console.error(this.props.url, status, err.toString());
@@ -20383,6 +20419,23 @@
 	      ));
 	    });
 	    this.setState({ interests: rows });
+	  },
+	  handleNeighborhoods: function handleNeighborhoods(data) {
+	    console.log(data.neighborhoods);
+	    var rows = [];
+	    data.neighborhoods.forEach(function (neighborhood, index) {
+	      rows.push(React.createElement(
+	        'li',
+	        { key: index },
+	        React.createElement(
+	          'a',
+	          null,
+	          '#',
+	          neighborhood
+	        )
+	      ));
+	    });
+	    this.setState({ neighborhoods: rows });
 	  },
 	  render: function render() {
 
@@ -20432,6 +20485,16 @@
 	        'ul',
 	        { className: 'interests' },
 	        this.state.interests
+	      ),
+	      React.createElement(
+	        'h3',
+	        null,
+	        'Neighborhoods:'
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'neighborhoods' },
+	        this.state.neighborhoods
 	      )
 	    );
 	  }

@@ -6,13 +6,16 @@ const http = require('http')
 const callGoogle = require('../libs/googleLocation')
 const getAndSendUserLocalEvents = require('../libs/getEventsPerUser')
 const getS3SignedUrl = require('../config/aws')
+const passport = require('../config/passport')
+
 
 
 //index of events
 eventRouter.get('/events', (req, res) => {
   console.log('request for ALL events')
+  // console.log(req)
   Event.find({}, (err, result) => {
-    if (err || results === null) return res.status(500).json({msg: 'Server Error'})
+    if (err || result === null) return res.status(500).json({msg: 'Server Error'})
     res.status(200).json(result)
   })
 })
@@ -35,7 +38,7 @@ eventRouter.post('/event/new', (req, res) => {
       eventData.neighborhood = data.results[0].address_components[2].long_name
       eventData.locationData = data
       new Event(eventData).save((err, result) => {
-        if (err || results === null) return res.status(500).json({msg: 'Server Error'})
+        if (err || result === null) return res.status(500).json({msg: 'Server Error'})
         res.status(200).json({msg: 'event created', data: result})
       })
     })
@@ -53,9 +56,38 @@ eventRouter.get('/event/:id', (req, res) => {
   })
 })
 
+//get the attendees of a specific event
+eventRouter.get('/event/attendees/:id', (req, res) => {
+
+  console.log('GETTING EVENT ATTENDEES');
+
+  Event.findOne({_id: req.params.id}, {_attendees: true}).exec()
+    .then((result) => {
+      console.log('found event attendees');
+      console.log(result);
+      const attendeePromises = result._attendees.map((attendeeId) => {
+        console.log(attendeeId);
+        const attendeeProm = User.findOne({_id: attendeeId}, 'pic').exec()
+          .catch((err) => {res.status(500).json({msg: 'Error retrieving user'})})
+        return Promise.resolve(attendeeProm)
+      })
+      return Promise.all(attendeePromises);
+    })
+    .then((final) => {
+      console.log(final);
+      res.status(200).json(final);
+    })
+    .catch((err) => {
+      res.status(500).json({msg: 'Error retrieving event'});
+    })
+
+})
+
+
 //update event  AUTH creator
 eventRouter.put('/event/:id', (req, res) => {
   console.log('SERVER UPDATE EVENT ROUTE');
+  console.log(req.body);
   //auth for creator
   var newData = req.body
   // delete newData._creator
@@ -68,7 +100,7 @@ eventRouter.put('/event/:id', (req, res) => {
       newData.locationData = data
       Event.update({_id: req.params.id}, newData, (err, result) => {
         if (err) return res.status(500).json({msg: 'Server Error'})
-        res.status(200).json({msg: 'Successfully updated event'})
+        res.status(200).json({msg: 'Successfully updated event', result: result})
       })
     })
     .catch((err) => {
