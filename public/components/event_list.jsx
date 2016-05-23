@@ -15,7 +15,6 @@ module.exports = React.createClass({
       dataType: 'json',
       cache: false,
       success: function(data) {
-        console.log('Successfully retrieved DATA');
         this.setState({events: data})
         this.handleEvents(this.state.events)
       }.bind(this),

@@ -6,9 +6,9 @@ module.exports = React.createClass({
       displayName: 'CreateUserForm',
       getInitialState: function() {
         return({
-                firstName: 'Brian',
-                lastName: 'RayTEST',
-                email: 'bray@gmail.com',
+                firstName: '',
+                lastName: '',
+                email: '',
                 file: '',
                 imagePreviewUrl: '',
                 fileName: '',
@@ -18,23 +18,18 @@ module.exports = React.createClass({
               });
       },
       handleFirstChange: function(e) {
-        console.log('First Name ' + e.target.value);
         this.setState({firstName: e.target.value});
       },
       handleLastChange: function(e) {
-        console.log('Last Name ' + e.target.value);
         this.setState({lastName: e.target.value});
       },
       handleEmailChange: function(e) {
-        console.log('Email ' + e.target.value);
         this.setState({email: e.target.value});
       },
       handleImageChange: function(e){
         e.preventDefault();
         let reader = new FileReader()
         let file = e.target.files[0]
-        console.log('here is the mark ^^^^^^^^^')
-        console.log(file)
 
         reader.onloadend = () => {
           this.setState({
@@ -46,18 +41,19 @@ module.exports = React.createClass({
       },
       loadToS3: function(signedRequest, done){
         console.log('send off to S3')
-        console.log(signedRequest)
         var xhr = new XMLHttpRequest()
         xhr.open("PUT", signedRequest)
         xhr.onload = function() {
           if (xhr.status === 200) {
-            console.log("SUCCESSSSSSSSSSSS")
             done()
           }
         }
-        console.log('file here')
 
         xhr.send(this.state.file)
+
+        this.setState({
+          file: ''
+        })
         // $.ajax({
         //   type: 'PUT',
         //   url: signedRequest,
@@ -80,6 +76,7 @@ module.exports = React.createClass({
         // })
 
       },
+      //Incomplete....use to source an image from Google
       srcImage: function(e){
         console.log('trying to source image')
         let title = this.state.title.trim()
@@ -107,7 +104,6 @@ module.exports = React.createClass({
         var lastName = this.state.lastName.trim()
         var email = this.state.email.trim()
         if (!this.state.picUrl){
-          // console.log('^^^^^^^^ here with no picUrl ... handle submit')
           var fileName = this.state.file.name
           var fileType = this.state.file.type
           var fileSize = this.state.file.size
@@ -133,8 +129,6 @@ module.exports = React.createClass({
           data: JSON.stringify(newUser),
           contentType: 'application/json',
           success: function(data){
-            console.log(data)
-            console.log('SUCCESS for uploading data...now S3 upload')
             callback(data.signedRequest)
           },
           error: function(data, status, jqXHR){
@@ -165,7 +159,6 @@ module.exports = React.createClass({
               <button type="submit">Create User!</button>
             </form>
             {$imagePreview}
-            Above should be the preview
           </div>
         );
       }

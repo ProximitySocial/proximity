@@ -3,8 +3,8 @@ const User = require(__dirname + '/../models/user')
 const Event = require(__dirname + '/../models/event')
 const eventRouter = module.exports = exports = express.Router()
 const http = require('http')
-const callGoogle = require('../public/libs/googleLocation')
-const getAndSendUserLocalEvents = require('../public/libs/getEventsPerUser')
+const callGoogle = require('../libs/googleLocation')
+const getAndSendUserLocalEvents = require('../libs/getEventsPerUser')
 const getS3SignedUrl = require('../config/aws')
 
 

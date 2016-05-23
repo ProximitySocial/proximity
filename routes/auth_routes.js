@@ -1,5 +1,5 @@
 const express = require('express')
-const passport = require('passport')
+const passport = require('../config/passport')
 // const jsonParser = require('body-parser').json()
 const User = require(__dirname + '/../models/user')
 const Event = require(__dirname + '/../models/event')
