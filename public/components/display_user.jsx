@@ -17,6 +17,7 @@ module.exports = React.createClass({
          this.setState({user:        data,
                         lastInitial: data.lastName.charAt(0)});
          this.handleInterests(data);
+         this.handleNeighborhoods(data);
        }.bind(this),
        error: function(xhr, status, err) {
          console.error(this.props.url, status, err.toString());
@@ -37,6 +38,14 @@ module.exports = React.createClass({
      });
      this.setState({interests: rows});
    },
+   handleNeighborhoods: function(data) {
+     console.log(data.neighborhoods);
+     var rows = [];
+     data.neighborhoods.forEach(function(neighborhood, index) {
+       rows.push(<li key={index}><a>#{neighborhood}</a></li>);
+     });
+     this.setState({neighborhoods: rows});
+   },
    render: function() {
 
      return (
@@ -49,6 +58,10 @@ module.exports = React.createClass({
          <h3>Interests:</h3>
          <ul className="interests">
            {this.state.interests}
+         </ul>
+         <h3>Neighborhoods:</h3>
+         <ul className="neighborhoods">
+           {this.state.neighborhoods}
          </ul>
        </div>
      )

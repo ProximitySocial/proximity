@@ -26,7 +26,10 @@ module.exports = React.createClass({
         </div>
         <div className="eventDetails">
           <p><strong>@ </strong>{this.props.event.addressName}</p>
-          <p><strong>Starts:</strong>{this.state.timeTill}</p>
+          // <p><strong>Starts:</strong>{this.state.timeTill}</p>
+          <p><strong>Starts:</strong>{this.props.event.startTime}</p>
+          <p><strong>Tags:</strong>{this.props.event.interestTags}</p>
+          <p><strong>Neighborhood:</strong>{this.props.event.neighborhood}</p>
           <div className="eventAttCount">
             <h3>{this.props.event._attendees.length}</h3>
             <p>attendees</p>

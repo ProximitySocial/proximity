@@ -66,14 +66,14 @@ app.on('listening', () => {
   console.log('ok, server is running')
 })
 
-// app.listen(port)
+app.listen(port)
 
 // shoutout to the user
 console.log('Magic happens on port ' + port);
 
 // expose app
-// exports = module.exports = app;
-module.exports = exports = (port2, cb) => {
-  return app.listen(port || port2,
-    cb || (() => console.log('Magic happens on port: ' + port)));
-};
+exports = module.exports = app;
+// module.exports = exports = app = (port2, cb) => {
+//   return app.listen(port || port2,
+//     cb || (() => console.log('Magic happens on port: ' + port)));
+// };

@@ -12,15 +12,15 @@ const baseUri = 'localhost:2323';
 
 describe('event routes', () => {
 
-  before((done) => {
-    this.server = server(2323, done);
-  });
+  // before((done) => {
+  //   this.server = server(2323, done);
+  // });
 
   // EVENTUALLY NEED TO ADD BEFORE BLOCK TO HANDLE AUTH OF MOCK USER
 
-  after((done) => {
-    this.server.close(done);
-  });
+  // after((done) => {
+  //   this.server.close(done);
+  // });
 
   after((done) => {
     // necessary so that test DB does not keep growing after each run
