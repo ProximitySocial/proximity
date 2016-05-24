@@ -4,7 +4,7 @@ const Event = require('../models/event')
 
 //get users neighborHood, then call perHoodGetEvents
 function getAndSendUserLocalEvents(userId, res) {
-    User.findOne({_id: userId}, {neighborhoods: true}, (err, data) => {
+    User.findOne({_id: userId}, 'neighborhoods interests', (err, data) => {
       if (err) {return res.status(500).json({msg: 'Server Error'})}
       else if (data === null) res.status(400).json({msg: 'Bad request...user Id likely invalid'})
       else {getEventsPerHood(null, data, res)}
@@ -14,7 +14,8 @@ function getAndSendUserLocalEvents(userId, res) {
 // query DB for the get
 function getEventsPerHood(error, data, res){
     if (error) return console.error('Uhoh, there was an error', err)
-    Event.find({neighborhood: { $in: data.neighborhoods}}, function(err, results){
+    Event.find({neighborhood: { $in: data.neighborhoods},
+      interestTags: { $in: data.interests}}, function(err, results){
       if (err) {return res.status(500).json({msg: 'Server Error'})}
       else { return results }
     })
