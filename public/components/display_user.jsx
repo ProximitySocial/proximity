@@ -4,29 +4,29 @@ var port = process.env.PORT
 
 module.exports = React.createClass({
    getInitialState: function() {
-     return {user: {}}
+     return {user: this.props.user}
    },
-   loadUserFromServer: function() {
-     $.ajax({
-       type: 'GET',
-       url: this.props.url,
-       dataType: 'json',
-       cache: false,
-       success: function(data) {
-         console.log(data.lastName)
-         this.setState({user:        data,
-                        lastInitial: data.lastName.charAt(0)});
-         this.handleInterests(data);
-         this.handleNeighborhoods(data);
-       }.bind(this),
-       error: function(xhr, status, err) {
-         console.error(this.props.url, status, err.toString());
-       }.bind(this)
-     });
-   },
-   componentWillMount: function() {
-      this.loadUserFromServer()
-   },
+   // loadUserFromServer: function() {
+   //   $.ajax({
+   //     type: 'GET',
+   //     url: '',
+   //     dataType: 'json',
+   //     cache: false,
+   //     success: function(data) {
+   //       console.log(data.lastName)
+   //       this.setState({user:        data,
+   //                      lastInitial: data.lastName.charAt(0)});
+   //       this.handleInterests(data);
+   //       this.handleNeighborhoods(data);
+   //     }.bind(this),
+   //     error: function(xhr, status, err) {
+   //       console.error(this.props.url, status, err.toString());
+   //     }.bind(this)
+   //   });
+   // },
+   // componentWillMount: function() {
+      // this.loadUserFromServer()
+   // },
    handleUpdate: function(){
      console.log('make a request to handleUpdate')
    },
