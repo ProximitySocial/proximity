@@ -82,11 +82,11 @@ module.exports = React.createClass({
       },
       onFormSubmit: function(newEvent) {
         if(this.state.eventId){
-          var route = 'http://localhost:6060/api/event/' + this.state.eventId
+          var route = 'http://localhost:2323/api/event/' + this.state.eventId
           var crudType = 'PUT'
         } else {
           var crudType = 'POST'
-          var route = 'http://localhost:6060/api/event/new'
+          var route = 'http://localhost:2323/api/event/new'
         }
         $.ajax({
           type: crudType,

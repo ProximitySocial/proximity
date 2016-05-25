@@ -28,7 +28,7 @@ var localhost = 'http://localhost:' + port
 mongoose.connect(db.url);
 
 app.use((req, res, next) => {
-  // res.header('Access-Control-Allow-Origin', "*");
+  res.header('Access-Control-Allow-Origin', 'http://localhost:2323');
   res.header('Access-Control-Allow-Headers', 'Cache-Control, Pragma, Authorization, Origin, X-Requested-With, Content-Type, Accept');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
@@ -50,13 +50,23 @@ app.use('/api', userRouter)
 app.use('/api', eventRouter)
 
 app.get('/', (req, res) => {
-  if (req.query.access_token){
-    console.log('Access TOKEN found')
-    res.sendfile(__dirname + '/build').status(200)
-  }
-  console.log('no access TOKEN')
-  res.sendfile(__dirname + '/build').status(200)
+  // if (req.query.access_token){
+  //   console.log('Access TOKEN found')
+  //   res.sendfile(__dirname + '/build').status(200)
+  // }
+  // console.log('no access TOKEN')
+  console.log('REDIRECTED AND AUTHENTICATED');
+  console.log(req.query.access_token);
+  res.render(__dirname + '/build.index.html');
 })
+
+// function ensureAuthenticated(req, res, next) {
+//   console.log('INSIDE ENSURE AUTHENTICATED');
+//   console.log(req);
+//   if (req.isAuthenticated()) { return next(); }
+//   res.redirect('/');
+// }
+
 
 app.get('/login', (req, res) => {
   console.log('AT THE LOGIN ROUTE')

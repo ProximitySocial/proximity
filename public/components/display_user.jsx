@@ -4,7 +4,17 @@ var port = process.env.PORT
 
 module.exports = React.createClass({
    getInitialState: function() {
-     return {user: this.props.user}
+     console.log('Getting initial state of display user class');
+     console.log(this.props.user);
+     return ({user: this.props.user})
+   },
+   componentWillReceiveProps: function() {
+     this.setState({
+       user: this.props.user
+     })
+     console.log('Display User state has been set to user');
+     console.log(this.props.user);
+     console.log(this.state.user);
    },
    // loadUserFromServer: function() {
    //   $.ajax({
@@ -47,21 +57,22 @@ module.exports = React.createClass({
      this.setState({neighborhoods: rows});
    },
    render: function() {
-
+     console.log('inside display user render');
+     console.log(this.props.user);
      return (
        <div>
-         <h3 className="userName">{this.state.user.firstName} {this.state.lastInitial}.</h3>
-         <img className="userPic" src={this.state.user.pic}/>
-         <p><strong>Email: </strong>{this.state.user.email}</p>
-         <p><strong>Member since: </strong>{this.state.user.created_at}</p>
-         <p>{this.state.user.bio}</p>
+         <h3 className="userName">{this.props.user.firstName} {this.props.user.lastName}</h3>
+         <img className="userPic" src={this.props.user.pic}/>
+         <p><strong>Email: </strong>{this.props.user.email}</p>
+         <p><strong>Member since: </strong>{this.props.user.created_at}</p>
+         <p>{this.props.user.bio}</p>
          <h3>Interests:</h3>
          <ul className="interests">
-           {this.state.interests}
+           {this.props.interests}
          </ul>
          <h3>Neighborhoods:</h3>
          <ul className="neighborhoods">
-           {this.state.neighborhoods}
+           {this.props.neighborhoods}
          </ul>
        </div>
      )

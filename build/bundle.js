@@ -64,6 +64,15 @@
 	var userUrl = "/api/user/" + userId;
 	var eventUrl = "/api/events/" + userId;
 	// var eventUrl = "http://localhost:6060/api/event/" + eventId
+	function getParameterByName(name, url) {
+	  if (!url) url = window.location.href;
+	  name = name.replace(/[\[\]]/g, "\\$&");
+	  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+	      results = regex.exec(url);
+	  if (!results) return null;
+	  if (!results[2]) return '';
+	  return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
 
 	var RootApp = React.createClass({
 	  displayName: 'RootApp',
@@ -72,30 +81,35 @@
 	    return { user: '',
 	      events: '' };
 	  },
-	  handleUserReq: function handleUserReq() {
+	  componentDidMount: function componentDidMount() {
 	    var _this = this;
 
-	    console.log('making FB call');
-	    $.ajax({
-	      type: 'GET',
-	      url: 'http://localhost:6060/api/auth/facebook',
-	      // beforeSend: function(xhr){
-	      //   xhr.withCredentials = true;
-	      //   xhr.setRequestHeader('Authorization', )
-	      // },
-	      success: function success(data, status) {
-	        console.log(data);
-	        console.log(status);
-	        _this.setState({
-	          user: data
-	        });
-	      },
-	      error: function error(xhr, status, _error) {
-	        console.log(xhr);
-	        console.log(status);
-	        console.log(_error);
-	      }
-	    });
+	    var token = getParameterByName('access_token');
+	    console.log(token);
+	    if (token) {
+	      $.ajax({
+	        type: 'GET',
+	        url: 'http://localhost:2323/api/user/' + token,
+	        headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
+	        // beforeSend: function(xhr){
+	        //   xhr.withCredentials = true;
+	        //   xhr.setRequestHeader('Authorization', )
+	        // },
+	        success: function success(data, status) {
+	          console.log(data);
+	          console.log(status);
+	          _this.setState({
+	            user: data
+	          });
+	          // console.log('State has been set to user');
+	        },
+	        error: function error(xhr, status, _error) {
+	          console.log(xhr);
+	          console.log(status);
+	          console.log(_error);
+	        }
+	      });
+	    }
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -157,7 +171,7 @@
 	                null,
 	                React.createElement(
 	                  'a',
-	                  { className: 'btn btn-primary fb-login', onClick: this.handleUserReq, role: 'button' },
+	                  { className: 'btn btn-primary fb-login', href: '/api/auth/facebook', role: 'button' },
 	                  'Facebook Login »'
 	                )
 	              )
@@ -217,7 +231,6 @@
 	//    </Route>
 	//  </Router>
 	//), document.getElementById('root'))
-
 	// ReactDOM.render( <CreateUserForm />, document.getElementById('userForm'))
 	// ReactDOM.render( <UpdateUserForm url={userUrl}/>, document.getElementById('userUpdate'))
 
@@ -20510,7 +20523,17 @@
 	  displayName: 'exports',
 
 	  getInitialState: function getInitialState() {
+	    console.log('Getting initial state of display user class');
+	    console.log(this.props.user);
 	    return { user: this.props.user };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps() {
+	    this.setState({
+	      user: this.props.user
+	    });
+	    console.log('Display User state has been set to user');
+	    console.log(this.props.user);
+	    console.log(this.state.user);
 	  },
 	  // loadUserFromServer: function() {
 	  //   $.ajax({
@@ -20571,19 +20594,19 @@
 	    this.setState({ neighborhoods: rows });
 	  },
 	  render: function render() {
-
+	    console.log('inside display user render');
+	    console.log(this.props.user);
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
 	        'h3',
 	        { className: 'userName' },
-	        this.state.user.firstName,
+	        this.props.user.firstName,
 	        ' ',
-	        this.state.lastInitial,
-	        '.'
+	        this.props.user.lastName
 	      ),
-	      React.createElement('img', { className: 'userPic', src: this.state.user.pic }),
+	      React.createElement('img', { className: 'userPic', src: this.props.user.pic }),
 	      React.createElement(
 	        'p',
 	        null,
@@ -20592,7 +20615,7 @@
 	          null,
 	          'Email: '
 	        ),
-	        this.state.user.email
+	        this.props.user.email
 	      ),
 	      React.createElement(
 	        'p',
@@ -20602,12 +20625,12 @@
 	          null,
 	          'Member since: '
 	        ),
-	        this.state.user.created_at
+	        this.props.user.created_at
 	      ),
 	      React.createElement(
 	        'p',
 	        null,
-	        this.state.user.bio
+	        this.props.user.bio
 	      ),
 	      React.createElement(
 	        'h3',
@@ -20617,7 +20640,7 @@
 	      React.createElement(
 	        'ul',
 	        { className: 'interests' },
-	        this.state.interests
+	        this.props.interests
 	      ),
 	      React.createElement(
 	        'h3',
@@ -20627,7 +20650,7 @@
 	      React.createElement(
 	        'ul',
 	        { className: 'neighborhoods' },
-	        this.state.neighborhoods
+	        this.props.neighborhoods
 	      )
 	    );
 	  }
@@ -20731,11 +20754,11 @@
 	  },
 	  onFormSubmit: function onFormSubmit(newEvent) {
 	    if (this.state.eventId) {
-	      var route = 'http://localhost:6060/api/event/' + this.state.eventId;
+	      var route = 'http://localhost:2323/api/event/' + this.state.eventId;
 	      var crudType = 'PUT';
 	    } else {
 	      var crudType = 'POST';
-	      var route = 'http://localhost:6060/api/event/new';
+	      var route = 'http://localhost:2323/api/event/new';
 	    }
 	    $.ajax({
 	      type: crudType,

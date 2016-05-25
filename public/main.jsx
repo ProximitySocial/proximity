@@ -17,34 +17,48 @@ var userId = "573c10e075e9137b3f148ffa"
 var userUrl = "/api/user/" + userId
 var eventUrl = "/api/events/" + userId
 // var eventUrl = "http://localhost:6060/api/event/" + eventId
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 
 var RootApp = React.createClass({
   getInitialState: function(){
     return ({user: '',
             events: ''})
   },
-  handleUserReq: function() {
-    console.log('making FB call')
-    $.ajax({
-      type: 'GET',
-      url: 'http://localhost:6060/api/auth/facebook',
-      // beforeSend: function(xhr){
-      //   xhr.withCredentials = true;
-      //   xhr.setRequestHeader('Authorization', )
-      // },
-      success: (data, status) => {
-        console.log(data)
-        console.log(status)
-        this.setState({
-          user: data
-        })
-      },
-      error: (xhr, status, error) => {
-        console.log(xhr)
-        console.log(status)
-        console.log(error)
-      }
-    })
+  componentDidMount: function() {
+    var token = getParameterByName('access_token');
+    console.log(token);
+    if (token) {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:2323/api/user/' + token,
+        headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
+        // beforeSend: function(xhr){
+        //   xhr.withCredentials = true;
+        //   xhr.setRequestHeader('Authorization', )
+        // },
+        success: (data, status) => {
+          console.log(data)
+          console.log(status)
+          this.setState({
+            user: data
+          })
+          // console.log('State has been set to user');
+        },
+        error: (xhr, status, error) => {
+          console.log(xhr)
+          console.log(status)
+          console.log(error)
+        }
+      })
+    }
   },
   render: function(){
     return (
@@ -65,7 +79,7 @@ var RootApp = React.createClass({
 
                 <li className="active"><a href="">Interests</a></li>
                 <li><a href="">Search Me</a></li>
-                <li><a className="btn btn-primary fb-login" onClick={this.handleUserReq} role="button">Facebook Login &raquo;</a></li>
+                <li><a className="btn btn-primary fb-login" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a></li>
               </ul>
             </div>
           </div>
@@ -107,7 +121,6 @@ var RootApp = React.createClass({
 //    </Route>
 //  </Router>
 //), document.getElementById('root'))
-
 // ReactDOM.render( <CreateUserForm />, document.getElementById('userForm'))
 // ReactDOM.render( <UpdateUserForm url={userUrl}/>, document.getElementById('userUpdate'))
 
