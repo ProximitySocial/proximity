@@ -60,11 +60,7 @@
 	var UpdateUserForm = __webpack_require__(174);
 
 	// for testing purposes
-<<<<<<< HEAD
-	var userId = "573c10e075e9137b3f148ffa";
-=======
-	var userId = "573ca6f8522a732dff9cb616";
->>>>>>> dev
+	var userId = "574390a51831bd0d9abfe74a";
 	var userUrl = "/api/user/" + userId;
 	var eventUrl = "/api/events/" + userId;
 	// var eventUrl = "http://localhost:6060/api/event/" + eventId
@@ -20544,7 +20540,6 @@
 	    e.preventDefault();
 	    var reader = new FileReader();
 	    var fileUrl = e.target.files[0];
-	    console.log(fileUrl);
 
 	    reader.onloadend = function () {
 	      _this.setState({
@@ -20601,7 +20596,6 @@
 	      contentType: 'application/json',
 	      success: function success(data) {
 	        console.log(data);
-	        console.log('SUCCESS');
 	      },
 	      error: function error(data, status, jqXHR) {
 	        console.log(data);
@@ -20702,9 +20696,9 @@
 	  displayName: 'CreateUserForm',
 	  getInitialState: function getInitialState() {
 	    return {
-	      firstName: 'Brian',
-	      lastName: 'RayTEST',
-	      email: 'bray@gmail.com',
+	      firstName: '',
+	      lastName: '',
+	      email: '',
 	      file: '',
 	      imagePreviewUrl: '',
 	      fileName: '',
@@ -20714,15 +20708,12 @@
 	    };
 	  },
 	  handleFirstChange: function handleFirstChange(e) {
-	    console.log('First Name ' + e.target.value);
 	    this.setState({ firstName: e.target.value });
 	  },
 	  handleLastChange: function handleLastChange(e) {
-	    console.log('Last Name ' + e.target.value);
 	    this.setState({ lastName: e.target.value });
 	  },
 	  handleEmailChange: function handleEmailChange(e) {
-	    console.log('Email ' + e.target.value);
 	    this.setState({ email: e.target.value });
 	  },
 	  handleImageChange: function handleImageChange(e) {
@@ -20731,8 +20722,6 @@
 	    e.preventDefault();
 	    var reader = new FileReader();
 	    var file = e.target.files[0];
-	    console.log('here is the mark ^^^^^^^^^');
-	    console.log(file);
 
 	    reader.onloadend = function () {
 	      _this.setState({
@@ -20744,18 +20733,19 @@
 	  },
 	  loadToS3: function loadToS3(signedRequest, done) {
 	    console.log('send off to S3');
-	    console.log(signedRequest);
 	    var xhr = new XMLHttpRequest();
 	    xhr.open("PUT", signedRequest);
 	    xhr.onload = function () {
 	      if (xhr.status === 200) {
-	        console.log("SUCCESSSSSSSSSSSS");
 	        done();
 	      }
 	    };
-	    console.log('file here');
 
 	    xhr.send(this.state.file);
+
+	    this.setState({
+	      file: ''
+	    });
 	    // $.ajax({
 	    //   type: 'PUT',
 	    //   url: signedRequest,
@@ -20777,6 +20767,7 @@
 
 	    // })
 	  },
+	  //Incomplete....use to source an image from Google
 	  srcImage: function srcImage(e) {
 	    console.log('trying to source image');
 	    var title = this.state.title.trim();
@@ -20804,7 +20795,6 @@
 	    var lastName = this.state.lastName.trim();
 	    var email = this.state.email.trim();
 	    if (!this.state.picUrl) {
-	      // console.log('^^^^^^^^ here with no picUrl ... handle submit')
 	      var fileName = this.state.file.name;
 	      var fileType = this.state.file.type;
 	      var fileSize = this.state.file.size;
@@ -20830,8 +20820,6 @@
 	      data: JSON.stringify(newUser),
 	      contentType: 'application/json',
 	      success: function success(data) {
-	        console.log(data);
-	        console.log('SUCCESS for uploading data...now S3 upload');
 	        callback(data.signedRequest);
 	      },
 	      error: function error(data, status, jqXHR) {
@@ -20889,8 +20877,7 @@
 	          'Create User!'
 	        )
 	      ),
-	      $imagePreview,
-	      'Above should be the preview'
+	      $imagePreview
 	    );
 	  }
 	});
