@@ -11,7 +11,7 @@ module.exports = React.createClass({
   componentDidMount: function() {
     $.ajax({
       type: 'GET',
-      url: 'http://localhost:2323/api/events/' + this.props.url,
+      url: 'https://proximitysocial.herokuapp.com/api/events/' + this.props.url,
       dataType: 'json',
       cache: false,
       success: function(data){
