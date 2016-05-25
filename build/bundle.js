@@ -60,7 +60,7 @@
 	var UpdateUserForm = __webpack_require__(174);
 
 	// for testing purposes
-	var userId = "574390a51831bd0d9abfe74a";
+	var userId = "574390a51831bd0d9abfe749";
 	var userUrl = "/api/user/" + userId;
 	var eventUrl = "/api/events/" + userId;
 	// var eventUrl = "http://localhost:6060/api/event/" + eventId
@@ -20202,7 +20202,7 @@
 	  componentDidMount: function componentDidMount() {
 	    $.ajax({
 	      type: 'GET',
-	      url: 'http://localhost:2323/api/events/' + this.props.url,
+	      url: 'https://proximitysocial.herokuapp.com/api/events/' + this.props.url,
 	      dataType: 'json',
 	      cache: false,
 	      success: function (data) {
