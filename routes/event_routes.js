@@ -29,17 +29,26 @@ eventRouter.get('/events/:userId', (req, res) => {
 
   //create new event
 eventRouter.post('/event/new', (req, res) => {
+  console.log("Made a POST request for NEW user")
   //add _creator from User _id
   var eventData = req.body
-  console.log("Made a POST request for NEW user")
   var address = req.body.address.split(' ').join('+')
   callGoogle(address)
     .then((data) => {
+      if(eventData.fileName && eventData.fileType){
+        getS3SignedUrl(eventData)
+          .then((s3Data) => {
+            eventData = s3Data
+          }).catch((err) => {
+            throw err;
+          })
+      }
       eventData.neighborhood = data.results[0].address_components[2].long_name
       eventData.locationData = data
+      eventData.picture = eventData.url
       new Event(eventData).save((err, result) => {
         if (err || result === null) return res.status(500).json({msg: 'Server Error'})
-        res.status(200).json({msg: 'event created', data: result})
+        res.status(200).json({msg: 'event created', signedRequest: eventData.awsData})
       })
     })
     .catch((err) => {
