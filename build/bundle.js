@@ -56,165 +56,13 @@
 	var DisplayUser = __webpack_require__(170);
 	var CreateEventForm = __webpack_require__(171);
 	var CreateUserForm = __webpack_require__(172);
-	var UpdateEventForm = __webpack_require__(173);
-	var UpdateUserForm = __webpack_require__(174);
+	var UpdateUserForm = __webpack_require__(173);
 
 	// for testing purposes
 	var userId = "573c10e075e9137b3f148ffa";
 	var userUrl = "/api/user/" + userId;
 	var eventUrl = "/api/events/" + userId;
 	// var eventUrl = "http://localhost:6060/api/event/" + eventId
-	function getParameterByName(name, url) {
-	  if (!url) url = window.location.href;
-	  name = name.replace(/[\[\]]/g, "\\$&");
-	  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-	      results = regex.exec(url);
-	  if (!results) return null;
-	  if (!results[2]) return '';
-	  return decodeURIComponent(results[2].replace(/\+/g, " "));
-	}
-
-	var RootApp = React.createClass({
-	  displayName: 'RootApp',
-
-	  getInitialState: function getInitialState() {
-	    return { user: '',
-	      events: '' };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    var _this = this;
-
-	    var token = getParameterByName('access_token');
-	    console.log(token);
-	    if (token) {
-	      $.ajax({
-	        type: 'GET',
-	        url: 'http://localhost:2323/api/user/' + token,
-	        headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
-	        // beforeSend: function(xhr){
-	        //   xhr.withCredentials = true;
-	        //   xhr.setRequestHeader('Authorization', )
-	        // },
-	        success: function success(data, status) {
-	          console.log(data);
-	          console.log(status);
-	          _this.setState({
-	            user: data
-	          });
-	          // console.log('State has been set to user');
-	        },
-	        error: function error(xhr, status, _error) {
-	          console.log(xhr);
-	          console.log(status);
-	          console.log(_error);
-	        }
-	      });
-	    }
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'section',
-	      null,
-	      React.createElement(
-	        'nav',
-	        { className: 'navbar navbar-default navbar-fixed-top' },
-	        React.createElement(
-	          'div',
-	          { className: 'container' },
-	          React.createElement(
-	            'div',
-	            { className: 'navbar-header' },
-	            React.createElement(
-	              'button',
-	              { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#navbar', 'aria-expanded': 'false', 'aria-controls': 'navbar' },
-	              React.createElement(
-	                'span',
-	                { className: 'sr-only' },
-	                'Toggle navigation'
-	              ),
-	              React.createElement('span', { className: 'icon-bar' }),
-	              React.createElement('span', { className: 'icon-bar' }),
-	              React.createElement('span', { className: 'icon-bar' })
-	            ),
-	            React.createElement(
-	              'a',
-	              { className: 'navbar-brand', href: '#' },
-	              'Common Radar'
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            { id: 'navbar', className: 'navbar-collapse collapse' },
-	            React.createElement(
-	              'ul',
-	              { className: 'nav navbar-nav' },
-	              React.createElement(
-	                'li',
-	                { className: 'active' },
-	                React.createElement(
-	                  'a',
-	                  { href: '' },
-	                  'Interests'
-	                )
-	              ),
-	              React.createElement(
-	                'li',
-	                null,
-	                React.createElement(
-	                  'a',
-	                  { href: '' },
-	                  'Search Me'
-	                )
-	              ),
-	              React.createElement(
-	                'li',
-	                null,
-	                React.createElement(
-	                  'a',
-	                  { className: 'btn btn-primary fb-login', href: '/api/auth/facebook', role: 'button' },
-	                  'Facebook Login »'
-	                )
-	              )
-	            )
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'container row' },
-	        React.createElement(
-	          'h2',
-	          null,
-	          'Profile'
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'col-lg-4' },
-	          React.createElement(DisplayUser, { className: 'row profile', user: this.state.user }),
-	          React.createElement('div', { className: 'row form', id: 'userForm' }),
-	          React.createElement('div', { className: 'row form', id: 'userUpdate' })
-	        ),
-	        React.createElement(
-	          'h2',
-	          null,
-	          'Events'
-	        ),
-	        React.createElement('div', { className: 'col-lg-4 events', id: 'eventList' }),
-	        React.createElement(
-	          'h2',
-	          null,
-	          'CreateEvent'
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'col-lg-4' },
-	          React.createElement('div', { className: 'row form', id: 'eventForm' }),
-	          React.createElement('div', { className: 'row form', id: 'eventUpdate' })
-	        )
-	      )
-	    );
-	  }
-	});
 
 	// require('font-awesome/css/font-awesome.css')
 	// require('normalize-css')
@@ -231,14 +79,15 @@
 	//    </Route>
 	//  </Router>
 	//), document.getElementById('root'))
-	// ReactDOM.render( <CreateUserForm />, document.getElementById('userForm'))
-	// ReactDOM.render( <UpdateUserForm url={userUrl}/>, document.getElementById('userUpdate'))
 
-	// ReactDOM.render( <EventList url={userId}/>, document.getElementById('eventList'))
+	ReactDOM.render(React.createElement(DisplayUser, { url: userUrl }), document.getElementById('userProfile'));
+	ReactDOM.render(React.createElement(CreateUserForm, null), document.getElementById('userForm'));
+	ReactDOM.render(React.createElement(UpdateUserForm, { url: userUrl }), document.getElementById('userUpdate'));
 
-	// ReactDOM.render( <CreateEventForm />, document.getElementById('eventForm'))
-	// ReactDOM.render( <UpdateEventForm url={eventUrl}/>, document.getElementById('eventUpdate'))
-	ReactDOM.render(React.createElement(RootApp, null), document.getElementById('root'));
+	ReactDOM.render(React.createElement(EventList, { url: userId }), document.getElementById('eventList'));
+
+	ReactDOM.render(React.createElement(CreateEventForm, null), document.getElementById('eventForm'));
+	ReactDOM.render(React.createElement(UpdateEventForm, { url: eventUrl }), document.getElementById('eventUpdate'));
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
@@ -20352,7 +20201,7 @@
 	  componentDidMount: function componentDidMount() {
 	    $.ajax({
 	      type: 'GET',
-	      url: 'http://localhost:2323/api/events/' + this.props.url,
+	      url: 'http://localhost:6060/api/events/' + this.props.url,
 	      dataType: 'json',
 	      cache: false,
 	      success: function (data) {
@@ -20420,6 +20269,10 @@
 	      margin: 0,
 	      verticalAlign: "bottom" };
 
+	    var startTime = Date(this.props.event.startTime).toString().split(' ');
+	    console.log(startTime);
+	    var day = startTime;
+
 	    return React.createElement(
 	      'li',
 	      null,
@@ -20440,35 +20293,29 @@
 	        'div',
 	        { className: 'eventDetails' },
 	        React.createElement(
-	          'p',
+	          'h4',
 	          null,
 	          React.createElement(
 	            'strong',
 	            null,
-	            '@ '
+	            '@'
 	          ),
+	          '  ',
 	          this.props.event.addressName
 	        ),
-	        '// ',
 	        React.createElement(
 	          'p',
 	          null,
 	          React.createElement(
 	            'strong',
 	            null,
-	            'Starts:'
+	            'Starts in:'
 	          ),
-	          this.state.timeTill
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          React.createElement(
-	            'strong',
-	            null,
-	            'Starts:'
-	          ),
-	          this.props.event.startTime
+	          '  ',
+	          Date(startTime),
+	          '  (',
+	          day,
+	          ')'
 	        ),
 	        React.createElement(
 	          'p',
@@ -20478,6 +20325,7 @@
 	            null,
 	            'Tags:'
 	          ),
+	          '  #',
 	          this.props.event.interestTags
 	        ),
 	        React.createElement(
@@ -20488,7 +20336,19 @@
 	            null,
 	            'Neighborhood:'
 	          ),
+	          '  ',
 	          this.props.event.neighborhood
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          React.createElement(
+	            'strong',
+	            null,
+	            'ID:'
+	          ),
+	          '   ',
+	          this.props.event._id
 	        ),
 	        React.createElement(
 	          'div',
@@ -20501,7 +20361,7 @@
 	          React.createElement(
 	            'p',
 	            null,
-	            'attendees'
+	            '  attendees'
 	          )
 	        )
 	      )
@@ -20523,39 +20383,29 @@
 	  displayName: 'exports',
 
 	  getInitialState: function getInitialState() {
-	    console.log('Getting initial state of display user class');
-	    console.log(this.props.user);
-	    return { user: this.props.user };
+	    return { user: {} };
 	  },
-	  componentWillReceiveProps: function componentWillReceiveProps() {
-	    this.setState({
-	      user: this.props.user
+	  loadUserFromServer: function loadUserFromServer() {
+	    $.ajax({
+	      type: 'GET',
+	      url: this.props.url,
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log(data.lastName);
+	        this.setState({ user: data,
+	          lastInitial: data.lastName.charAt(0) });
+	        this.handleInterests(data);
+	        this.handleNeighborhoods(data);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(this.props.url, status, err.toString());
+	      }.bind(this)
 	    });
-	    console.log('Display User state has been set to user');
-	    console.log(this.props.user);
-	    console.log(this.state.user);
 	  },
-	  // loadUserFromServer: function() {
-	  //   $.ajax({
-	  //     type: 'GET',
-	  //     url: '',
-	  //     dataType: 'json',
-	  //     cache: false,
-	  //     success: function(data) {
-	  //       console.log(data.lastName)
-	  //       this.setState({user:        data,
-	  //                      lastInitial: data.lastName.charAt(0)});
-	  //       this.handleInterests(data);
-	  //       this.handleNeighborhoods(data);
-	  //     }.bind(this),
-	  //     error: function(xhr, status, err) {
-	  //       console.error(this.props.url, status, err.toString());
-	  //     }.bind(this)
-	  //   });
-	  // },
-	  // componentWillMount: function() {
-	  // this.loadUserFromServer()
-	  // },
+	  componentWillMount: function componentWillMount() {
+	    this.loadUserFromServer();
+	  },
 	  handleUpdate: function handleUpdate() {
 	    console.log('make a request to handleUpdate');
 	  },
@@ -20594,19 +20444,19 @@
 	    this.setState({ neighborhoods: rows });
 	  },
 	  render: function render() {
-	    console.log('inside display user render');
-	    console.log(this.props.user);
+
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
 	        'h3',
 	        { className: 'userName' },
-	        this.props.user.firstName,
+	        this.state.user.firstName,
 	        ' ',
-	        this.props.user.lastName
+	        this.state.lastInitial,
+	        '.'
 	      ),
-	      React.createElement('img', { className: 'userPic', src: this.props.user.pic }),
+	      React.createElement('img', { className: 'userPic', src: this.state.user.pic }),
 	      React.createElement(
 	        'p',
 	        null,
@@ -20615,7 +20465,7 @@
 	          null,
 	          'Email: '
 	        ),
-	        this.props.user.email
+	        this.state.user.email
 	      ),
 	      React.createElement(
 	        'p',
@@ -20625,12 +20475,12 @@
 	          null,
 	          'Member since: '
 	        ),
-	        this.props.user.created_at
+	        this.state.user.created_at
 	      ),
 	      React.createElement(
 	        'p',
 	        null,
-	        this.props.user.bio
+	        this.state.user.bio
 	      ),
 	      React.createElement(
 	        'h3',
@@ -20640,7 +20490,7 @@
 	      React.createElement(
 	        'ul',
 	        { className: 'interests' },
-	        this.props.interests
+	        this.state.interests
 	      ),
 	      React.createElement(
 	        'h3',
@@ -20650,7 +20500,7 @@
 	      React.createElement(
 	        'ul',
 	        { className: 'neighborhoods' },
-	        this.props.neighborhoods
+	        this.state.neighborhoods
 	      )
 	    );
 	  }
@@ -20675,16 +20525,21 @@
 	  displayName: 'eventForm',
 	  getInitialState: function getInitialState() {
 	    return {
-	      eventId: '',
-	      title: '',
+	      eventId: '5745fe521e346da7f258df2b',
+	      title: 'A CHANGE I MADE',
 	      description: '',
+	      interestTags: '',
 	      addressName: '',
 	      address: '',
 	      file: '',
-	      imagePreviewUrl: '' };
+	      imagePreviewUrl: '',
+	      picUrl: '',
+	      fileName: '',
+	      fileType: '',
+	      fileSize: '' };
 	  },
 	  handleIdChange: function handleIdChange(e) {
-	    this.setState({ title: e.target.value });
+	    this.setState({ eventId: e.target.value });
 	  },
 	  handleTitleChange: function handleTitleChange(e) {
 	    this.setState({ title: e.target.value });
@@ -20698,20 +20553,39 @@
 	  handleAddressChange: function handleAddressChange(e) {
 	    this.setState({ address: e.target.value });
 	  },
+	  handleInterestTagsChange: function handleInterestTagsChange(e) {
+	    this.setState({ interestTags: e.target.value });
+	  },
 	  handleImageChange: function handleImageChange(e) {
 	    var _this = this;
 
 	    e.preventDefault();
 	    var reader = new FileReader();
-	    var fileUrl = e.target.files[0];
+	    var file = e.target.files[0];
 
 	    reader.onloadend = function () {
 	      _this.setState({
-	        file: fileUrl,
+	        file: file,
 	        imagePreviewUrl: reader.result
 	      });
 	    };
 	    reader.readAsDataURL(file);
+	  },
+	  loadToS3: function loadToS3(signedRequest, done) {
+	    console.log('send off to S3');
+	    var xhr = new XMLHttpRequest();
+	    xhr.open("PUT", signedRequest);
+	    xhr.onload = function () {
+	      if (xhr.status === 200) {
+	        done();
+	      }
+	    };
+
+	    xhr.send(this.state.file);
+
+	    this.setState({
+	      file: ''
+	    });
 	  },
 	  srcImage: function srcImage(e) {
 	    console.log('trying to source image');
@@ -20737,29 +20611,42 @@
 	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
+	    console.log('somehting to see');
 	    var title = this.state.title.trim();
 	    var description = this.state.description.trim();
-	    var addressName = this.state.addressName.trim();
+	    var interestTags = this.state.interestTags.trim();
 	    var address = this.state.address.trim();
-	    var picture = this.state.file;
-	    if (!title || !description || !addressName || !address) return;
+	    var addressName = this.state.addressName.trim();
+	    if (this.state.file) {
+	      var fileName = this.state.file.name;
+	      var fileType = this.state.file.type;
+	      var fileSize = this.state.file.size;
+	    } else {
+	      var picture = this.state.picUrl.trim();
+	    }
+	    // if (!title || !description || !address) return
 	    this.onFormSubmit({
 	      title: title,
 	      description: description,
+	      interestTags: interestTags,
 	      addressName: addressName,
 	      address: address,
-	      picture: picture
-	    });
-	    this.setState({ title: '', description: '', addressName: '', address: '', file: '', imagePreviewUrl: '' });
+	      picture: picture,
+	      fileName: fileName,
+	      fileType: fileType,
+	      fileSize: fileSize
+	    }, this.loadToS3);
+	    this.setState({ title: '', description: '', interestTags: '', addressName: '', address: '', file: '' });
 	  },
-	  onFormSubmit: function onFormSubmit(newEvent) {
+	  onFormSubmit: function onFormSubmit(newEvent, callback) {
 	    if (this.state.eventId) {
-	      var route = 'http://localhost:2323/api/event/' + this.state.eventId;
 	      var crudType = 'PUT';
+	      var route = '/api/event/' + this.state.eventId;
 	    } else {
 	      var crudType = 'POST';
-	      var route = 'http://localhost:2323/api/event/new';
+	      var route = '/api/event/new';
 	    }
+	    console.log(crudType, route);
 	    $.ajax({
 	      type: crudType,
 	      url: route,
@@ -20767,6 +20654,7 @@
 	      contentType: 'application/json',
 	      success: function success(data) {
 	        console.log(data);
+	        callback(data.signedRequest);
 	      },
 	      error: function error(data, status, jqXHR) {
 	        console.log(data);
@@ -20788,7 +20676,7 @@
 	      React.createElement(
 	        'h2',
 	        null,
-	        'Create Event'
+	        'Create/Update Event'
 	      ),
 	      React.createElement(
 	        'form',
@@ -20811,6 +20699,12 @@
 	          'Description:'
 	        ),
 	        React.createElement('input', { type: 'text', placeholder: 'Description', value: this.state.description, onChange: this.handleDescriptionChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'Address' },
+	          'InterestsTag:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'InterestTags', value: this.state.interestTags, onChange: this.handleInterestTagsChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'Address Name' },
@@ -21047,188 +20941,6 @@
 
 /***/ },
 /* 173 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(2);
-	var ReactDOM = __webpack_require__(33);
-
-	module.exports = React.createClass({
-	  displayName: 'UpdateEventForm',
-	  getInitialState: function getInitialState() {
-	    return {
-	      title: '',
-	      description: '',
-	      addressName: '',
-	      address: '',
-	      file: '',
-	      imagePreviewUrl: '' };
-	  },
-	  handleTitleChange: function handleTitleChange(e) {
-	    this.setState({ title: e.target.value });
-	  },
-	  handleDescriptionChange: function handleDescriptionChange(e) {
-	    this.setState({ description: e.target.value });
-	  },
-	  handleAddressNameChange: function handleAddressNameChange(e) {
-	    this.setState({ addressName: e.target.value });
-	  },
-	  handleAddressChange: function handleAddressChange(e) {
-	    this.setState({ address: e.target.value });
-	  },
-	  handleImageChange: function handleImageChange(e) {
-	    var _this = this;
-
-	    e.preventDefault();
-	    var reader = new FileReader();
-	    var fileUrl = e.target.files[0];
-	    console.log(fileUrl);
-
-	    reader.onloadend = function () {
-	      _this.setState({
-	        file: fileUrl,
-	        imagePreviewUrl: reader.result
-	      });
-	    };
-	    reader.readAsDataURL(file);
-	  },
-	  srcImage: function srcImage(e) {
-	    console.log('trying to source image');
-	    var title = this.state.title.trim();
-	    var arr = title.split(' ');
-	    var length = arr.length;
-	    var query = arr.join('+');
-	    console.log(query);
-	    $.ajax({
-	      type: 'GET',
-	      url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
-	      dataType: 'application/json',
-	      success: function success(data) {
-	        console.log(data);
-	      },
-	      error: function error(data, status, xhr) {
-	        console.log(data);
-	        console.log(status);
-	        console.log(xhr);
-	      }
-
-	    });
-	  },
-	  handleSubmit: function handleSubmit(e) {
-	    e.preventDefault();
-	    var title = this.state.title.trim();
-	    var description = this.state.description.trim();
-	    var addressName = this.state.addressName.trim();
-	    var address = this.state.address.trim();
-	    var picture = this.state.file;
-	    if (!title || !description || !addressName || !address) return;
-	    this.onFormSubmit({
-	      title: title,
-	      description: description,
-	      addressName: addressName,
-	      address: address,
-	      picture: picture
-	    });
-	    this.setState({ title: '', description: '', addressName: '', address: '', file: '', imagePreviewUrl: '' });
-	  },
-	  onFormSubmit: function onFormSubmit(newEvent) {
-	    $.ajax({
-	      type: 'PUT',
-	      url: this.props.url,
-	      data: JSON.stringify(newEvent),
-	      contentType: 'application/json',
-	      success: function success(data) {
-	        console.log(data);
-	        console.log('SUCCESS');
-	      },
-	      error: function error(data, status, jqXHR) {
-	        console.log(data);
-	        console.log(status);
-	        console.log(jqXHR);
-	      }
-	    });
-	  },
-	  render: function render() {
-	    var imagePreviewUrl = this.state.imagePreviewUrl;
-
-	    var $imagePreview = null;
-	    if (imagePreviewUrl) {
-	      $imagePreview = React.createElement('img', { src: imagePreviewUrl });
-	    }
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Update Your Event'
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'updateEventForm', onSubmit: this.handleSubmit },
-	        React.createElement(
-	          'label',
-	          { 'for': 'title' },
-	          'Title:'
-	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'Title', value: this.state.title, onChange: this.handleTitleChange }),
-	        React.createElement(
-	          'label',
-	          { 'for': 'description' },
-	          'Description:'
-	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'Description', value: this.state.description, onChange: this.handleDescriptionChange }),
-	        React.createElement(
-	          'label',
-	          { 'for': 'Address Name' },
-	          'Address Name:'
-	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'Address Name', value: this.state.addressName, onChange: this.handleAddressNameChange }),
-	        React.createElement(
-	          'label',
-	          { 'for': 'Address' },
-	          'Address:'
-	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'Address', value: this.state.address, onChange: this.handleAddressChange }),
-	        React.createElement(
-	          'label',
-	          { 'for': 'Image' },
-	          'Image:'
-	        ),
-	        React.createElement(
-	          'button',
-	          { type: 'submit', onClick: this.srcImg },
-	          'Google Image'
-	        ),
-	        React.createElement('input', { type: 'file', onChange: this.handleImageChange }),
-	        React.createElement(
-	          'button',
-	          { type: 'submit', onClick: this.handleSubmit },
-	          'Update Event'
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
-	          $imagePreview
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
-	          this.file
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
-	          this.imagePreviewUrl
-	        )
-	      )
-	    );
-	  }
-	});
-
-/***/ },
-/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

@@ -8,12 +8,11 @@ const EventList = require(__dirname + '/components/event_list.jsx')
 const DisplayUser = require(__dirname + '/components/display_user.jsx')
 const CreateEventForm = require(__dirname + '/components/event_form.jsx')
 const CreateUserForm = require(__dirname + '/components/user_form.jsx')
-const UpdateEventForm = require(__dirname + '/components/event_update.jsx')
 const UpdateUserForm = require(__dirname + '/components/user_update.jsx')
 
 
 // for testing purposes
-var userId = "573c10e075e9137b3f148ffa"
+var userId = "574390a51831bd0d9abfe74a"
 var userUrl = "/api/user/" + userId
 var eventUrl = "/api/events/" + userId
 // var eventUrl = "http://localhost:6060/api/event/" + eventId

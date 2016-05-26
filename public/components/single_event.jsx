@@ -17,6 +17,11 @@ module.exports = React.createClass({
                     margin: 0,
                     verticalAlign: "bottom"}
 
+    var startTime = Date(this.props.event.startTime).toString().split(' ')
+    console.log(startTime)
+    var day = startTime
+
+
     return (
       <li>
         <div className="eventPicture" style={divStyle}>
@@ -25,14 +30,14 @@ module.exports = React.createClass({
           </div>
         </div>
         <div className="eventDetails">
-          <p><strong>@ </strong>{this.props.event.addressName}</p>
-          // <p><strong>Starts:</strong>{this.state.timeTill}</p>
-          <p><strong>Starts:</strong>{this.props.event.startTime}</p>
-          <p><strong>Tags:</strong>{this.props.event.interestTags}</p>
-          <p><strong>Neighborhood:</strong>{this.props.event.neighborhood}</p>
+          <h4><strong>@</strong>  {this.props.event.addressName}</h4>
+          <p><strong>Starts in:</strong>  {Date(startTime)}  ({day})</p>
+          <p><strong>Tags:</strong>  #{this.props.event.interestTags}</p>
+          <p><strong>Neighborhood:</strong>  {this.props.event.neighborhood}</p>
+          <p><strong>ID:</strong>   {this.props.event._id}</p>
           <div className="eventAttCount">
             <h3>{this.props.event._attendees.length}</h3>
-            <p>attendees</p>
+            <p>&nbsp;&nbsp;attendees</p>
           </div>
         </div>
       </li>

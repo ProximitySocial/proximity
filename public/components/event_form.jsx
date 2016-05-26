@@ -5,16 +5,21 @@ module.exports = React.createClass({
       displayName: 'eventForm',
       getInitialState: function() {
         return({
-                eventId: '',
-                title: '',
+                eventId: '5745fe521e346da7f258df2b',
+                title: 'A CHANGE I MADE',
                 description: '',
+                interestTags: '',
                 addressName: '',
                 address: '',
                 file: '',
-                imagePreviewUrl: ''});
+                imagePreviewUrl: '',
+                picUrl: '',
+                fileName: '',
+                fileType: '',
+                fileSize: ''});
       },
       handleIdChange: function(e) {
-        this.setState({title: e.target.value});
+        this.setState({eventId: e.target.value});
       },
       handleTitleChange: function(e) {
         this.setState({title: e.target.value});
@@ -28,18 +33,37 @@ module.exports = React.createClass({
       handleAddressChange: function(e) {
         this.setState({address: e.target.value});
       },
+      handleInterestTagsChange: function(e) {
+        this.setState({interestTags: e.target.value});
+      },
       handleImageChange: function(e){
         e.preventDefault();
         let reader = new FileReader()
-        let fileUrl = e.target.files[0]
+        let file = e.target.files[0]
 
         reader.onloadend = () => {
           this.setState({
-            file: fileUrl,
-            imagePreviewUrl: reader.result
+            file: file,
+            imagePreviewUrl: reader.result,
           })
         }
         reader.readAsDataURL(file)
+      },
+      loadToS3: function(signedRequest, done){
+        console.log('send off to S3')
+        var xhr = new XMLHttpRequest()
+        xhr.open("PUT", signedRequest)
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            done()
+          }
+        }
+
+        xhr.send(this.state.file)
+
+        this.setState({
+          file: ''
+        })
       },
       srcImage: function(e){
         console.log('trying to source image')
@@ -65,29 +89,42 @@ module.exports = React.createClass({
       },
       handleSubmit: function(e) {
         e.preventDefault()
+        console.log('somehting to see')
         var title = this.state.title.trim()
         var description = this.state.description.trim()
-        var addressName = this.state.addressName.trim()
+        var interestTags = this.state.interestTags.trim()
         var address = this.state.address.trim()
-        var picture = this.state.file
-        if (!title || !description || !addressName || !address) return
+        var addressName = this.state.addressName.trim()
+        if (this.state.file){
+          var fileName = this.state.file.name
+          var fileType = this.state.file.type
+          var fileSize = this.state.file.size
+        } else {
+          var picture = this.state.picUrl.trim()
+        }
+        // if (!title || !description || !address) return
         this.onFormSubmit({
            title: title,
            description: description,
+           interestTags: interestTags,
            addressName: addressName,
            address: address,
-           picture: picture
-        });
-        this.setState({title: '', description: '', addressName: '', address: '', file: '', imagePreviewUrl: ''});
+           picture: picture,
+           fileName: fileName,
+           fileType: fileType,
+           fileSize: fileSize
+        }, this.loadToS3);
+        this.setState({title: '', description: '', interestTags: '', addressName: '', address: '', file: ''});
       },
-      onFormSubmit: function(newEvent) {
+      onFormSubmit: function(newEvent, callback) {
         if(this.state.eventId){
-          var route = 'http://localhost:2323/api/event/' + this.state.eventId
           var crudType = 'PUT'
+          var route = '/api/event/' + this.state.eventId
         } else {
           var crudType = 'POST'
-          var route = 'http://localhost:2323/api/event/new'
+          var route = '/api/event/new'
         }
+        console.log(crudType, route)
         $.ajax({
           type: crudType,
           url: route,
@@ -95,6 +132,7 @@ module.exports = React.createClass({
           contentType: 'application/json',
           success: function(data){
             console.log(data)
+            callback(data.signedRequest)
           },
           error: function(data, status, jqXHR){
             console.log(data)
@@ -111,7 +149,7 @@ module.exports = React.createClass({
         }
         return (
           <div>
-            <h2>Create Event</h2>
+            <h2>Create/Update Event</h2>
             <form className="eventForm" onSubmit={this.handleSubmit} >
               <label for="eventId">Event ID:</label>
               <input type="text" placeholder="eventID" value={this.state.eventId}  onChange={this.handleIdChange} />
@@ -119,6 +157,8 @@ module.exports = React.createClass({
               <input type="text" placeholder="Title" value={this.state.title}  onChange={this.handleTitleChange} />
               <label for="description">Description:</label>
               <input type="text" placeholder="Description" value={this.state.description} onChange={this.handleDescriptionChange} />
+              <label for="Address">InterestsTag:</label>
+              <input type="text" placeholder="InterestTags" value={this.state.interestTags} onChange={this.handleInterestTagsChange} />
               <label for="Address Name">Address Name:</label>
               <input type="text" placeholder="Address Name" value={this.state.addressName} onChange={this.handleAddressNameChange} />
               <label for="Address">Address:</label>
@@ -129,6 +169,6 @@ module.exports = React.createClass({
               <div>{$imagePreview }</div>
             </form>
           </div>
-        );
+        )
       }
     });
