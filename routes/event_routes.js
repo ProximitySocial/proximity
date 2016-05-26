@@ -25,6 +25,7 @@ eventRouter.get('/events', (req, res) => {
 eventRouter.get('/events/:userId', (req, res) => {
   console.log('Events per USER has been requested')
   var userId = req.params.userId
+  console.log(userId);
   getAndSendUserLocalEvents(userId, res)
 })
 
@@ -93,6 +94,7 @@ eventRouter.get('/event/attendees/:id', (req, res) => {
 //update event  AUTH creator
 eventRouter.put('/event/:id', (req, res) => {
   console.log('SERVER UPDATE EVENT called');
+  var cb = function() {};
   var newData = req.body
   Object.keys(newData).forEach( (prop) => {
     if (!newData[prop]){
@@ -108,27 +110,28 @@ eventRouter.put('/event/:id', (req, res) => {
         newData.locationData = data
           if (newData.fileName && newData.fileType){
             console.log('picture changed && address changed')
-            getS3SignedUrl(newData)
+            getS3SignedUrl(newData, cb)
               .then((data) => {
                 newData = data
-                updateEvent(newData, req.params.id, res)
+                return updateEvent(newData, req.params.id, res)
               }).catch((err) => { console.log('inside call google error'); throw err; })
           } else {
             console.log('no S3 change but Yes an address changed')
-            updateEvent(newData, req.params.id, res)
+            return updateEvent(newData, req.params.id, res)
           }
       }).catch((err) => { console.log('inside call google error'); throw err; })
   }
   if (newData.fileName && newData.fileType){
     console.log('picture changed, no address change')
-    getS3SignedUrl(newData)
+    console.log(newData);
+    getS3SignedUrl(newData, cb)
       .then((data) => {
         newData = data
-        updateEvent(newData, req.params.id, res)
+        return updateEvent(newData, req.params.id, res)
       }).catch((err) => { console.log('inside call S3 error'); throw err; })
   } else {
     console.log('no address change and no picture change')
-    updateEvent(newData, req.params.id, res)
+    return updateEvent(newData, req.params.id, res)
   }
 })
 

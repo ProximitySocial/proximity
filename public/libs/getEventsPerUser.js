@@ -5,6 +5,7 @@ const Event = require(__dirname + '/../../models/event')
 //get users neighborHood, then call perHoodGetEvents
 function getAndSendUserLocalEvents(userId, res) {
     console.log('GET AND SEND USER LOCAL EVENTS');
+    console.log(userId);
     User.findOne({_id: userId}, 'neighborhoods interests', (err, data) => {
       if (err) {return res.status(500).json({msg: 'Server Error'})}
       else if (data === null) res.status(400).json({msg: 'Bad request...user Id likely invalid'})

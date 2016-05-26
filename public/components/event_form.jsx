@@ -5,7 +5,7 @@ module.exports = React.createClass({
       displayName: 'eventForm',
       getInitialState: function() {
         return({
-                eventId: '5745fe521e346da7f258df2b',
+                eventId: '5740b2dfb7c4e79bf41af122',
                 title: 'A CHANGE I MADE',
                 description: '',
                 interestTags: '',
@@ -51,6 +51,7 @@ module.exports = React.createClass({
       },
       loadToS3: function(signedRequest, done){
         console.log('send off to S3')
+        console.log(this.state.file);
         var xhr = new XMLHttpRequest()
         xhr.open("PUT", signedRequest)
         xhr.onload = function() {
@@ -114,7 +115,7 @@ module.exports = React.createClass({
            fileType: fileType,
            fileSize: fileSize
         }, this.loadToS3);
-        this.setState({title: '', description: '', interestTags: '', addressName: '', address: '', file: ''});
+        this.setState({title: '', description: '', interestTags: '', addressName: '', address: ''});
       },
       onFormSubmit: function(newEvent, callback) {
         if(this.state.eventId){

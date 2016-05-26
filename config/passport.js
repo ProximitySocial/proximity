@@ -1,7 +1,7 @@
-const User = require('../models/user')
-const passport         = require('passport')
-    , FacebookStrategy = require('passport-facebook').Strategy;
-const BearerStrategy   = require('passport-http-bearer')
+const User = require('../models/user');
+const passport         = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
+const BearerStrategy   = require('passport-http-bearer');
 
 
 passport.use(new BearerStrategy(

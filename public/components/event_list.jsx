@@ -8,32 +8,49 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {events: []}
   },
-  componentDidMount: function() {
-    $.ajax({
-      type: 'GET',
-      url: 'http://localhost:6060/api/events/' + this.props.url,
-      dataType: 'json',
-      cache: false,
-      success: function(data){
-        console.log('Successfully retrieved DATA');
-        console.log(data);
-        this.setState({events: data.events})
-        this.handleEvents(this.state.events)
-      }.bind(this),
-      error: function(xhr, status, err){
-        console.error(this.props.url, status, err)
-      }.bind(this)
-    })
+  componentWillReceiveProps: function() {
+    console.log('inside compoennt did mount');
+    console.log(this.props.user._id);
+    if (this.props.user._id) {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:2323/api/events/' + this.props.user._id,
+        dataType: 'json',
+        cache: false,
+        success: function(data){
+          console.log('Successfully retrieved DATA');
+          console.log(data);
+          this.setState({events: data.events})
+          this.handleEvents(this.state.events)
+          this.props.user._id = null;
+        }.bind(this),
+        error: function(xhr, status, err){
+          console.error(this.props.url, status, err)
+          this.props.user._id = null;
+        }.bind(this)
+      })
+    }
   },
   handleEvents: function(events){
     var rows = []
-    events.forEach(function(event, index) {
-      rows.push(<SingleEvent event={event} key={index} />)
-    })
-    console.log('Rendering Event List')
-    this.setState({rowes: rows})
+    console.log('inside handle events');
+    console.log(events);
+    if (events) {
+      events.forEach(function(event, index) {
+        rows.push(<SingleEvent event={event} key={index} />)
+      })
+      console.log('Rendering Event List')
+      this.setState({rowes: rows})
+    }
+
   },
   render: function() {
+    console.log('inside event list render');
+    console.log(this.props.user._id);
+    if (this.props.user._id) {
+      this.componentWillReceiveProps();
+      this.props.user._id = null;
+    }
     return (
       <div className="eventList">
         <ul>

@@ -9,12 +9,17 @@ module.exports = React.createClass({
      return ({user: this.props.user})
    },
    componentWillReceiveProps: function() {
-     this.setState({
-       user: this.props.user
-     })
-     console.log('Display User state has been set to user');
-     console.log(this.props.user);
-     console.log(this.state.user);
+     if (this.props.user._id) {
+       this.setState({
+         user: this.props.user
+       })
+       console.log('Display User state has been set to user');
+       console.log(this.props.user);
+       console.log(this.state.user);
+       this.handleInterests(this.props.user);
+       this.handleNeighborhoods(this.props.user);
+     }
+
    },
    // loadUserFromServer: function() {
    //   $.ajax({
@@ -59,6 +64,10 @@ module.exports = React.createClass({
    render: function() {
      console.log('inside display user render');
      console.log(this.props.user);
+    //  if (this.props.user._id) {
+    //    this.componentWillReceiveProps();
+    //    this.props.user._id = null;
+    //  }
      return (
        <div>
          <h3 className="userName">{this.props.user.firstName} {this.props.user.lastName}</h3>

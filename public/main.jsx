@@ -15,7 +15,7 @@ const UpdateUserForm = require(__dirname + '/components/user_update.jsx')
 var userId = "574390a51831bd0d9abfe74a"
 var userUrl = "/api/user/" + userId
 var eventUrl = "/api/events/" + userId
-// var eventUrl = "http://localhost:6060/api/event/" + eventId
+// var eventUrl = "http://localhost:2323/api/event/" + eventId
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -88,14 +88,16 @@ var RootApp = React.createClass({
           <h2>Profile</h2>
           <div className="col-lg-4">
             <DisplayUser className="row profile" user={this.state.user} />
-            <div className="row form" id="userForm"></div>
-            <div className="row form" id="userUpdate"></div>
+            <CreateUserForm className="row form" />
+            <UpdateUserForm className="row form" />
           </div>
           <h2>Events</h2>
-          <div className="col-lg-4 events" id="eventList"></div>
+          <div className="col-lg-4" id="eventList">
+            <EventList className="row events" user={this.state.user}/>
+          </div>
           <h2>CreateEvent</h2>
           <div className="col-lg-4">
-            <div className="row form" id="eventForm"></div>
+            <CreateEventForm className="row form" />
             <div className="row form" id="eventUpdate"></div>
           </div>
         </div>
