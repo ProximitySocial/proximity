@@ -190,8 +190,7 @@
 	          'div',
 	          { className: 'col-lg-4' },
 	          React.createElement(DisplayUser, { className: 'row profile', user: this.state.user }),
-	          React.createElement(CreateUserForm, { className: 'row form' }),
-	          React.createElement(UpdateUserForm, { className: 'row form' })
+	          React.createElement(CreateUserForm, { className: 'row form', user: this.state.user })
 	        ),
 	        React.createElement(
 	          'h2',
@@ -20721,7 +20720,7 @@
 	      address: '',
 	      file: '',
 	      imagePreviewUrl: '',
-	      picUrl: '',
+	      url: '',
 	      fileName: '',
 	      fileType: '',
 	      fileSize: '' };
@@ -20811,7 +20810,7 @@
 	      var fileType = this.state.file.type;
 	      var fileSize = this.state.file.size;
 	    } else {
-	      var picture = this.state.picUrl.trim();
+	      var picture = this.state.url.trim();
 	    }
 	    // if (!title || !description || !address) return
 	    this.onFormSubmit({
@@ -20941,16 +20940,24 @@
 	  displayName: 'CreateUserForm',
 	  getInitialState: function getInitialState() {
 	    return {
+	      userId: '5740b2dfb7c4e79bf41af122',
 	      firstName: '',
 	      lastName: '',
 	      email: '',
+	      bio: '',
+	      interests: '',
+	      addressName: '',
+	      address: '',
 	      file: '',
 	      imagePreviewUrl: '',
+	      url: '',
 	      fileName: '',
 	      fileType: '',
-	      picUrl: '',
 	      fileSize: ''
 	    };
+	  },
+	  handleIdChange: function handleIdChange(e) {
+	    this.setState({ userId: e.target.value });
 	  },
 	  handleFirstChange: function handleFirstChange(e) {
 	    this.setState({ firstName: e.target.value });
@@ -20960,6 +20967,18 @@
 	  },
 	  handleEmailChange: function handleEmailChange(e) {
 	    this.setState({ email: e.target.value });
+	  },
+	  handleBioChange: function handleBioChange(e) {
+	    this.setState({ bio: e.target.value });
+	  },
+	  handleInterestsChange: function handleInterestsChange(e) {
+	    this.setState({ interests: e.target.value });
+	  },
+	  handleAddressNameChange: function handleAddressNameChange(e) {
+	    this.setState({ addressName: e.target.value });
+	  },
+	  handleAddressChange: function handleAddressChange(e) {
+	    this.setState({ address: e.target.value });
 	  },
 	  handleImageChange: function handleImageChange(e) {
 	    var _this = this;
@@ -20978,6 +20997,7 @@
 	  },
 	  loadToS3: function loadToS3(signedRequest, done) {
 	    console.log('send off to S3');
+	    console.log(this.state.file);
 	    var xhr = new XMLHttpRequest();
 	    xhr.open("PUT", signedRequest);
 	    xhr.onload = function () {
@@ -20991,28 +21011,7 @@
 	    this.setState({
 	      file: ''
 	    });
-	    // $.ajax({
-	    //   type: 'PUT',
-	    //   url: signedRequest,
-	    //   processData: false,
-	    //   data: this.state.file,
-	    //   success: (data) => {
-	    //     console.log(data);
-	    //     console.log('Success from S3')
-	    //     this.setState({
-	    //       file: ''
-	    //     })
-	    //   },
-	    //   error: (data, status, xhr) => {
-	    //     console.log('Failure from S3')
-	    //     console.log(data)
-	    //     console.log(status)
-	    //     console.log(xhr)
-	    //   }
-
-	    // })
 	  },
-	  //Incomplete....use to source an image from Google
 	  srcImage: function srcImage(e) {
 	    console.log('trying to source image');
 	    var title = this.state.title.trim();
@@ -21023,6 +21022,7 @@
 	    $.ajax({
 	      type: 'GET',
 	      url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
+	      dataType: 'application/json',
 	      success: function success(data) {
 	        console.log(data);
 	      },
@@ -21039,32 +21039,51 @@
 	    var firstName = this.state.firstName.trim();
 	    var lastName = this.state.lastName.trim();
 	    var email = this.state.email.trim();
-	    if (!this.state.picUrl) {
+	    var bio = this.state.bio.trim();
+	    var interests = this.state.interests.trim();
+	    var address = this.state.address.trim();
+	    var addressName = this.state.addressName.trim();
+
+	    if (this.state.file) {
 	      var fileName = this.state.file.name;
 	      var fileType = this.state.file.type;
 	      var fileSize = this.state.file.size;
 	    } else {
-	      var picture = this.state.picUrl.trim();
+	      var picture = this.state.url.trim();
 	    }
-	    if (!firstName || !lastName || !email) return;
+
+	    // if (!firstName || !lastName || !email) return
 	    this.onFormSubmit({
 	      firstName: firstName,
 	      lastName: lastName,
 	      email: email,
-	      pic: picture,
+	      bio: bio,
+	      interests: interests,
+	      addressName: addressName,
+	      address: address,
+	      picture: picture,
 	      fileName: fileName,
 	      fileType: fileType,
 	      fileSize: fileSize
 	    }, this.loadToS3);
-	    this.setState({ firstName: '', lastName: '', email: '' });
+	    this.setState({ firstName: '', lastName: '', email: '', bio: '', interests: '', addressName: '', address: '' });
 	  },
 	  onFormSubmit: function onFormSubmit(newUser, callback) {
+	    if (this.state.userId) {
+	      var crudType = 'PUT';
+	      var route = '/api/user/' + this.state.userId;
+	    } else {
+	      var crudType = 'POST';
+	      var route = '/api/user/new';
+	    }
+	    console.log(crudType, route);
 	    $.ajax({
-	      type: 'POST',
-	      url: '/api/user/new',
+	      type: crudType,
+	      url: route,
 	      data: JSON.stringify(newUser),
 	      contentType: 'application/json',
 	      success: function success(data) {
+	        console.log(data);
 	        callback(data.signedRequest);
 	      },
 	      error: function error(data, status, jqXHR) {
@@ -21094,6 +21113,12 @@
 	        { className: 'createUserForm', onSubmit: this.handleSubmit },
 	        React.createElement(
 	          'label',
+	          { 'for': 'userID' },
+	          'User ID:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'userID', value: this.state.userId, onChange: this.handleIdChange }),
+	        React.createElement(
+	          'label',
 	          { 'for': 'firstName' },
 	          'First Name:'
 	        ),
@@ -21110,6 +21135,30 @@
 	          'Email:'
 	        ),
 	        React.createElement('input', { type: 'text', placeholder: 'Email', value: this.state.email, onChange: this.handleEmailChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'bio' },
+	          'Bio:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'bio', value: this.state.bio, onChange: this.handleDescriptionChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'Address' },
+	          'Interests:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'InterestTags', value: this.state.interests, onChange: this.handleInterestTagsChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'Address Name' },
+	          'Address Name:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Address Name', value: this.state.addressName, onChange: this.handleAddressNameChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'Address' },
+	          'Address:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Address', value: this.state.address, onChange: this.handleAddressChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'Image' },
@@ -21173,17 +21222,42 @@
 	    });
 	    this.setState({ firstName: '', lastName: '', email: '' });
 	  },
-	  onFormSubmit: function onFormSubmit(newUser) {
-	    console.log('Submittiing update user form');
-	    console.log(this.props.url);
+	  // onFormSubmit: function(newUser) {
+	  //   console.log('Submittiing update user form');
+	  //   console.log(this.props.url);
+	  //   $.ajax({
+	  //     type: 'PUT',
+	  //     url: this.props.url,
+	  //     data: JSON.stringify(newUser),
+	  //     contentType: 'application/json',
+	  //     success: function(data){
+	  //       console.log(data)
+	  //       console.log('SUCCESS')
+	  //     },
+	  //     error: function(data, status, jqXHR){
+	  //       console.log(data)
+	  //       console.log(status)
+	  //       console.log(jqXHR)
+	  //     }
+	  //   })
+	  // },
+	  onFormSubmit: function onFormSubmit(newEvent, callback) {
+	    if (this.state.userId) {
+	      var crudType = 'PUT';
+	      var route = '/api/user/' + this.state.userId;
+	    } else {
+	      var crudType = 'POST';
+	      var route = '/api/user/new';
+	    }
+	    console.log(crudType, route);
 	    $.ajax({
-	      type: 'PUT',
-	      url: this.props.url,
-	      data: JSON.stringify(newUser),
+	      type: crudType,
+	      url: route,
+	      data: JSON.stringify(newEvent),
 	      contentType: 'application/json',
 	      success: function success(data) {
 	        console.log(data);
-	        console.log('SUCCESS');
+	        callback(data.signedRequest);
 	      },
 	      error: function error(data, status, jqXHR) {
 	        console.log(data);
@@ -21193,6 +21267,13 @@
 	    });
 	  },
 	  render: function render() {
+	    var imagePreviewUrl = this.state.imagePreviewUrl;
+
+	    var $imagePreview = null;
+	    if (imagePreviewUrl) {
+	      $imagePreview = React.createElement('img', { src: imagePreviewUrl });
+	    }
+
 	    return React.createElement(
 	      'div',
 	      null,
@@ -21222,6 +21303,22 @@
 	          'Email:'
 	        ),
 	        React.createElement('input', { type: 'text', placeholder: 'Email', value: this.state.email, onChange: this.handleEmailChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'Image' },
+	          'Image:'
+	        ),
+	        React.createElement('input', { type: 'file', onChange: this.handleImageChange }),
+	        React.createElement(
+	          'button',
+	          { type: 'submit', onClick: this.handleSubmit },
+	          'Update User'
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          $imagePreview
+	        ),
 	        React.createElement(
 	          'button',
 	          { type: 'submit' },

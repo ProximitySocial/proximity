@@ -88,8 +88,7 @@ var RootApp = React.createClass({
           <h2>Profile</h2>
           <div className="col-lg-4">
             <DisplayUser className="row profile" user={this.state.user} />
-            <CreateUserForm className="row form" />
-            <UpdateUserForm className="row form" />
+            <CreateUserForm className="row form" user={this.state.user}/>
           </div>
           <h2>Events</h2>
           <div className="col-lg-4" id="eventList">
