@@ -8,7 +8,6 @@ const EventList = require(__dirname + '/components/event_list.jsx')
 const DisplayUser = require(__dirname + '/components/display_user.jsx')
 const CreateEventForm = require(__dirname + '/components/event_form.jsx')
 const CreateUserForm = require(__dirname + '/components/user_form.jsx')
-const UpdateEventForm = require(__dirname + '/components/event_update.jsx')
 const UpdateUserForm = require(__dirname + '/components/user_update.jsx')
 
 

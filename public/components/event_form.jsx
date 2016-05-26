@@ -5,12 +5,12 @@ module.exports = React.createClass({
       displayName: 'eventForm',
       getInitialState: function() {
         return({
-                eventId: '',
-                title: 'Blah Blah',
-                description: 'Description of the best event ever',
-                interestTags: 'golf',
-                addressName: 'Code Fellows',
-                address: '2901 3rd ave seattle',
+                eventId: '5745fe521e346da7f258df2b',
+                title: 'A CHANGE I MADE',
+                description: '',
+                interestTags: '',
+                addressName: '',
+                address: '',
                 file: '',
                 imagePreviewUrl: '',
                 picUrl: '',
@@ -19,7 +19,7 @@ module.exports = React.createClass({
                 fileSize: ''});
       },
       handleIdChange: function(e) {
-        this.setState({title: e.target.value});
+        this.setState({eventId: e.target.value});
       },
       handleTitleChange: function(e) {
         this.setState({title: e.target.value});
@@ -89,19 +89,20 @@ module.exports = React.createClass({
       },
       handleSubmit: function(e) {
         e.preventDefault()
+        console.log('somehting to see')
         var title = this.state.title.trim()
         var description = this.state.description.trim()
         var interestTags = this.state.interestTags.trim()
         var address = this.state.address.trim()
         var addressName = this.state.addressName.trim()
-        if (!this.state.picUrl){
+        if (this.state.file){
           var fileName = this.state.file.name
           var fileType = this.state.file.type
           var fileSize = this.state.file.size
         } else {
           var picture = this.state.picUrl.trim()
         }
-        if (!title || !description || !address) return
+        // if (!title || !description || !address) return
         this.onFormSubmit({
            title: title,
            description: description,
@@ -113,16 +114,17 @@ module.exports = React.createClass({
            fileType: fileType,
            fileSize: fileSize
         }, this.loadToS3);
-        this.setState({title: '', description: '', interestTags: '', addressName: '', address: ''});
+        this.setState({title: '', description: '', interestTags: '', addressName: '', address: '', file: ''});
       },
       onFormSubmit: function(newEvent, callback) {
         if(this.state.eventId){
           var crudType = 'PUT'
-          var route = 'http://localhost:6060/api/event/' + this.state.eventId
+          var route = '/api/event/' + this.state.eventId
         } else {
           var crudType = 'POST'
-          var route = 'http://localhost:6060/api/event/new'
+          var route = '/api/event/new'
         }
+        console.log(crudType, route)
         $.ajax({
           type: crudType,
           url: route,
@@ -147,7 +149,7 @@ module.exports = React.createClass({
         }
         return (
           <div>
-            <h2>Create Event</h2>
+            <h2>Create/Update Event</h2>
             <form className="eventForm" onSubmit={this.handleSubmit} >
               <label for="eventId">Event ID:</label>
               <input type="text" placeholder="eventID" value={this.state.eventId}  onChange={this.handleIdChange} />

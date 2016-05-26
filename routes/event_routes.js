@@ -2,6 +2,7 @@ const express = require('express')
 const User = require(__dirname + '/../models/user')
 const Event = require(__dirname + '/../models/event')
 const eventRouter = module.exports = exports = express.Router()
+const updateEvent = require('../libs/eventslib').updateEvent
 const http = require('http')
 const callGoogle = require('../libs/googleLocation')
 const getAndSendUserLocalEvents = require('../libs/getEventsPerUser')
@@ -37,11 +38,7 @@ eventRouter.post('/event/new', (req, res) => {
     .then((data) => {
       if(eventData.fileName && eventData.fileType){
         getS3SignedUrl(eventData)
-          .then((s3Data) => {
-            eventData = s3Data
-          }).catch((err) => {
-            throw err;
-          })
+          .then((s3Data) => { eventData = s3Data }).catch((err) => {throw err;})
       }
       eventData.neighborhood = data.results[0].address_components[2].long_name
       eventData.locationData = data
@@ -95,27 +92,44 @@ eventRouter.get('/event/attendees/:id', (req, res) => {
 
 //update event  AUTH creator
 eventRouter.put('/event/:id', (req, res) => {
-  console.log('SERVER UPDATE EVENT ROUTE');
-  console.log(req.body);
-  //auth for creator
+  console.log('SERVER UPDATE EVENT called');
   var newData = req.body
-  // delete newData._creator
-  // delete newData._id
-  var address = req.body.address.split(' ').join('+')
-  console.log(address);
-  callGoogle(address)
-    .then((data) => {
-      newData.neighborhood = data.results[0].address_components[2].long_name
-      newData.locationData = data
-      Event.update({_id: req.params.id}, newData, (err, result) => {
-        if (err) return res.status(500).json({msg: 'Server Error'})
-        res.status(200).json({msg: 'Successfully updated event', result: result})
-      })
-    })
-    .catch((err) => {
-      console.log('inside call google error');
-      throw err;
-    })
+  Object.keys(newData).forEach( (prop) => {
+    if (!newData[prop]){
+      console.log('deleting prop obj: ' + newData[prop])
+      delete newData[prop]
+    }
+  })
+  if (newData.address) {
+    var address = req.body.address.split(' ').join('+')
+    callGoogle(address)
+      .then((data) => {
+        newData.neighborhood = data.results[0].address_components[2].long_name
+        newData.locationData = data
+          if (newData.fileName && newData.fileType){
+            console.log('picture changed && address changed')
+            getS3SignedUrl(newData)
+              .then((data) => {
+                newData = data
+                updateEvent(newData, req.params.id, res)
+              }).catch((err) => { console.log('inside call google error'); throw err; })
+          } else {
+            console.log('no S3 change but Yes an address changed')
+            updateEvent(newData, req.params.id, res)
+          }
+      }).catch((err) => { console.log('inside call google error'); throw err; })
+  }
+  if (newData.fileName && newData.fileType){
+    console.log('picture changed, no address change')
+    getS3SignedUrl(newData)
+      .then((data) => {
+        newData = data
+        updateEvent(newData, req.params.id, res)
+      }).catch((err) => { console.log('inside call S3 error'); throw err; })
+  } else {
+    console.log('no address change and no picture change')
+    updateEvent(newData, req.params.id, res)
+  }
 })
 
 //add attendee
