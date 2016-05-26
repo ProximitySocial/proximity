@@ -67,7 +67,7 @@ eventRouter.get('/event/attendees/:id', (req, res) => {
       console.log(result);
       const attendeePromises = result._attendees.map((attendeeId) => {
         console.log(attendeeId);
-        const attendeeProm = User.findOne({_id: attendeeId}, 'pic').exec()
+        const attendeeProm = User.findOne({_id: attendeeId}).exec()
           .catch((err) => {res.status(500).json({msg: 'Error retrieving user'})})
         return Promise.resolve(attendeeProm)
       })
