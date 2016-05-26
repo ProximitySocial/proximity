@@ -5,6 +5,7 @@ const Event = require(__dirname + '/../models/event')
 const userRouter = module.exports = exports = express.Router()
 const getS3SignedUrl = require('../config/aws')
 const createUser = require('../libs/userLib')
+const passport = require('../config/passport')
 
 userRouter.get('/users', (req, res) => {
   User.find({}, (err, result) => {
@@ -29,15 +30,22 @@ userRouter.post('/user/new', (req, res) => {
   }
 })
 
+userRouter.get('/user', passport.authenticate('bearer', {session: false}),
+  (req, res) => {
+    console.log("GETTING REQUEST for a specific user")
+    res.status(200).json(req.user).header()
+  }
+)
+
+
 userRouter.get('/user/:id', (req, res) => {
   console.log("GETTING REQUEST for a specific user")
-  User.findOne({_id: req.params.id}, (err, result) => {
+  User.findOne({access_token: req.params.id}, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     if (result === null) return res.status(400).json({msg: "bad request, user doesn't exist"})
     res.status(200).json(result)
   })
 })
-
 
 userRouter.put('/user/:id', (req, res) => {
   console.log('SERVER UPDATE USER ROUTE')
@@ -45,7 +53,6 @@ userRouter.put('/user/:id', (req, res) => {
   User.update({_id: req.params.id}, {$set: newData}, (err, doc) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     console.log(doc)
-
     res.status(200).json({docs: doc, msg: 'changed User details' })
   })
 })

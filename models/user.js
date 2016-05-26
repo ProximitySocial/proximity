@@ -22,6 +22,7 @@ var userSchema = new mongoose.Schema({
     _favorites:    {type: Array},
     provider:      {type: String},
     facebook:      {type: Object},
+    access_token:      {type: String},
     created_at:    {type: Date, required: true, default: Date.now }
 })
 
