@@ -5,8 +5,8 @@ module.exports = React.createClass({
       displayName: 'eventForm',
       getInitialState: function() {
         return({
-                eventId: '5740b2dfb7c4e79bf41af122',
-                title: 'A CHANGE I MADE',
+                eventId: '',
+                title: '',
                 description: '',
                 interestTags: '',
                 addressName: '',
