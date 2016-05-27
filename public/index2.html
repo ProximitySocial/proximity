@@ -94,7 +94,7 @@
         onFormSubmit: function(newEvent) {
           $.ajax({
             type: 'POST',
-            url: 'http://localhost:6060/api/event/new',
+            url: 'http://localhost:2323/api/event/new',
             data: JSON.stringify(newEvent),
             dataType: json,
             success: function(data){

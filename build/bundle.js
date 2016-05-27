@@ -100,8 +100,8 @@
 	    }
 	    $.ajax({
 	      type: 'GET',
-	      url: 'http://localhost:6060/api/user/' + sessionStorage.token,
-	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:6060' },
+	      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
+	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
 	      // beforeSend: function(xhr){
 	      //   xhr.withCredentials = true;
 	      //   xhr.setRequestHeader('Authorization', )
@@ -200,47 +200,25 @@
 	        )
 	      ),
 	      React.createElement(
-<<<<<<< HEAD
-	        'div',
-	        { className: 'container row' },
-	        React.createElement(
-	          'h2',
-	          null,
-	          'Profile'
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'col-lg-4' },
-	          React.createElement(DisplayUser, { className: 'row profile', user: this.state.user }),
-	          React.createElement(CreateUserForm, { className: 'row form', user: this.state.user })
-	        ),
-	        React.createElement(
-	          'h2',
-	          null,
-	          'Events'
-	        ),
-=======
 	        'section',
 	        { style: classHide },
->>>>>>> dev
 	        React.createElement(
 	          'div',
 	          { className: 'container row' },
 	          React.createElement(
 	            'div',
-	            { className: 'col-lg-4 column' },
+	            { className: 'col-lg-4' },
 	            React.createElement(
 	              'h2',
 	              null,
 	              'Profile'
 	            ),
 	            React.createElement(DisplayUser, { className: 'row profile', user: this.state.user }),
-	            React.createElement(CreateUserForm, { className: 'row form' }),
-	            React.createElement(UpdateUserForm, { className: 'row form' })
+	            React.createElement(CreateUserForm, { className: 'row form', user: this.state.user })
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-lg-4 column', id: 'eventList' },
+	            { className: 'col-lg-4', id: 'eventList' },
 	            React.createElement(
 	              'h2',
 	              null,
@@ -250,7 +228,7 @@
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-lg-4', column: true },
+	            { className: 'col-lg-4' },
 	            React.createElement(
 	              'h2',
 	              null,
@@ -20412,7 +20390,7 @@
 	    if (user._id) {
 	      $.ajax({
 	        type: 'GET',
-	        url: 'http://localhost:6060/api/events/' + user._id,
+	        url: 'http://localhost:2323/api/events/' + user._id,
 	        dataType: 'json',
 	        cache: false,
 	        success: function (data) {

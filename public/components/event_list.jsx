@@ -22,7 +22,7 @@ module.exports = React.createClass({
     if (user._id) {
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:6060/api/events/' + user._id,
+        url: 'http://localhost:2323/api/events/' + user._id,
         dataType: 'json',
         cache: false,
         success: function(data){

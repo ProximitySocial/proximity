@@ -49,8 +49,8 @@ var RootApp = React.createClass({
     }
     $.ajax({
       type: 'GET',
-      url: 'http://localhost:6060/api/user/' + sessionStorage.token,
-      headers: {'Access-Control-Allow-Origin': 'http://localhost:6060'},
+      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
+      headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
       // beforeSend: function(xhr){
       //   xhr.withCredentials = true;
       //   xhr.setRequestHeader('Authorization', )
@@ -115,22 +115,23 @@ var RootApp = React.createClass({
         </section>
         <section style={classHide}>
           <div className="container row">
-            <h2>Profile</h2>
             <div className="col-lg-4">
+              <h2>Profile</h2>
               <DisplayUser className="row profile" user={this.state.user} />
               <CreateUserForm className="row form" user={this.state.user}/>
             </div>
-            <h2>Events</h2>
             <div className="col-lg-4" id="eventList">
+              <h2>Events</h2>
               <EventList className="row events" user={this.state.user}/>
             </div>
-            <h2>CreateEvent</h2>
             <div className="col-lg-4">
+              <h2>CreateEvent</h2>
               <CreateEventForm className="row form" />
               <div className="row form" id="eventUpdate"></div>
             </div>
           </div>
-      </section>
+        </section>
+      </div>
     )
   }
 })
