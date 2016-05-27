@@ -40,7 +40,8 @@ var RootApp = React.createClass({
     }
     return ({user: userObj,
             events: '',
-            toggle: toggleVar})
+            toggle: toggleVar,
+            hideForm: true})
   },
   componentDidMount: function() {
     if (!this.state.user){
@@ -77,6 +78,9 @@ var RootApp = React.createClass({
                    events: '',
                    toggle: true})
   },
+  showForm: function(){
+    this.setState({hideForm: false})
+  },
   render: function(){
     var classHide, classShow
     if (this.state.toggle){
@@ -86,27 +90,27 @@ var RootApp = React.createClass({
       classHide = {}
       classShow = {display: "none"}
     }
+    var hideForm
+    if (this.state.hideForm){
+      hide = {display: "none"}
+    } else {
+      hide = {}
+    }
     return (
       <div>
         <section>
           <nav className="navbar navbar-default navbar-fixed-top">
-            <div className="container">
+            <div className="container nav-contain">
               <div className="navbar-header">
-                <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                  <span className="sr-only">Toggle navigation</span>
-                  <span className="icon-bar"></span>
-                  <span className="icon-bar"></span>
-                  <span className="icon-bar"></span>
-                </button>
                 <a className="navbar-brand" href="#">VivaCity</a>
               </div>
               <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav">
                   <li style={classShow}>
-                      <a className="btn btn-primary fb-login"  id="fbLogin" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a>
+                      <a className="btn fb-login"  id="fbLogin" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a>
                   </li>
                   <li style={classHide}>
-                      <a className="btn btn-primary" id="fbLogin" onClick={this.logout} role="button">Logout &raquo;</a>
+                      <a className="btn fb-login" id="fbLogin" onClick={this.logout} role="button">Logout &raquo;</a>
                   </li>
                 </ul>
               </div>
@@ -125,10 +129,10 @@ var RootApp = React.createClass({
               <h2>Events</h2>
               <EventList className="row events" user={this.state.user}/>
             </div>
-            <div className="col-lg-4" column>
-              <h2>CreateEvent</h2>
-              <CreateEventForm className="row form" />
-              <div className="row form" id="eventUpdate"></div>
+            <div className="col-lg-4 column">
+              <h2 className="btn" onClick={this.showForm}>Create From</h2>
+              <h2 className="btn" onClick={this.showForm} style={hide}>Update</h2>
+              <CreateEventForm style={hide} className="row form" />
             </div>
           </div>
         </section>

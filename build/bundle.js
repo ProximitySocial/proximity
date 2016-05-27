@@ -89,7 +89,8 @@
 	    }
 	    return { user: userObj,
 	      events: '',
-	      toggle: toggleVar };
+	      toggle: toggleVar,
+	      hideForm: true };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    var _this = this;
@@ -128,6 +129,9 @@
 	      events: '',
 	      toggle: true });
 	  },
+	  showForm: function showForm() {
+	    this.setState({ hideForm: false });
+	  },
 	  render: function render() {
 	    var classHide, classShow;
 	    if (this.state.toggle) {
@@ -136,6 +140,12 @@
 	    } else {
 	      classHide = {};
 	      classShow = { display: "none" };
+	    }
+	    var hideForm;
+	    if (this.state.hideForm) {
+	      hideForm = { display: "none" };
+	    } else {
+	      hideForm = {};
 	    }
 	    return React.createElement(
 	      'div',
@@ -148,22 +158,10 @@
 	          { className: 'navbar navbar-default navbar-fixed-top' },
 	          React.createElement(
 	            'div',
-	            { className: 'container' },
+	            { className: 'container nav-contain' },
 	            React.createElement(
 	              'div',
 	              { className: 'navbar-header' },
-	              React.createElement(
-	                'button',
-	                { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#navbar', 'aria-expanded': 'false', 'aria-controls': 'navbar' },
-	                React.createElement(
-	                  'span',
-	                  { className: 'sr-only' },
-	                  'Toggle navigation'
-	                ),
-	                React.createElement('span', { className: 'icon-bar' }),
-	                React.createElement('span', { className: 'icon-bar' }),
-	                React.createElement('span', { className: 'icon-bar' })
-	              ),
 	              React.createElement(
 	                'a',
 	                { className: 'navbar-brand', href: '#' },
@@ -181,7 +179,7 @@
 	                  { style: classShow },
 	                  React.createElement(
 	                    'a',
-	                    { className: 'btn btn-primary fb-login', id: 'fbLogin', href: '/api/auth/facebook', role: 'button' },
+	                    { className: 'btn fb-login', id: 'fbLogin', href: '/api/auth/facebook', role: 'button' },
 	                    'Facebook Login »'
 	                  )
 	                ),
@@ -190,7 +188,7 @@
 	                  { style: classHide },
 	                  React.createElement(
 	                    'a',
-	                    { className: 'btn btn-primary', id: 'fbLogin', onClick: this.logout, role: 'button' },
+	                    { className: 'btn fb-login', id: 'fbLogin', onClick: this.logout, role: 'button' },
 	                    'Logout »'
 	                  )
 	                )
@@ -229,14 +227,18 @@
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-lg-4', column: true },
+	            { className: 'col-lg-4 column' },
 	            React.createElement(
 	              'h2',
-	              null,
-	              'CreateEvent'
+	              { className: 'btn', onClick: this.showForm },
+	              'Create From'
 	            ),
-	            React.createElement(CreateEventForm, { className: 'row form' }),
-	            React.createElement('div', { className: 'row form', id: 'eventUpdate' })
+	            React.createElement(
+	              'h2',
+	              { className: 'btn', onClick: this.showForm, style: hideForm },
+	              'Update'
+	            ),
+	            React.createElement(CreateEventForm, { style: hideForm, className: 'row form' })
 	          )
 	        )
 	      )
@@ -20491,15 +20493,11 @@
 	      margin: 0,
 	      verticalAlign: "bottom" };
 
-	    var startTime = Date.parse(this.props.event.startTime);
+	    // var startTime = Date.parse(this.props.event.startTime)
 	    var now = Date.now(); //- Date.parse(Date.now())
 	    var timeTill = Date.parse(this.props.event.startTime) - now;
 	    var x = timeTill / 1000;
 	    var hour = formatDate(this.props.event.startTime);
-	    console.log('startTime: ' + startTime);
-	    console.log('hours: ' + x % 24);
-	    console.log('days: ' + x);
-	    var day = x;
 
 	    return React.createElement(
 	      'li',
@@ -20616,9 +20614,6 @@
 	      neighborhoods: [] };
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    console.log(nextProps);
-	    console.log('^^^^^^^^^^^^^');
-	    console.log('^^^^^^^^^^^^^');
 	    this.handleNeighborhoods(nextProps.user);
 	    this.handleInterests(nextProps.user);
 	  },

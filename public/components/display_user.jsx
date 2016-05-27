@@ -10,12 +10,8 @@ module.exports = React.createClass({
               neighborhoods: []})
    },
    componentWillReceiveProps: function(nextProps) {
-      console.log(nextProps)
-      console.log('^^^^^^^^^^^^^')
-      console.log('^^^^^^^^^^^^^')
       this.handleNeighborhoods(nextProps.user)
       this.handleInterests(nextProps.user)
-
    },
    // loadUserFromServer: function() {
    //   $.ajax({
