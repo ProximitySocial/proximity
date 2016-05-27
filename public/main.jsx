@@ -29,7 +29,8 @@ function getParameterByName(name, url) {
 var RootApp = React.createClass({
   getInitialState: function(){
     return ({user: '',
-            events: ''})
+            events: '',
+            toggle: true})
   },
   componentDidMount: function() {
     var token = getParameterByName('access_token');
@@ -37,8 +38,8 @@ var RootApp = React.createClass({
     if (token) {
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:2323/api/user/' + token,
-        headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
+        url: 'http://localhost:6060/api/user/' + token,
+        headers: {'Access-Control-Allow-Origin': 'http://localhost:6060'},
         // beforeSend: function(xhr){
         //   xhr.withCredentials = true;
         //   xhr.setRequestHeader('Authorization', )
@@ -47,9 +48,10 @@ var RootApp = React.createClass({
           console.log(data)
           console.log(status)
           this.setState({
-            user: data
+            user: data,
+            toggle: false
           })
-          // console.log('State has been set to user');
+          console.log('this is toggle: ' + toggle);
         },
         error: (xhr, status, error) => {
           console.log(xhr)
@@ -59,49 +61,71 @@ var RootApp = React.createClass({
       })
     }
   },
+  logout: function(){
+
+    this.setState({user: '',
+                   events: '',
+                   toggle: true})
+  },
   render: function(){
+    var classHide, classShow
+    if (this.state.toggle){
+      classHide = {display: "none"}
+      classShow = {}
+    } else {
+      classHide = {}
+      classShow = {display: "none"}
+    }
     return (
-      <section>
-        <nav className="navbar navbar-default navbar-fixed-top">
-          <div className="container">
-            <div className="navbar-header">
-              <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span className="sr-only">Toggle navigation</span>
-                <span className="icon-bar"></span>
-                <span className="icon-bar"></span>
-                <span className="icon-bar"></span>
-              </button>
-              <a className="navbar-brand" href="#">Common Radar</a>
-            </div>
-            <div id="navbar" className="navbar-collapse collapse">
-              <ul className="nav navbar-nav">
+      <div>
+        <section>
+          <nav className="navbar navbar-default navbar-fixed-top">
+            <div className="container">
+              <div className="navbar-header">
+                <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                  <span className="sr-only">Toggle navigation</span>
+                  <span className="icon-bar"></span>
+                  <span className="icon-bar"></span>
+                  <span className="icon-bar"></span>
+                </button>
+                <a className="navbar-brand" href="#">Common Radar</a>
+              </div>
+              <div id="navbar" className="navbar-collapse collapse">
+                <ul className="nav navbar-nav">
 
-                <li className="active"><a href="">Interests</a></li>
-                <li><a href="">Search Me</a></li>
-                <li><a className="btn btn-primary fb-login" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a></li>
-              </ul>
+                  <li className="active"><a href="">Interests</a></li>
+                  <li><a href="">Search Me</a></li>
+                  <li style={classShow}>
+                      <a className="btn btn-primary fb-login"  id="fbLogin" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a>
+                  </li>
+                  <li style={classHide}>
+                      <a className="btn btn-primary" id="fbLogin" onClick={this.logout} role="button">Logout &raquo;</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </section>
+        <section style={classHide}>
+          <div className="container row">
+            <div className="col-lg-4 column">
+              <h2>Profile</h2>
+              <DisplayUser className="row profile" user={this.state.user} />
+              <CreateUserForm className="row form" />
+              <UpdateUserForm className="row form" />
+            </div>
+            <div className="col-lg-4 column" id="eventList">
+              <h2>Events</h2>
+              <EventList className="row events" user={this.state.user}/>
+            </div>
+            <div className="col-lg-4" column>
+              <h2>CreateEvent</h2>
+              <CreateEventForm className="row form" />
+              <div className="row form" id="eventUpdate"></div>
             </div>
           </div>
-        </nav>
-
-        <div className="container row">
-          <h2>Profile</h2>
-          <div className="col-lg-4">
-            <DisplayUser className="row profile" user={this.state.user} />
-            <CreateUserForm className="row form" />
-            <UpdateUserForm className="row form" />
-          </div>
-          <h2>Events</h2>
-          <div className="col-lg-4" id="eventList">
-            <EventList className="row events" user={this.state.user}/>
-          </div>
-          <h2>CreateEvent</h2>
-          <div className="col-lg-4">
-            <CreateEventForm className="row form" />
-            <div className="row form" id="eventUpdate"></div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
     )
   }
 })

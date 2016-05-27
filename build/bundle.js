@@ -78,7 +78,8 @@
 
 	  getInitialState: function getInitialState() {
 	    return { user: '',
-	      events: '' };
+	      events: '',
+	      toggle: true };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    var _this = this;
@@ -88,8 +89,8 @@
 	    if (token) {
 	      $.ajax({
 	        type: 'GET',
-	        url: 'http://localhost:2323/api/user/' + token,
-	        headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
+	        url: 'http://localhost:6060/api/user/' + token,
+	        headers: { 'Access-Control-Allow-Origin': 'http://localhost:6060' },
 	        // beforeSend: function(xhr){
 	        //   xhr.withCredentials = true;
 	        //   xhr.setRequestHeader('Authorization', )
@@ -98,9 +99,10 @@
 	          console.log(data);
 	          console.log(status);
 	          _this.setState({
-	            user: data
+	            user: data,
+	            toggle: false
 	          });
-	          // console.log('State has been set to user');
+	          console.log('this is toggle: ' + toggle);
 	        },
 	        error: function error(xhr, status, _error) {
 	          console.log(xhr);
@@ -110,68 +112,95 @@
 	      });
 	    }
 	  },
+	  logout: function logout() {
+
+	    this.setState({ user: '',
+	      events: '',
+	      toggle: true });
+	  },
 	  render: function render() {
+	    var classHide, classShow;
+	    if (this.state.toggle) {
+	      classHide = { display: "none" };
+	      classShow = {};
+	    } else {
+	      classHide = {};
+	      classShow = { display: "none" };
+	    }
 	    return React.createElement(
-	      'section',
+	      'div',
 	      null,
 	      React.createElement(
-	        'nav',
-	        { className: 'navbar navbar-default navbar-fixed-top' },
+	        'section',
+	        null,
 	        React.createElement(
-	          'div',
-	          { className: 'container' },
+	          'nav',
+	          { className: 'navbar navbar-default navbar-fixed-top' },
 	          React.createElement(
 	            'div',
-	            { className: 'navbar-header' },
+	            { className: 'container' },
 	            React.createElement(
-	              'button',
-	              { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#navbar', 'aria-expanded': 'false', 'aria-controls': 'navbar' },
+	              'div',
+	              { className: 'navbar-header' },
 	              React.createElement(
-	                'span',
-	                { className: 'sr-only' },
-	                'Toggle navigation'
+	                'button',
+	                { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#navbar', 'aria-expanded': 'false', 'aria-controls': 'navbar' },
+	                React.createElement(
+	                  'span',
+	                  { className: 'sr-only' },
+	                  'Toggle navigation'
+	                ),
+	                React.createElement('span', { className: 'icon-bar' }),
+	                React.createElement('span', { className: 'icon-bar' }),
+	                React.createElement('span', { className: 'icon-bar' })
 	              ),
-	              React.createElement('span', { className: 'icon-bar' }),
-	              React.createElement('span', { className: 'icon-bar' }),
-	              React.createElement('span', { className: 'icon-bar' })
+	              React.createElement(
+	                'a',
+	                { className: 'navbar-brand', href: '#' },
+	                'Common Radar'
+	              )
 	            ),
 	            React.createElement(
-	              'a',
-	              { className: 'navbar-brand', href: '#' },
-	              'Common Radar'
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            { id: 'navbar', className: 'navbar-collapse collapse' },
-	            React.createElement(
-	              'ul',
-	              { className: 'nav navbar-nav' },
+	              'div',
+	              { id: 'navbar', className: 'navbar-collapse collapse' },
 	              React.createElement(
-	                'li',
-	                { className: 'active' },
+	                'ul',
+	                { className: 'nav navbar-nav' },
 	                React.createElement(
-	                  'a',
-	                  { href: '' },
-	                  'Interests'
-	                )
-	              ),
-	              React.createElement(
-	                'li',
-	                null,
+	                  'li',
+	                  { className: 'active' },
+	                  React.createElement(
+	                    'a',
+	                    { href: '' },
+	                    'Interests'
+	                  )
+	                ),
 	                React.createElement(
-	                  'a',
-	                  { href: '' },
-	                  'Search Me'
-	                )
-	              ),
-	              React.createElement(
-	                'li',
-	                null,
+	                  'li',
+	                  null,
+	                  React.createElement(
+	                    'a',
+	                    { href: '' },
+	                    'Search Me'
+	                  )
+	                ),
 	                React.createElement(
-	                  'a',
-	                  { className: 'btn btn-primary fb-login', href: '/api/auth/facebook', role: 'button' },
-	                  'Facebook Login »'
+	                  'li',
+	                  { style: classShow },
+	                  React.createElement(
+	                    'a',
+	                    { className: 'btn btn-primary fb-login', id: 'fbLogin', href: '/api/auth/facebook', role: 'button' },
+	                    'Facebook Login »'
+	                  )
+	                ),
+	                React.createElement(
+	                  'li',
+	                  { style: classHide },
+	                  React.createElement(
+	                    'a',
+	                    { className: 'btn btn-primary', id: 'fbLogin', onClick: this.logout, role: 'button' },
+	                    'Logout »'
+	                  )
 	                )
 	              )
 	            )
@@ -179,40 +208,44 @@
 	        )
 	      ),
 	      React.createElement(
-	        'div',
-	        { className: 'container row' },
-	        React.createElement(
-	          'h2',
-	          null,
-	          'Profile'
-	        ),
+	        'section',
+	        { style: classHide },
 	        React.createElement(
 	          'div',
-	          { className: 'col-lg-4' },
-	          React.createElement(DisplayUser, { className: 'row profile', user: this.state.user }),
-	          React.createElement(CreateUserForm, { className: 'row form' }),
-	          React.createElement(UpdateUserForm, { className: 'row form' })
-	        ),
-	        React.createElement(
-	          'h2',
-	          null,
-	          'Events'
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'col-lg-4', id: 'eventList' },
-	          React.createElement(EventList, { className: 'row events', user: this.state.user })
-	        ),
-	        React.createElement(
-	          'h2',
-	          null,
-	          'CreateEvent'
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'col-lg-4' },
-	          React.createElement(CreateEventForm, { className: 'row form' }),
-	          React.createElement('div', { className: 'row form', id: 'eventUpdate' })
+	          { className: 'container row' },
+	          React.createElement(
+	            'div',
+	            { className: 'col-lg-4 column' },
+	            React.createElement(
+	              'h2',
+	              null,
+	              'Profile'
+	            ),
+	            React.createElement(DisplayUser, { className: 'row profile', user: this.state.user }),
+	            React.createElement(CreateUserForm, { className: 'row form' }),
+	            React.createElement(UpdateUserForm, { className: 'row form' })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-lg-4 column', id: 'eventList' },
+	            React.createElement(
+	              'h2',
+	              null,
+	              'Events'
+	            ),
+	            React.createElement(EventList, { className: 'row events', user: this.state.user })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-lg-4', column: true },
+	            React.createElement(
+	              'h2',
+	              null,
+	              'CreateEvent'
+	            ),
+	            React.createElement(CreateEventForm, { className: 'row form' }),
+	            React.createElement('div', { className: 'row form', id: 'eventUpdate' })
+	          )
 	        )
 	      )
 	    );
@@ -20350,15 +20383,23 @@
 	  displayName: 'exports',
 
 	  getInitialState: function getInitialState() {
-	    return { events: [] };
+	    return { events: [],
+	      user: '' };
 	  },
-	  componentWillReceiveProps: function componentWillReceiveProps() {
-	    console.log('inside compoennt did mount');
-	    console.log(this.props.user._id);
-	    if (this.props.user._id) {
+	  propTypes: function propTypes() {
+	    user: React.PropTypes.object.isRequired;
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    console.log(nextProps);
+	    this.handleGetEvents(nextProps.user);
+	  },
+	  handleGetEvents: function handleGetEvents(user) {
+	    console.log('inside handleGet mount');
+	    console.log(user);
+	    if (user._id) {
 	      $.ajax({
 	        type: 'GET',
-	        url: 'http://localhost:2323/api/events/' + this.props.user._id,
+	        url: 'http://localhost:6060/api/events/' + user._id,
 	        dataType: 'json',
 	        cache: false,
 	        success: function (data) {
@@ -20366,7 +20407,6 @@
 	          console.log(data);
 	          this.setState({ events: data.events });
 	          this.handleEvents(this.state.events);
-	          this.props.user._id = null;
 	        }.bind(this),
 	        error: function (xhr, status, err) {
 	          console.error(this.props.url, status, err);
@@ -20389,11 +20429,6 @@
 	  },
 	  render: function render() {
 	    console.log('inside event list render');
-	    console.log(this.props.user._id);
-	    if (this.props.user._id) {
-	      this.componentWillReceiveProps();
-	      this.props.user._id = null;
-	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'eventList' },
@@ -20555,19 +20590,15 @@
 	  getInitialState: function getInitialState() {
 	    console.log('Getting initial state of display user class');
 	    console.log(this.props.user);
-	    return { user: this.props.user };
+	    return { user: this.props.user,
+	      neighborhoods: [] };
 	  },
-	  componentWillReceiveProps: function componentWillReceiveProps() {
-	    if (this.props.user._id) {
-	      this.setState({
-	        user: this.props.user
-	      });
-	      console.log('Display User state has been set to user');
-	      console.log(this.props.user);
-	      console.log(this.state.user);
-	      this.handleInterests(this.props.user);
-	      this.handleNeighborhoods(this.props.user);
-	    }
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    console.log(nextProps);
+	    console.log('^^^^^^^^^^^^^');
+	    console.log('^^^^^^^^^^^^^');
+	    this.handleNeighborhoods(nextProps.user);
+	    this.handleInterests(nextProps.user);
 	  },
 	  // loadUserFromServer: function() {
 	  //   $.ajax({
@@ -20593,10 +20624,10 @@
 	  handleUpdate: function handleUpdate() {
 	    console.log('make a request to handleUpdate');
 	  },
-	  handleInterests: function handleInterests(data) {
-	    console.log(data.interests);
+	  handleInterests: function handleInterests(user) {
+	    console.log(user.interests);
 	    var rows = [];
-	    data.interests.forEach(function (interest, index) {
+	    user.interests.forEach(function (interest, index) {
 	      rows.push(React.createElement(
 	        'li',
 	        { key: index },
@@ -20610,10 +20641,10 @@
 	    });
 	    this.setState({ interests: rows });
 	  },
-	  handleNeighborhoods: function handleNeighborhoods(data) {
-	    console.log(data.neighborhoods);
+	  handleNeighborhoods: function handleNeighborhoods(user) {
+	    console.log(user.neighborhoods);
 	    var rows = [];
-	    data.neighborhoods.forEach(function (neighborhood, index) {
+	    user.neighborhoods.forEach(function (neighborhood, index) {
 	      rows.push(React.createElement(
 	        'li',
 	        { key: index },
@@ -20630,6 +20661,9 @@
 	  render: function render() {
 	    console.log('inside display user render');
 	    console.log(this.props.user);
+	    var interests = this.state.interests;
+	    var neighborhoods = this.state.neighborhoods;
+	    // var hoods = this.handleNeighborhoods(this.props.user)
 	    //  if (this.props.user._id) {
 	    //    this.componentWillReceiveProps();
 	    //    this.props.user._id = null;
@@ -20678,7 +20712,7 @@
 	      React.createElement(
 	        'ul',
 	        { className: 'interests' },
-	        this.props.interests
+	        interests
 	      ),
 	      React.createElement(
 	        'h3',
@@ -20688,7 +20722,7 @@
 	      React.createElement(
 	        'ul',
 	        { className: 'neighborhoods' },
-	        this.props.neighborhoods
+	        neighborhoods
 	      )
 	    );
 	  }
@@ -20713,8 +20747,8 @@
 	  displayName: 'eventForm',
 	  getInitialState: function getInitialState() {
 	    return {
-	      eventId: '5740b2dfb7c4e79bf41af122',
-	      title: 'A CHANGE I MADE',
+	      eventId: '',
+	      title: '',
 	      description: '',
 	      interestTags: '',
 	      addressName: '',

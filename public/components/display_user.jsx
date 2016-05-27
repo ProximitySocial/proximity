@@ -6,19 +6,15 @@ module.exports = React.createClass({
    getInitialState: function() {
      console.log('Getting initial state of display user class');
      console.log(this.props.user);
-     return ({user: this.props.user})
+     return ({user: this.props.user,
+              neighborhoods: []})
    },
-   componentWillReceiveProps: function() {
-     if (this.props.user._id) {
-       this.setState({
-         user: this.props.user
-       })
-       console.log('Display User state has been set to user');
-       console.log(this.props.user);
-       console.log(this.state.user);
-       this.handleInterests(this.props.user);
-       this.handleNeighborhoods(this.props.user);
-     }
+   componentWillReceiveProps: function(nextProps) {
+      console.log(nextProps)
+      console.log('^^^^^^^^^^^^^')
+      console.log('^^^^^^^^^^^^^')
+      this.handleNeighborhoods(nextProps.user)
+      this.handleInterests(nextProps.user)
 
    },
    // loadUserFromServer: function() {
@@ -45,18 +41,18 @@ module.exports = React.createClass({
    handleUpdate: function(){
      console.log('make a request to handleUpdate')
    },
-   handleInterests: function(data) {
-     console.log(data.interests);
+   handleInterests: function(user) {
+     console.log(user.interests);
      var rows = [];
-     data.interests.forEach(function(interest, index) {
+     user.interests.forEach(function(interest, index) {
        rows.push(<li key={index}><a>#{interest}</a></li>);
      });
      this.setState({interests: rows});
    },
-   handleNeighborhoods: function(data) {
-     console.log(data.neighborhoods);
+   handleNeighborhoods: function(user) {
+     console.log(user.neighborhoods);
      var rows = [];
-     data.neighborhoods.forEach(function(neighborhood, index) {
+     user.neighborhoods.forEach(function(neighborhood, index) {
        rows.push(<li key={index}><a>#{neighborhood}</a></li>);
      });
      this.setState({neighborhoods: rows});
@@ -64,6 +60,9 @@ module.exports = React.createClass({
    render: function() {
      console.log('inside display user render');
      console.log(this.props.user);
+     var interests = this.state.interests
+     var neighborhoods = this.state.neighborhoods
+     // var hoods = this.handleNeighborhoods(this.props.user)
     //  if (this.props.user._id) {
     //    this.componentWillReceiveProps();
     //    this.props.user._id = null;
@@ -77,11 +76,11 @@ module.exports = React.createClass({
          <p>{this.props.user.bio}</p>
          <h3>Interests:</h3>
          <ul className="interests">
-           {this.props.interests}
+           {interests}
          </ul>
          <h3>Neighborhoods:</h3>
          <ul className="neighborhoods">
-           {this.props.neighborhoods}
+           {neighborhoods}
          </ul>
        </div>
      )
