@@ -13,12 +13,9 @@ module.exports = React.createClass({
     user: React.PropTypes.object.isRequired
   },
   componentWillReceiveProps: function(nextProps) {
-    console.log(nextProps);
     this.handleGetEvents(nextProps.user)
   },
   handleGetEvents: function(user){
-    console.log('inside handleGet mount');
-    console.log(user);
     if (user._id) {
       $.ajax({
         type: 'GET',
@@ -27,7 +24,6 @@ module.exports = React.createClass({
         cache: false,
         success: function(data){
           console.log('Successfully retrieved DATA');
-          console.log(data);
           this.setState({events: data.events})
           this.handleEvents(this.state.events)
         }.bind(this),
@@ -40,19 +36,15 @@ module.exports = React.createClass({
   },
   handleEvents: function(events){
     var rows = []
-    console.log('inside handle events');
-    console.log(events);
     if (events) {
       events.forEach(function(event, index) {
         rows.push(<SingleEvent event={event} key={index} />)
       })
-      console.log('Rendering Event List')
       this.setState({rowes: rows})
     }
 
   },
   render: function() {
-    console.log('inside event list render');
     return (
       <div className="eventList">
         <ul>

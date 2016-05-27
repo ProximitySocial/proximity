@@ -6,10 +6,8 @@ const ReactDOM = require('react-dom')
 
 const EventList = require(__dirname + '/components/event_list.jsx')
 const DisplayUser = require(__dirname + '/components/display_user.jsx')
-const CreateEventForm = require(__dirname + '/components/event_form.jsx')
-const CreateUserForm = require(__dirname + '/components/user_form.jsx')
-const UpdateUserForm = require(__dirname + '/components/user_update.jsx')
-
+const EventForm = require(__dirname + '/components/event_form.jsx')
+const UserForm = require(__dirname + '/components/user_form.jsx')
 
 // for testing purposes
 var userId = "574390a51831bd0d9abfe74a"
@@ -29,12 +27,10 @@ function getParameterByName(name, url) {
 var RootApp = React.createClass({
   getInitialState: function(){
     if (sessionStorage.token){
-      console.log('Yes there is a sessionStorage token')
-      console.log(sessionStorage.token)
+      // console.log('Yes there is a sessionStorage token')
       var userObj = sessionStorage.token
       var toggleVar = false
     } else {
-      console.log('No token')
       var userObj = ''
       var toggleVar = true
     }
@@ -57,13 +53,10 @@ var RootApp = React.createClass({
       //   xhr.setRequestHeader('Authorization', )
       // },
       success: (data, status) => {
-        console.log(data)
-        console.log(status)
         this.setState({
           user: data,
           toggle: false
         })
-        console.log('this is toggle: ' + toggle);
       },
       error: (xhr, status, error) => {
         console.log(xhr)
@@ -79,7 +72,8 @@ var RootApp = React.createClass({
                    toggle: true})
   },
   showForm: function(){
-    this.setState({hideForm: false})
+    var state = !this.state.hideForm
+    this.setState({hideForm: state})
   },
   render: function(){
     var classHide, classShow
@@ -90,11 +84,11 @@ var RootApp = React.createClass({
       classHide = {}
       classShow = {display: "none"}
     }
-    var hideForm
+    var hidden
     if (this.state.hideForm){
-      hide = {display: "none"}
+      hidden = {display: "none"}
     } else {
-      hide = {}
+      hidden = {}
     }
     return (
       <div>
@@ -122,17 +116,17 @@ var RootApp = React.createClass({
             <div className="col-lg-4 column">
               <h2>Profile</h2>
               <DisplayUser className="row profile" user={this.state.user} />
-              <CreateUserForm className="row form" />
-              <UpdateUserForm className="row form" />
+              <UserForm className="row form" />
             </div>
             <div className="col-lg-4 column" id="eventList">
               <h2>Events</h2>
               <EventList className="row events" user={this.state.user}/>
             </div>
             <div className="col-lg-4 column">
-              <h2 className="btn" onClick={this.showForm}>Create From</h2>
-              <h2 className="btn" onClick={this.showForm} style={hide}>Update</h2>
-              <CreateEventForm style={hide} className="row form" />
+              <h2 className="btn btn-primary" onClick={this.showForm}>Add Event</h2>
+              <div style={hidden}>
+                <EventForm className="row form" />
+              </div>
             </div>
           </div>
         </section>
@@ -157,11 +151,11 @@ var RootApp = React.createClass({
 //    </Route>
 //  </Router>
 //), document.getElementById('root'))
-// ReactDOM.render( <CreateUserForm />, document.getElementById('userForm'))
+// ReactDOM.render( <UserForm />, document.getElementById('userForm'))
 // ReactDOM.render( <UpdateUserForm url={userUrl}/>, document.getElementById('userUpdate'))
 
 // ReactDOM.render( <EventList url={userId}/>, document.getElementById('eventList'))
 
-// ReactDOM.render( <CreateEventForm />, document.getElementById('eventForm'))
+// ReactDOM.render( <EventForm />, document.getElementById('eventForm'))
 // ReactDOM.render( <UpdateEventForm url={eventUrl}/>, document.getElementById('eventUpdate'))
 ReactDOM.render( <RootApp />, document.getElementById('root'))

@@ -54,9 +54,8 @@
 
 	var EventList = __webpack_require__(168);
 	var DisplayUser = __webpack_require__(170);
-	var CreateEventForm = __webpack_require__(171);
-	var CreateUserForm = __webpack_require__(172);
-	var UpdateUserForm = __webpack_require__(173);
+	var EventForm = __webpack_require__(171);
+	var UserForm = __webpack_require__(172);
 
 	// for testing purposes
 	var userId = "574390a51831bd0d9abfe74a";
@@ -78,12 +77,10 @@
 
 	  getInitialState: function getInitialState() {
 	    if (sessionStorage.token) {
-	      console.log('Yes there is a sessionStorage token');
-	      console.log(sessionStorage.token);
+	      // console.log('Yes there is a sessionStorage token')
 	      var userObj = sessionStorage.token;
 	      var toggleVar = false;
 	    } else {
-	      console.log('No token');
 	      var userObj = '';
 	      var toggleVar = true;
 	    }
@@ -108,13 +105,10 @@
 	      //   xhr.setRequestHeader('Authorization', )
 	      // },
 	      success: function success(data, status) {
-	        console.log(data);
-	        console.log(status);
 	        _this.setState({
 	          user: data,
 	          toggle: false
 	        });
-	        console.log('this is toggle: ' + toggle);
 	      },
 	      error: function error(xhr, status, _error) {
 	        console.log(xhr);
@@ -130,7 +124,8 @@
 	      toggle: true });
 	  },
 	  showForm: function showForm() {
-	    this.setState({ hideForm: false });
+	    var state = !this.state.hideForm;
+	    this.setState({ hideForm: state });
 	  },
 	  render: function render() {
 	    var classHide, classShow;
@@ -141,11 +136,11 @@
 	      classHide = {};
 	      classShow = { display: "none" };
 	    }
-	    var hideForm;
+	    var hidden;
 	    if (this.state.hideForm) {
-	      hideForm = { display: "none" };
+	      hidden = { display: "none" };
 	    } else {
-	      hideForm = {};
+	      hidden = {};
 	    }
 	    return React.createElement(
 	      'div',
@@ -212,8 +207,7 @@
 	              'Profile'
 	            ),
 	            React.createElement(DisplayUser, { className: 'row profile', user: this.state.user }),
-	            React.createElement(CreateUserForm, { className: 'row form' }),
-	            React.createElement(UpdateUserForm, { className: 'row form' })
+	            React.createElement(UserForm, { className: 'row form' })
 	          ),
 	          React.createElement(
 	            'div',
@@ -230,15 +224,14 @@
 	            { className: 'col-lg-4 column' },
 	            React.createElement(
 	              'h2',
-	              { className: 'btn', onClick: this.showForm },
-	              'Create From'
+	              { className: 'btn btn-primary', onClick: this.showForm },
+	              'Add Event'
 	            ),
 	            React.createElement(
-	              'h2',
-	              { className: 'btn', onClick: this.showForm, style: hideForm },
-	              'Update'
-	            ),
-	            React.createElement(CreateEventForm, { style: hideForm, className: 'row form' })
+	              'div',
+	              { style: hidden },
+	              React.createElement(EventForm, { className: 'row form' })
+	            )
 	          )
 	        )
 	      )
@@ -261,12 +254,12 @@
 	//    </Route>
 	//  </Router>
 	//), document.getElementById('root'))
-	// ReactDOM.render( <CreateUserForm />, document.getElementById('userForm'))
+	// ReactDOM.render( <UserForm />, document.getElementById('userForm'))
 	// ReactDOM.render( <UpdateUserForm url={userUrl}/>, document.getElementById('userUpdate'))
 
 	// ReactDOM.render( <EventList url={userId}/>, document.getElementById('eventList'))
 
-	// ReactDOM.render( <CreateEventForm />, document.getElementById('eventForm'))
+	// ReactDOM.render( <EventForm />, document.getElementById('eventForm'))
 	// ReactDOM.render( <UpdateEventForm url={eventUrl}/>, document.getElementById('eventUpdate'))
 	ReactDOM.render(React.createElement(RootApp, null), document.getElementById('root'));
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
@@ -20384,12 +20377,9 @@
 	    user: React.PropTypes.object.isRequired;
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    console.log(nextProps);
 	    this.handleGetEvents(nextProps.user);
 	  },
 	  handleGetEvents: function handleGetEvents(user) {
-	    console.log('inside handleGet mount');
-	    console.log(user);
 	    if (user._id) {
 	      $.ajax({
 	        type: 'GET',
@@ -20398,7 +20388,6 @@
 	        cache: false,
 	        success: function (data) {
 	          console.log('Successfully retrieved DATA');
-	          console.log(data);
 	          this.setState({ events: data.events });
 	          this.handleEvents(this.state.events);
 	        }.bind(this),
@@ -20411,18 +20400,14 @@
 	  },
 	  handleEvents: function handleEvents(events) {
 	    var rows = [];
-	    console.log('inside handle events');
-	    console.log(events);
 	    if (events) {
 	      events.forEach(function (event, index) {
 	        rows.push(React.createElement(SingleEvent, { event: event, key: index }));
 	      });
-	      console.log('Rendering Event List');
 	      this.setState({ rowes: rows });
 	    }
 	  },
 	  render: function render() {
-	    console.log('inside event list render');
 	    return React.createElement(
 	      'div',
 	      { className: 'eventList' },
@@ -20757,6 +20742,8 @@
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(33);
 
@@ -20775,7 +20762,15 @@
 	      picUrl: '',
 	      fileName: '',
 	      fileType: '',
-	      fileSize: '' };
+	      fileSize: '',
+	      update: false };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    console.log(typeof nextProps === 'undefined' ? 'undefined' : _typeof(nextProps));
+	    console.log(nextProps);
+	    this.setState({ update: nextProps.update });
+	    console.log('This is the state : ');
+	    console.log(this.state.update);
 	  },
 	  handleIdChange: function handleIdChange(e) {
 	    this.setState({ eventId: e.target.value });
@@ -20849,6 +20844,10 @@
 
 	    });
 	  },
+	  updateUpdate: function updateUpdate() {
+	    var updated = !this.state.update;
+	    this.setState({ update: updated });
+	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
 	    console.log('somehting to see');
@@ -20910,6 +20909,12 @@
 	    if (imagePreviewUrl) {
 	      $imagePreview = React.createElement('img', { src: imagePreviewUrl });
 	    }
+	    var hidden = { display: 'none' };
+	    var show = {};
+	    if (this.state.update) {
+	      hidden = {};
+	      show = { display: 'none' };
+	    }
 	    return React.createElement(
 	      'div',
 	      null,
@@ -20919,14 +20924,28 @@
 	        'Create/Update Event'
 	      ),
 	      React.createElement(
+	        'button',
+	        { className: 'btn btn-primary', style: show, onClick: this.updateUpdate },
+	        'Update Event'
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'btn btn-primary', style: hidden, onClick: this.updateUpdate },
+	        'Create Event'
+	      ),
+	      React.createElement(
 	        'form',
 	        { className: 'eventForm', onSubmit: this.handleSubmit },
 	        React.createElement(
-	          'label',
-	          { 'for': 'eventId' },
-	          'Event ID:'
+	          'div',
+	          { className: 'eventIdDiv', style: hidden },
+	          React.createElement(
+	            'label',
+	            { 'for': 'eventId' },
+	            'Event ID:'
+	          ),
+	          React.createElement('input', { type: 'text', placeholder: 'eventID', value: this.state.eventId, onChange: this.handleIdChange })
 	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'eventID', value: this.state.eventId, onChange: this.handleIdChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'title' },
@@ -21178,110 +21197,6 @@
 	  }
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
-
-/***/ },
-/* 173 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(2);
-	var ReactDOM = __webpack_require__(33);
-
-	module.exports = React.createClass({
-	  displayName: 'UpdateUserForm',
-	  getInitialState: function getInitialState() {
-	    return {
-	      firstName: '',
-	      lastName: '',
-	      email: '' };
-	  },
-	  handleFirstChange: function handleFirstChange(e) {
-	    console.log('First Name ' + e.target.value);
-	    this.setState({ firstName: e.target.value });
-	  },
-	  handleLastChange: function handleLastChange(e) {
-	    console.log('Last Name ' + e.target.value);
-	    this.setState({ lastName: e.target.value });
-	  },
-	  handleEmailChange: function handleEmailChange(e) {
-	    console.log('Email ' + e.target.value);
-	    this.setState({ email: e.target.value });
-	  },
-	  handleSubmit: function handleSubmit(e) {
-	    e.preventDefault();
-
-	    var firstName = this.state.firstName.trim();
-	    var lastName = this.state.lastName.trim();
-	    var email = this.state.email.trim();
-
-	    // var picture = this.state.file
-	    // if (!firstName || !lastName || !email) return
-	    this.onFormSubmit({
-	      firstName: firstName,
-	      lastName: lastName,
-	      email: email
-	    });
-	    this.setState({ firstName: '', lastName: '', email: '' });
-	  },
-	  onFormSubmit: function onFormSubmit(newUser) {
-	    console.log('Submittiing update user form');
-	    console.log(this.props.url);
-	    $.ajax({
-	      type: 'PUT',
-	      url: this.props.url,
-	      data: JSON.stringify(newUser),
-	      contentType: 'application/json',
-	      success: function success(data) {
-	        console.log(data);
-	        console.log('SUCCESS');
-	      },
-	      error: function error(data, status, jqXHR) {
-	        console.log(data);
-	        console.log(status);
-	        console.log(jqXHR);
-	      }
-	    });
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Update Your Profile'
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'updateUserForm', onSubmit: this.handleSubmit },
-	        React.createElement(
-	          'label',
-	          { 'for': 'firstName' },
-	          'First Name:'
-	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'First', value: this.state.firstName, onChange: this.handleFirstChange }),
-	        React.createElement(
-	          'label',
-	          { 'for': 'lastName' },
-	          'Last Name:'
-	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'Last', value: this.state.lastName, onChange: this.handleLastChange }),
-	        React.createElement(
-	          'label',
-	          { 'for': 'email' },
-	          'Email:'
-	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'Email', value: this.state.email, onChange: this.handleEmailChange }),
-	        React.createElement(
-	          'button',
-	          { type: 'submit' },
-	          'Update Profile'
-	        )
-	      )
-	    );
-	  }
-	});
 
 /***/ }
 /******/ ]);
