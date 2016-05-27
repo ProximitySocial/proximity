@@ -62,9 +62,16 @@
 	var userId = "574390a51831bd0d9abfe74a";
 	var userUrl = "/api/user/" + userId;
 	var eventUrl = "/api/events/" + userId;
+<<<<<<< HEAD
 	// var eventUrl = "http://localhost:6060/api/event/" + eventId
 	function getParameterByName(name, url) {
 	  if (!url) url = window.location.href;
+=======
+	// var eventUrl = "http://localhost:2323/api/event/" + eventId
+	function getParameterByName(name, url) {
+	  if (!url) url = window.location.href;
+	  location.href = 'localStorage:6060/';
+>>>>>>> 4e725ba046058aec879f4ae3b410f8346036e694
 	  name = name.replace(/[\[\]]/g, "\\$&");
 	  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
 	      results = regex.exec(url);
@@ -77,6 +84,7 @@
 	  displayName: 'RootApp',
 
 	  getInitialState: function getInitialState() {
+<<<<<<< HEAD
 	    return { user: '',
 	      events: '' };
 	  },
@@ -90,6 +98,33 @@
 	        type: 'GET',
 	        url: 'http://localhost:2323/api/user/' + token,
 	        headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
+=======
+	    if (localStorage.token) {
+	      console.log('Yes there is a localStorage token');
+	      var userObj = localStorage.token;
+	      var toggleVar = false;
+	    } else {
+	      console.log('No token');
+	      var userObj = '';
+	      var toggleVar = true;
+	    }
+	    return { user: userObj,
+	      events: '',
+	      toggle: toggleVar };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    var _this = this;
+
+	    var token = getParameterByName('access_token');
+	    localStorage.setItem('token', token);
+	    console.log('here is the user before making a call to get it');
+	    console.log(this.state.user);
+	    if (!this.state.user) {
+	      $.ajax({
+	        type: 'GET',
+	        url: 'http://localhost:6060/api/user/' + token,
+	        headers: { 'Access-Control-Allow-Origin': 'http://localhost:6060' },
+>>>>>>> 4e725ba046058aec879f4ae3b410f8346036e694
 	        // beforeSend: function(xhr){
 	        //   xhr.withCredentials = true;
 	        //   xhr.setRequestHeader('Authorization', )
@@ -98,9 +133,16 @@
 	          console.log(data);
 	          console.log(status);
 	          _this.setState({
+<<<<<<< HEAD
 	            user: data
 	          });
 	          // console.log('State has been set to user');
+=======
+	            user: data,
+	            toggle: false
+	          });
+	          console.log('this is toggle: ' + toggle);
+>>>>>>> 4e725ba046058aec879f4ae3b410f8346036e694
 	        },
 	        error: function error(xhr, status, _error) {
 	          console.log(xhr);
@@ -110,6 +152,7 @@
 	      });
 	    }
 	  },
+<<<<<<< HEAD
 	  render: function render() {
 	    return React.createElement(
 	      'section',
@@ -172,6 +215,97 @@
 	                  'a',
 	                  { className: 'btn btn-primary fb-login', href: '/api/auth/facebook', role: 'button' },
 	                  'Facebook Login »'
+=======
+	  logout: function logout() {
+	    localStorage.removeItem('token');
+	    this.setState({ user: '',
+	      events: '',
+	      toggle: true });
+	  },
+	  render: function render() {
+	    var classHide, classShow;
+	    if (this.state.toggle) {
+	      classHide = { display: "none" };
+	      classShow = {};
+	    } else {
+	      classHide = {};
+	      classShow = { display: "none" };
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'section',
+	        null,
+	        React.createElement(
+	          'nav',
+	          { className: 'navbar navbar-default navbar-fixed-top' },
+	          React.createElement(
+	            'div',
+	            { className: 'container' },
+	            React.createElement(
+	              'div',
+	              { className: 'navbar-header' },
+	              React.createElement(
+	                'button',
+	                { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#navbar', 'aria-expanded': 'false', 'aria-controls': 'navbar' },
+	                React.createElement(
+	                  'span',
+	                  { className: 'sr-only' },
+	                  'Toggle navigation'
+	                ),
+	                React.createElement('span', { className: 'icon-bar' }),
+	                React.createElement('span', { className: 'icon-bar' }),
+	                React.createElement('span', { className: 'icon-bar' })
+	              ),
+	              React.createElement(
+	                'a',
+	                { className: 'navbar-brand', href: '#' },
+	                'Common Radar'
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { id: 'navbar', className: 'navbar-collapse collapse' },
+	              React.createElement(
+	                'ul',
+	                { className: 'nav navbar-nav' },
+	                React.createElement(
+	                  'li',
+	                  { className: 'active' },
+	                  React.createElement(
+	                    'a',
+	                    { href: '' },
+	                    'Interests'
+	                  )
+	                ),
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement(
+	                    'a',
+	                    { href: '' },
+	                    'Search Me'
+	                  )
+	                ),
+	                React.createElement(
+	                  'li',
+	                  { style: classShow },
+	                  React.createElement(
+	                    'a',
+	                    { className: 'btn btn-primary fb-login', id: 'fbLogin', href: '/api/auth/facebook', role: 'button' },
+	                    'Facebook Login »'
+	                  )
+	                ),
+	                React.createElement(
+	                  'li',
+	                  { style: classHide },
+	                  React.createElement(
+	                    'a',
+	                    { className: 'btn btn-primary', id: 'fbLogin', onClick: this.logout, role: 'button' },
+	                    'Logout »'
+	                  )
+>>>>>>> 4e725ba046058aec879f4ae3b410f8346036e694
 	                )
 	              )
 	            )
@@ -179,6 +313,10 @@
 	        )
 	      ),
 	      React.createElement(
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 4e725ba046058aec879f4ae3b410f8346036e694
 	        'div',
 	        { className: 'container row' },
 	        React.createElement(
@@ -190,14 +328,19 @@
 	          'div',
 	          { className: 'col-lg-4' },
 	          React.createElement(DisplayUser, { className: 'row profile', user: this.state.user }),
+<<<<<<< HEAD
 	          React.createElement('div', { className: 'row form', id: 'userForm' }),
 	          React.createElement('div', { className: 'row form', id: 'userUpdate' })
+=======
+	          React.createElement(CreateUserForm, { className: 'row form', user: this.state.user })
+>>>>>>> 4e725ba046058aec879f4ae3b410f8346036e694
 	        ),
 	        React.createElement(
 	          'h2',
 	          null,
 	          'Events'
 	        ),
+<<<<<<< HEAD
 	        React.createElement('div', { className: 'col-lg-4 events', id: 'eventList' }),
 	        React.createElement(
 	          'h2',
@@ -209,6 +352,48 @@
 	          { className: 'col-lg-4' },
 	          React.createElement('div', { className: 'row form', id: 'eventForm' }),
 	          React.createElement('div', { className: 'row form', id: 'eventUpdate' })
+=======
+=======
+	        'section',
+	        { style: classHide },
+>>>>>>> dev
+	        React.createElement(
+	          'div',
+	          { className: 'container row' },
+	          React.createElement(
+	            'div',
+	            { className: 'col-lg-4 column' },
+	            React.createElement(
+	              'h2',
+	              null,
+	              'Profile'
+	            ),
+	            React.createElement(DisplayUser, { className: 'row profile', user: this.state.user }),
+	            React.createElement(CreateUserForm, { className: 'row form' }),
+	            React.createElement(UpdateUserForm, { className: 'row form' })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-lg-4 column', id: 'eventList' },
+	            React.createElement(
+	              'h2',
+	              null,
+	              'Events'
+	            ),
+	            React.createElement(EventList, { className: 'row events', user: this.state.user })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-lg-4', column: true },
+	            React.createElement(
+	              'h2',
+	              null,
+	              'CreateEvent'
+	            ),
+	            React.createElement(CreateEventForm, { className: 'row form' }),
+	            React.createElement('div', { className: 'row form', id: 'eventUpdate' })
+	          )
+>>>>>>> 4e725ba046058aec879f4ae3b410f8346036e694
 	        )
 	      )
 	    );
@@ -20346,34 +20531,52 @@
 	  displayName: 'exports',
 
 	  getInitialState: function getInitialState() {
-	    return { events: [] };
+	    return { events: [],
+	      user: '' };
 	  },
-	  componentDidMount: function componentDidMount() {
-	    $.ajax({
-	      type: 'GET',
-	      url: 'http://localhost:6060/api/events/' + this.props.url,
-	      dataType: 'json',
-	      cache: false,
-	      success: function (data) {
-	        console.log('Successfully retrieved DATA');
-	        console.log(data);
-	        this.setState({ events: data.events });
-	        this.handleEvents(this.state.events);
-	      }.bind(this),
-	      error: function (xhr, status, err) {
-	        console.error(this.props.url, status, err);
-	      }.bind(this)
-	    });
+	  propTypes: function propTypes() {
+	    user: React.PropTypes.object.isRequired;
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    console.log(nextProps);
+	    this.handleGetEvents(nextProps.user);
+	  },
+	  handleGetEvents: function handleGetEvents(user) {
+	    console.log('inside handleGet mount');
+	    console.log(user);
+	    if (user._id) {
+	      $.ajax({
+	        type: 'GET',
+	        url: 'http://localhost:6060/api/events/' + user._id,
+	        dataType: 'json',
+	        cache: false,
+	        success: function (data) {
+	          console.log('Successfully retrieved DATA');
+	          console.log(data);
+	          this.setState({ events: data.events });
+	          this.handleEvents(this.state.events);
+	        }.bind(this),
+	        error: function (xhr, status, err) {
+	          console.error(this.props.url, status, err);
+	          this.props.user._id = null;
+	        }.bind(this)
+	      });
+	    }
 	  },
 	  handleEvents: function handleEvents(events) {
 	    var rows = [];
-	    events.forEach(function (event, index) {
-	      rows.push(React.createElement(SingleEvent, { event: event, key: index }));
-	    });
-	    console.log('Rendering Event List');
-	    this.setState({ rowes: rows });
+	    console.log('inside handle events');
+	    console.log(events);
+	    if (events) {
+	      events.forEach(function (event, index) {
+	        rows.push(React.createElement(SingleEvent, { event: event, key: index }));
+	      });
+	      console.log('Rendering Event List');
+	      this.setState({ rowes: rows });
+	    }
 	  },
 	  render: function render() {
+	    console.log('inside event list render');
 	    return React.createElement(
 	      'div',
 	      { className: 'eventList' },
@@ -20401,6 +20604,31 @@
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(33);
 
+	function formatDate(date) {
+	  var d = new Date(date);
+	  var hh = d.getHours();
+	  var m = d.getMinutes();
+	  var s = d.getSeconds();
+	  var dd = "AM";
+	  var h = hh;
+	  if (h >= 12) {
+	    h = hh - 12;
+	    dd = "PM";
+	  }
+	  if (h == 0) {
+	    h = 12;
+	  }
+	  m = m < 10 ? "0" + m : m;
+	  s = s < 10 ? "0" + s : s;
+	  var pattern = new RegExp("0?" + hh + ":" + m + ":" + s);
+	  var replacement = h + ":" + m;
+	  /* if you want to add seconds
+	  replacement += ":"+s;  */
+	  replacement += " " + dd;
+
+	  return replacement;
+	}
+
 	module.exports = React.createClass({
 	  displayName: 'exports',
 
@@ -20419,9 +20647,15 @@
 	      margin: 0,
 	      verticalAlign: "bottom" };
 
-	    var startTime = Date(this.props.event.startTime).toString().split(' ');
-	    console.log(startTime);
-	    var day = startTime;
+	    var startTime = Date.parse(this.props.event.startTime);
+	    var now = Date.now(); //- Date.parse(Date.now())
+	    var timeTill = Date.parse(this.props.event.startTime) - now;
+	    var x = timeTill / 1000;
+	    var hour = formatDate(this.props.event.startTime);
+	    console.log('startTime: ' + startTime);
+	    console.log('hours: ' + x % 24);
+	    console.log('days: ' + x);
+	    var day = x;
 
 	    return React.createElement(
 	      'li',
@@ -20455,21 +20689,20 @@
 	        ),
 	        React.createElement(
 	          'p',
-	          null,
+	          { className: 'time' },
 	          React.createElement(
 	            'strong',
 	            null,
 	            'Starts in:'
 	          ),
 	          '  ',
-	          Date(startTime),
-	          '  (',
-	          day,
-	          ')'
+	          (x % 24).toFixed(0),
+	          ' hours  @ ',
+	          hour
 	        ),
 	        React.createElement(
 	          'p',
-	          null,
+	          { className: 'interest' },
 	          React.createElement(
 	            'strong',
 	            null,
@@ -20480,7 +20713,7 @@
 	        ),
 	        React.createElement(
 	          'p',
-	          null,
+	          { className: 'hood' },
 	          React.createElement(
 	            'strong',
 	            null,
@@ -20535,6 +20768,7 @@
 	  getInitialState: function getInitialState() {
 	    console.log('Getting initial state of display user class');
 	    console.log(this.props.user);
+<<<<<<< HEAD
 	    return { user: this.props.user };
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps() {
@@ -20544,6 +20778,17 @@
 	    console.log('Display User state has been set to user');
 	    console.log(this.props.user);
 	    console.log(this.state.user);
+=======
+	    return { user: this.props.user,
+	      neighborhoods: [] };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    console.log(nextProps);
+	    console.log('^^^^^^^^^^^^^');
+	    console.log('^^^^^^^^^^^^^');
+	    this.handleNeighborhoods(nextProps.user);
+	    this.handleInterests(nextProps.user);
+>>>>>>> 4e725ba046058aec879f4ae3b410f8346036e694
 	  },
 	  // loadUserFromServer: function() {
 	  //   $.ajax({
@@ -20569,10 +20814,10 @@
 	  handleUpdate: function handleUpdate() {
 	    console.log('make a request to handleUpdate');
 	  },
-	  handleInterests: function handleInterests(data) {
-	    console.log(data.interests);
+	  handleInterests: function handleInterests(user) {
+	    console.log(user.interests);
 	    var rows = [];
-	    data.interests.forEach(function (interest, index) {
+	    user.interests.forEach(function (interest, index) {
 	      rows.push(React.createElement(
 	        'li',
 	        { key: index },
@@ -20586,10 +20831,10 @@
 	    });
 	    this.setState({ interests: rows });
 	  },
-	  handleNeighborhoods: function handleNeighborhoods(data) {
-	    console.log(data.neighborhoods);
+	  handleNeighborhoods: function handleNeighborhoods(user) {
+	    console.log(user.neighborhoods);
 	    var rows = [];
-	    data.neighborhoods.forEach(function (neighborhood, index) {
+	    user.neighborhoods.forEach(function (neighborhood, index) {
 	      rows.push(React.createElement(
 	        'li',
 	        { key: index },
@@ -20606,6 +20851,16 @@
 	  render: function render() {
 	    console.log('inside display user render');
 	    console.log(this.props.user);
+<<<<<<< HEAD
+=======
+	    var interests = this.state.interests;
+	    var neighborhoods = this.state.neighborhoods;
+	    // var hoods = this.handleNeighborhoods(this.props.user)
+	    //  if (this.props.user._id) {
+	    //    this.componentWillReceiveProps();
+	    //    this.props.user._id = null;
+	    //  }
+>>>>>>> 4e725ba046058aec879f4ae3b410f8346036e694
 	    return React.createElement(
 	      'div',
 	      null,
@@ -20650,7 +20905,11 @@
 	      React.createElement(
 	        'ul',
 	        { className: 'interests' },
+<<<<<<< HEAD
 	        this.props.interests
+=======
+	        interests
+>>>>>>> 4e725ba046058aec879f4ae3b410f8346036e694
 	      ),
 	      React.createElement(
 	        'h3',
@@ -20660,7 +20919,11 @@
 	      React.createElement(
 	        'ul',
 	        { className: 'neighborhoods' },
+<<<<<<< HEAD
 	        this.props.neighborhoods
+=======
+	        neighborhoods
+>>>>>>> 4e725ba046058aec879f4ae3b410f8346036e694
 	      )
 	    );
 	  }
@@ -20685,15 +20948,15 @@
 	  displayName: 'eventForm',
 	  getInitialState: function getInitialState() {
 	    return {
-	      eventId: '5745fe521e346da7f258df2b',
-	      title: 'A CHANGE I MADE',
+	      eventId: '',
+	      title: '',
 	      description: '',
 	      interestTags: '',
 	      addressName: '',
 	      address: '',
 	      file: '',
 	      imagePreviewUrl: '',
-	      picUrl: '',
+	      url: '',
 	      fileName: '',
 	      fileType: '',
 	      fileSize: '' };
@@ -20733,6 +20996,7 @@
 	  },
 	  loadToS3: function loadToS3(signedRequest, done) {
 	    console.log('send off to S3');
+	    console.log(this.state.file);
 	    var xhr = new XMLHttpRequest();
 	    xhr.open("PUT", signedRequest);
 	    xhr.onload = function () {
@@ -20782,7 +21046,7 @@
 	      var fileType = this.state.file.type;
 	      var fileSize = this.state.file.size;
 	    } else {
-	      var picture = this.state.picUrl.trim();
+	      var picture = this.state.url.trim();
 	    }
 	    // if (!title || !description || !address) return
 	    this.onFormSubmit({
@@ -20796,7 +21060,7 @@
 	      fileType: fileType,
 	      fileSize: fileSize
 	    }, this.loadToS3);
-	    this.setState({ title: '', description: '', interestTags: '', addressName: '', address: '', file: '' });
+	    this.setState({ title: '', description: '', interestTags: '', addressName: '', address: '' });
 	  },
 	  onFormSubmit: function onFormSubmit(newEvent, callback) {
 	    if (this.state.eventId) {
@@ -20912,16 +21176,24 @@
 	  displayName: 'CreateUserForm',
 	  getInitialState: function getInitialState() {
 	    return {
+	      userId: '5740b2dfb7c4e79bf41af122',
 	      firstName: '',
 	      lastName: '',
 	      email: '',
+	      bio: '',
+	      interests: '',
+	      addressName: '',
+	      address: '',
 	      file: '',
 	      imagePreviewUrl: '',
+	      url: '',
 	      fileName: '',
 	      fileType: '',
-	      picUrl: '',
 	      fileSize: ''
 	    };
+	  },
+	  handleIdChange: function handleIdChange(e) {
+	    this.setState({ userId: e.target.value });
 	  },
 	  handleFirstChange: function handleFirstChange(e) {
 	    this.setState({ firstName: e.target.value });
@@ -20931,6 +21203,18 @@
 	  },
 	  handleEmailChange: function handleEmailChange(e) {
 	    this.setState({ email: e.target.value });
+	  },
+	  handleBioChange: function handleBioChange(e) {
+	    this.setState({ bio: e.target.value });
+	  },
+	  handleInterestsChange: function handleInterestsChange(e) {
+	    this.setState({ interests: e.target.value });
+	  },
+	  handleAddressNameChange: function handleAddressNameChange(e) {
+	    this.setState({ addressName: e.target.value });
+	  },
+	  handleAddressChange: function handleAddressChange(e) {
+	    this.setState({ address: e.target.value });
 	  },
 	  handleImageChange: function handleImageChange(e) {
 	    var _this = this;
@@ -20949,6 +21233,7 @@
 	  },
 	  loadToS3: function loadToS3(signedRequest, done) {
 	    console.log('send off to S3');
+	    console.log(this.state.file);
 	    var xhr = new XMLHttpRequest();
 	    xhr.open("PUT", signedRequest);
 	    xhr.onload = function () {
@@ -20962,28 +21247,7 @@
 	    this.setState({
 	      file: ''
 	    });
-	    // $.ajax({
-	    //   type: 'PUT',
-	    //   url: signedRequest,
-	    //   processData: false,
-	    //   data: this.state.file,
-	    //   success: (data) => {
-	    //     console.log(data);
-	    //     console.log('Success from S3')
-	    //     this.setState({
-	    //       file: ''
-	    //     })
-	    //   },
-	    //   error: (data, status, xhr) => {
-	    //     console.log('Failure from S3')
-	    //     console.log(data)
-	    //     console.log(status)
-	    //     console.log(xhr)
-	    //   }
-
-	    // })
 	  },
-	  //Incomplete....use to source an image from Google
 	  srcImage: function srcImage(e) {
 	    console.log('trying to source image');
 	    var title = this.state.title.trim();
@@ -20994,6 +21258,7 @@
 	    $.ajax({
 	      type: 'GET',
 	      url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
+	      dataType: 'application/json',
 	      success: function success(data) {
 	        console.log(data);
 	      },
@@ -21010,32 +21275,51 @@
 	    var firstName = this.state.firstName.trim();
 	    var lastName = this.state.lastName.trim();
 	    var email = this.state.email.trim();
-	    if (!this.state.picUrl) {
+	    var bio = this.state.bio.trim();
+	    var interests = this.state.interests.trim();
+	    var address = this.state.address.trim();
+	    var addressName = this.state.addressName.trim();
+
+	    if (this.state.file) {
 	      var fileName = this.state.file.name;
 	      var fileType = this.state.file.type;
 	      var fileSize = this.state.file.size;
 	    } else {
-	      var picture = this.state.picUrl.trim();
+	      var picture = this.state.url.trim();
 	    }
-	    if (!firstName || !lastName || !email) return;
+
+	    // if (!firstName || !lastName || !email) return
 	    this.onFormSubmit({
 	      firstName: firstName,
 	      lastName: lastName,
 	      email: email,
-	      pic: picture,
+	      bio: bio,
+	      interests: interests,
+	      addressName: addressName,
+	      address: address,
+	      picture: picture,
 	      fileName: fileName,
 	      fileType: fileType,
 	      fileSize: fileSize
 	    }, this.loadToS3);
-	    this.setState({ firstName: '', lastName: '', email: '' });
+	    this.setState({ firstName: '', lastName: '', email: '', bio: '', interests: '', addressName: '', address: '' });
 	  },
 	  onFormSubmit: function onFormSubmit(newUser, callback) {
+	    if (this.state.userId) {
+	      var crudType = 'PUT';
+	      var route = '/api/user/' + this.state.userId;
+	    } else {
+	      var crudType = 'POST';
+	      var route = '/api/user/new';
+	    }
+	    console.log(crudType, route);
 	    $.ajax({
-	      type: 'POST',
-	      url: '/api/user/new',
+	      type: crudType,
+	      url: route,
 	      data: JSON.stringify(newUser),
 	      contentType: 'application/json',
 	      success: function success(data) {
+	        console.log(data);
 	        callback(data.signedRequest);
 	      },
 	      error: function error(data, status, jqXHR) {
@@ -21065,6 +21349,12 @@
 	        { className: 'createUserForm', onSubmit: this.handleSubmit },
 	        React.createElement(
 	          'label',
+	          { 'for': 'userID' },
+	          'User ID:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'userID', value: this.state.userId, onChange: this.handleIdChange }),
+	        React.createElement(
+	          'label',
 	          { 'for': 'firstName' },
 	          'First Name:'
 	        ),
@@ -21081,6 +21371,30 @@
 	          'Email:'
 	        ),
 	        React.createElement('input', { type: 'text', placeholder: 'Email', value: this.state.email, onChange: this.handleEmailChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'bio' },
+	          'Bio:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'bio', value: this.state.bio, onChange: this.handleDescriptionChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'Address' },
+	          'Interests:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'InterestTags', value: this.state.interests, onChange: this.handleInterestTagsChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'Address Name' },
+	          'Address Name:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Address Name', value: this.state.addressName, onChange: this.handleAddressNameChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'Address' },
+	          'Address:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Address', value: this.state.address, onChange: this.handleAddressChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'Image' },
@@ -21144,17 +21458,42 @@
 	    });
 	    this.setState({ firstName: '', lastName: '', email: '' });
 	  },
-	  onFormSubmit: function onFormSubmit(newUser) {
-	    console.log('Submittiing update user form');
-	    console.log(this.props.url);
+	  // onFormSubmit: function(newUser) {
+	  //   console.log('Submittiing update user form');
+	  //   console.log(this.props.url);
+	  //   $.ajax({
+	  //     type: 'PUT',
+	  //     url: this.props.url,
+	  //     data: JSON.stringify(newUser),
+	  //     contentType: 'application/json',
+	  //     success: function(data){
+	  //       console.log(data)
+	  //       console.log('SUCCESS')
+	  //     },
+	  //     error: function(data, status, jqXHR){
+	  //       console.log(data)
+	  //       console.log(status)
+	  //       console.log(jqXHR)
+	  //     }
+	  //   })
+	  // },
+	  onFormSubmit: function onFormSubmit(newEvent, callback) {
+	    if (this.state.userId) {
+	      var crudType = 'PUT';
+	      var route = '/api/user/' + this.state.userId;
+	    } else {
+	      var crudType = 'POST';
+	      var route = '/api/user/new';
+	    }
+	    console.log(crudType, route);
 	    $.ajax({
-	      type: 'PUT',
-	      url: this.props.url,
-	      data: JSON.stringify(newUser),
+	      type: crudType,
+	      url: route,
+	      data: JSON.stringify(newEvent),
 	      contentType: 'application/json',
 	      success: function success(data) {
 	        console.log(data);
-	        console.log('SUCCESS');
+	        callback(data.signedRequest);
 	      },
 	      error: function error(data, status, jqXHR) {
 	        console.log(data);
@@ -21164,6 +21503,13 @@
 	    });
 	  },
 	  render: function render() {
+	    var imagePreviewUrl = this.state.imagePreviewUrl;
+
+	    var $imagePreview = null;
+	    if (imagePreviewUrl) {
+	      $imagePreview = React.createElement('img', { src: imagePreviewUrl });
+	    }
+
 	    return React.createElement(
 	      'div',
 	      null,
@@ -21193,6 +21539,22 @@
 	          'Email:'
 	        ),
 	        React.createElement('input', { type: 'text', placeholder: 'Email', value: this.state.email, onChange: this.handleEmailChange }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'Image' },
+	          'Image:'
+	        ),
+	        React.createElement('input', { type: 'file', onChange: this.handleImageChange }),
+	        React.createElement(
+	          'button',
+	          { type: 'submit', onClick: this.handleSubmit },
+	          'Update User'
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          $imagePreview
+	        ),
 	        React.createElement(
 	          'button',
 	          { type: 'submit' },

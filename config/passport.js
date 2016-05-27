@@ -1,7 +1,7 @@
-const User = require('../models/user')
-const passport         = require('passport')
-    , FacebookStrategy = require('passport-facebook').Strategy;
-const BearerStrategy   = require('passport-http-bearer')
+const User = require('../models/user');
+const passport         = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
+const BearerStrategy   = require('passport-http-bearer');
 
 
 passport.use(new BearerStrategy(
@@ -19,7 +19,7 @@ passport.use(new BearerStrategy(
 passport.use('facebook', new FacebookStrategy({
     clientID: process.env.PROXIMITY_FB_ID,
     clientSecret: process.env.PROXIMITY_FB_SECRET,
-    callbackURL: 'http://localhost:2323/api/auth/facebook/callback'
+    callbackURL: 'http://localhost:6060/api/auth/facebook/callback'
   },
   function(accessToken, refreshToken, profile, done) {
         console.log('OAUTH CALLBACK RETURNED PROFILE')

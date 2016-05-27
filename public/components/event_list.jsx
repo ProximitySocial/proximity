@@ -6,34 +6,53 @@ var port = process.env.PORT
 
 module.exports = React.createClass({
   getInitialState: function() {
-    return {events: []}
+    return ({events: [],
+            user: ''})
   },
-  componentDidMount: function() {
-    $.ajax({
-      type: 'GET',
-      url: 'http://localhost:6060/api/events/' + this.props.url,
-      dataType: 'json',
-      cache: false,
-      success: function(data){
-        console.log('Successfully retrieved DATA');
-        console.log(data);
-        this.setState({events: data.events})
-        this.handleEvents(this.state.events)
-      }.bind(this),
-      error: function(xhr, status, err){
-        console.error(this.props.url, status, err)
-      }.bind(this)
-    })
+  propTypes: function(){
+    user: React.PropTypes.object.isRequired
+  },
+  componentWillReceiveProps: function(nextProps) {
+    console.log(nextProps);
+    this.handleGetEvents(nextProps.user)
+  },
+  handleGetEvents: function(user){
+    console.log('inside handleGet mount');
+    console.log(user);
+    if (user._id) {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:6060/api/events/' + user._id,
+        dataType: 'json',
+        cache: false,
+        success: function(data){
+          console.log('Successfully retrieved DATA');
+          console.log(data);
+          this.setState({events: data.events})
+          this.handleEvents(this.state.events)
+        }.bind(this),
+        error: function(xhr, status, err){
+          console.error(this.props.url, status, err)
+          this.props.user._id = null;
+        }.bind(this)
+      })
+    }
   },
   handleEvents: function(events){
     var rows = []
-    events.forEach(function(event, index) {
-      rows.push(<SingleEvent event={event} key={index} />)
-    })
-    console.log('Rendering Event List')
-    this.setState({rowes: rows})
+    console.log('inside handle events');
+    console.log(events);
+    if (events) {
+      events.forEach(function(event, index) {
+        rows.push(<SingleEvent event={event} key={index} />)
+      })
+      console.log('Rendering Event List')
+      this.setState({rowes: rows})
+    }
+
   },
   render: function() {
+    console.log('inside event list render');
     return (
       <div className="eventList">
         <ul>

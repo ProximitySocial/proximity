@@ -79,7 +79,7 @@ function genRandSelectArray(array, max) {
   return randSelectArray
 }
 
-var User = function(){
+var User = function() {
   this.email      = Faker.internet.email(),
   this.firstName  = Faker.name.firstName(),
   this.lastName   = Faker.name.lastName(),
