@@ -1,6 +1,31 @@
 const React = require('react')
 const ReactDOM = require('react-dom')
 
+function formatDate(date) {
+  var d = new Date(date);
+  var hh = d.getHours();
+  var m = d.getMinutes();
+  var s = d.getSeconds();
+  var dd = "AM";
+  var h = hh;
+  if (h >= 12) {
+        h = hh-12;
+        dd = "PM";
+    }
+  if (h == 0) {
+        h = 12;
+    }
+  m = m<10?"0"+m:m;
+  s = s<10?"0"+s:s;
+  var pattern = new RegExp("0?"+hh+":"+m+":"+s);
+  var replacement = h+":"+m;
+  /* if you want to add seconds
+  replacement += ":"+s;  */
+  replacement += " "+dd;
+
+  return replacement
+}
+
 module.exports = React.createClass({
   getInitialState: function(){
     return {event: this.props.event}
@@ -17,14 +42,15 @@ module.exports = React.createClass({
                     margin: 0,
                     verticalAlign: "bottom"}
 
-    var startTime = Date(this.props.event.startTime)
+    var startTime = Date.parse(this.props.event.startTime)
     var now = Date.now() //- Date.parse(Date.now())
     var timeTill = Date.parse(this.props.event.startTime) - now
     var x = timeTill / 1000
-
+    var hour = formatDate(this.props.event.startTime)
     console.log('startTime: ' + startTime)
     console.log('hours: ' + (x % 24))
     console.log('days: ' + (x))
+    var day = x
 
 
     return (
@@ -36,9 +62,9 @@ module.exports = React.createClass({
         </div>
         <div className="eventDetails">
           <h4><strong>@</strong>  {this.props.event.addressName}</h4>
-          <p><strong>Starts in:</strong>  {Date(startTime)}  ({day})</p>
-          <p><strong>Tags:</strong>  #{this.props.event.interestTags}</p>
-          <p><strong>Neighborhood:</strong>  {this.props.event.neighborhood}</p>
+          <p className="time"><strong>Starts in:</strong>  {(x % 24).toFixed(0)} hours  @ {hour}</p>
+          <p className="interest"><strong>Tags:</strong>  #{this.props.event.interestTags}</p>
+          <p className="hood"><strong>Neighborhood:</strong>  {this.props.event.neighborhood}</p>
           <p><strong>ID:</strong>   {this.props.event._id}</p>
           <div className="eventAttCount">
             <h3>{this.props.event._attendees.length}</h3>

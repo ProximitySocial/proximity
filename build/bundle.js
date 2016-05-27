@@ -20468,6 +20468,31 @@
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(33);
 
+	function formatDate(date) {
+	  var d = new Date(date);
+	  var hh = d.getHours();
+	  var m = d.getMinutes();
+	  var s = d.getSeconds();
+	  var dd = "AM";
+	  var h = hh;
+	  if (h >= 12) {
+	    h = hh - 12;
+	    dd = "PM";
+	  }
+	  if (h == 0) {
+	    h = 12;
+	  }
+	  m = m < 10 ? "0" + m : m;
+	  s = s < 10 ? "0" + s : s;
+	  var pattern = new RegExp("0?" + hh + ":" + m + ":" + s);
+	  var replacement = h + ":" + m;
+	  /* if you want to add seconds
+	  replacement += ":"+s;  */
+	  replacement += " " + dd;
+
+	  return replacement;
+	}
+
 	module.exports = React.createClass({
 	  displayName: 'exports',
 
@@ -20486,14 +20511,15 @@
 	      margin: 0,
 	      verticalAlign: "bottom" };
 
-	    var startTime = Date(this.props.event.startTime);
+	    var startTime = Date.parse(this.props.event.startTime);
 	    var now = Date.now(); //- Date.parse(Date.now())
 	    var timeTill = Date.parse(this.props.event.startTime) - now;
 	    var x = timeTill / 1000;
-
+	    var hour = formatDate(this.props.event.startTime);
 	    console.log('startTime: ' + startTime);
 	    console.log('hours: ' + x % 24);
 	    console.log('days: ' + x);
+	    var day = x;
 
 	    return React.createElement(
 	      'li',
@@ -20527,21 +20553,20 @@
 	        ),
 	        React.createElement(
 	          'p',
-	          null,
+	          { className: 'time' },
 	          React.createElement(
 	            'strong',
 	            null,
 	            'Starts in:'
 	          ),
 	          '  ',
-	          Date(startTime),
-	          '  (',
-	          day,
-	          ')'
+	          (x % 24).toFixed(0),
+	          ' hours  @ ',
+	          hour
 	        ),
 	        React.createElement(
 	          'p',
-	          null,
+	          { className: 'interest' },
 	          React.createElement(
 	            'strong',
 	            null,
@@ -20552,7 +20577,7 @@
 	        ),
 	        React.createElement(
 	          'p',
-	          null,
+	          { className: 'hood' },
 	          React.createElement(
 	            'strong',
 	            null,
