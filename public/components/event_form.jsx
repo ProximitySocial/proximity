@@ -13,7 +13,7 @@ module.exports = React.createClass({
                 address: '',
                 file: '',
                 imagePreviewUrl: '',
-                picUrl: '',
+                url: '',
                 fileName: '',
                 fileType: '',
                 fileSize: ''});
@@ -101,7 +101,7 @@ module.exports = React.createClass({
           var fileType = this.state.file.type
           var fileSize = this.state.file.size
         } else {
-          var picture = this.state.picUrl.trim()
+          var picture = this.state.url.trim()
         }
         // if (!title || !description || !address) return
         this.onFormSubmit({

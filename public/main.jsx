@@ -120,24 +120,22 @@ var RootApp = React.createClass({
         </section>
         <section style={classHide}>
           <div className="container row">
-            <div className="col-lg-4 column">
-              <h2>Profile</h2>
+            <h2>Profile</h2>
+            <div className="col-lg-4">
               <DisplayUser className="row profile" user={this.state.user} />
-              <CreateUserForm className="row form" />
-              <UpdateUserForm className="row form" />
+              <CreateUserForm className="row form" user={this.state.user}/>
             </div>
-            <div className="col-lg-4 column" id="eventList">
-              <h2>Events</h2>
+            <h2>Events</h2>
+            <div className="col-lg-4" id="eventList">
               <EventList className="row events" user={this.state.user}/>
             </div>
-            <div className="col-lg-4" column>
-              <h2>CreateEvent</h2>
+            <h2>CreateEvent</h2>
+            <div className="col-lg-4">
               <CreateEventForm className="row form" />
               <div className="row form" id="eventUpdate"></div>
             </div>
           </div>
-        </section>
-      </div>
+      </section>
     )
   }
 })
