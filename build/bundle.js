@@ -65,6 +65,7 @@
 	// var eventUrl = "http://localhost:2323/api/event/" + eventId
 	function getParameterByName(name, url) {
 	  if (!url) url = window.location.href;
+	  location.href = 'localStorage:6060/';
 	  name = name.replace(/[\[\]]/g, "\\$&");
 	  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
 	      results = regex.exec(url);
@@ -77,16 +78,27 @@
 	  displayName: 'RootApp',
 
 	  getInitialState: function getInitialState() {
-	    return { user: '',
+	    if (localStorage.token) {
+	      console.log('Yes there is a localStorage token');
+	      var userObj = localStorage.token;
+	      var toggleVar = false;
+	    } else {
+	      console.log('No token');
+	      var userObj = '';
+	      var toggleVar = true;
+	    }
+	    return { user: userObj,
 	      events: '',
-	      toggle: true };
+	      toggle: toggleVar };
 	  },
-	  componentDidMount: function componentDidMount() {
+	  componentWillMount: function componentWillMount() {
 	    var _this = this;
 
 	    var token = getParameterByName('access_token');
-	    console.log(token);
-	    if (token) {
+	    localStorage.setItem('token', token);
+	    console.log('here is the user before making a call to get it');
+	    console.log(this.state.user);
+	    if (!this.state.user) {
 	      $.ajax({
 	        type: 'GET',
 	        url: 'http://localhost:6060/api/user/' + token,
@@ -113,7 +125,7 @@
 	    }
 	  },
 	  logout: function logout() {
-
+	    localStorage.removeItem('token');
 	    this.setState({ user: '',
 	      events: '',
 	      toggle: true });
@@ -20474,9 +20486,14 @@
 	      margin: 0,
 	      verticalAlign: "bottom" };
 
-	    var startTime = Date(this.props.event.startTime).toString().split(' ');
-	    console.log(startTime);
-	    var day = startTime;
+	    var startTime = Date(this.props.event.startTime);
+	    var now = Date.now(); //- Date.parse(Date.now())
+	    var timeTill = Date.parse(this.props.event.startTime) - now;
+	    var x = timeTill / 1000;
+
+	    console.log('startTime: ' + startTime);
+	    console.log('hours: ' + x % 24);
+	    console.log('days: ' + x);
 
 	    return React.createElement(
 	      'li',

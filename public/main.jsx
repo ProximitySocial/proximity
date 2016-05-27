@@ -18,6 +18,7 @@ var eventUrl = "/api/events/" + userId
 // var eventUrl = "http://localhost:2323/api/event/" + eventId
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
+    location.href = 'localStorage:6060/'
     name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
@@ -28,14 +29,25 @@ function getParameterByName(name, url) {
 
 var RootApp = React.createClass({
   getInitialState: function(){
-    return ({user: '',
+    if (localStorage.token){
+      console.log('Yes there is a localStorage token')
+      var userObj = localStorage.token
+      var toggleVar = false
+    } else {
+      console.log('No token')
+      var userObj = ''
+      var toggleVar = true
+    }
+    return ({user: userObj,
             events: '',
-            toggle: true})
+            toggle: toggleVar})
   },
-  componentDidMount: function() {
-    var token = getParameterByName('access_token');
-    console.log(token);
-    if (token) {
+  componentWillMount: function() {
+    var token = getParameterByName('access_token')
+    localStorage.setItem('token', token)
+    console.log('here is the user before making a call to get it')
+    console.log(this.state.user)
+    if (!this.state.user){
       $.ajax({
         type: 'GET',
         url: 'http://localhost:6060/api/user/' + token,
@@ -62,7 +74,7 @@ var RootApp = React.createClass({
     }
   },
   logout: function(){
-
+    localStorage.removeItem('token')
     this.setState({user: '',
                    events: '',
                    toggle: true})
