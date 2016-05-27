@@ -65,7 +65,6 @@
 	// var eventUrl = "http://localhost:2323/api/event/" + eventId
 	function getParameterByName(name, url) {
 	  if (!url) url = window.location.href;
-	  location.href = 'localStorage:6060/';
 	  name = name.replace(/[\[\]]/g, "\\$&");
 	  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
 	      results = regex.exec(url);
@@ -78,9 +77,10 @@
 	  displayName: 'RootApp',
 
 	  getInitialState: function getInitialState() {
-	    if (localStorage.token) {
-	      console.log('Yes there is a localStorage token');
-	      var userObj = localStorage.token;
+	    if (sessionStorage.token) {
+	      console.log('Yes there is a sessionStorage token');
+	      console.log(sessionStorage.token);
+	      var userObj = sessionStorage.token;
 	      var toggleVar = false;
 	    } else {
 	      console.log('No token');
@@ -91,41 +91,39 @@
 	      events: '',
 	      toggle: toggleVar };
 	  },
-	  componentWillMount: function componentWillMount() {
+	  componentDidMount: function componentDidMount() {
 	    var _this = this;
 
-	    var token = getParameterByName('access_token');
-	    localStorage.setItem('token', token);
-	    console.log('here is the user before making a call to get it');
-	    console.log(this.state.user);
 	    if (!this.state.user) {
-	      $.ajax({
-	        type: 'GET',
-	        url: 'http://localhost:6060/api/user/' + token,
-	        headers: { 'Access-Control-Allow-Origin': 'http://localhost:6060' },
-	        // beforeSend: function(xhr){
-	        //   xhr.withCredentials = true;
-	        //   xhr.setRequestHeader('Authorization', )
-	        // },
-	        success: function success(data, status) {
-	          console.log(data);
-	          console.log(status);
-	          _this.setState({
-	            user: data,
-	            toggle: false
-	          });
-	          console.log('this is toggle: ' + toggle);
-	        },
-	        error: function error(xhr, status, _error) {
-	          console.log(xhr);
-	          console.log(status);
-	          console.log(_error);
-	        }
-	      });
+	      var token = getParameterByName('access_token');
+	      sessionStorage.setItem('token', token);
 	    }
+	    $.ajax({
+	      type: 'GET',
+	      url: 'http://localhost:6060/api/user/' + sessionStorage.token,
+	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:6060' },
+	      // beforeSend: function(xhr){
+	      //   xhr.withCredentials = true;
+	      //   xhr.setRequestHeader('Authorization', )
+	      // },
+	      success: function success(data, status) {
+	        console.log(data);
+	        console.log(status);
+	        _this.setState({
+	          user: data,
+	          toggle: false
+	        });
+	        console.log('this is toggle: ' + toggle);
+	      },
+	      error: function error(xhr, status, _error) {
+	        console.log(xhr);
+	        console.log(status);
+	        console.log(_error);
+	      }
+	    });
 	  },
 	  logout: function logout() {
-	    localStorage.removeItem('token');
+	    sessionStorage.removeItem('token');
 	    this.setState({ user: '',
 	      events: '',
 	      toggle: true });
@@ -169,7 +167,7 @@
 	              React.createElement(
 	                'a',
 	                { className: 'navbar-brand', href: '#' },
-	                'Common Radar'
+	                'VivaCity'
 	              )
 	            ),
 	            React.createElement(
@@ -178,24 +176,6 @@
 	              React.createElement(
 	                'ul',
 	                { className: 'nav navbar-nav' },
-	                React.createElement(
-	                  'li',
-	                  { className: 'active' },
-	                  React.createElement(
-	                    'a',
-	                    { href: '' },
-	                    'Interests'
-	                  )
-	                ),
-	                React.createElement(
-	                  'li',
-	                  null,
-	                  React.createElement(
-	                    'a',
-	                    { href: '' },
-	                    'Search Me'
-	                  )
-	                ),
 	                React.createElement(
 	                  'li',
 	                  { style: classShow },
