@@ -18,7 +18,6 @@ var eventUrl = "/api/events/" + userId
 // var eventUrl = "http://localhost:2323/api/event/" + eventId
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
-    location.href = 'localStorage:6060/'
     name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
@@ -29,9 +28,10 @@ function getParameterByName(name, url) {
 
 var RootApp = React.createClass({
   getInitialState: function(){
-    if (localStorage.token){
-      console.log('Yes there is a localStorage token')
-      var userObj = localStorage.token
+    if (sessionStorage.token){
+      console.log('Yes there is a sessionStorage token')
+      console.log(sessionStorage.token)
+      var userObj = sessionStorage.token
       var toggleVar = false
     } else {
       console.log('No token')
@@ -42,39 +42,37 @@ var RootApp = React.createClass({
             events: '',
             toggle: toggleVar})
   },
-  componentWillMount: function() {
-    var token = getParameterByName('access_token')
-    localStorage.setItem('token', token)
-    console.log('here is the user before making a call to get it')
-    console.log(this.state.user)
+  componentDidMount: function() {
     if (!this.state.user){
-      $.ajax({
-        type: 'GET',
-        url: 'http://localhost:6060/api/user/' + token,
-        headers: {'Access-Control-Allow-Origin': 'http://localhost:6060'},
-        // beforeSend: function(xhr){
-        //   xhr.withCredentials = true;
-        //   xhr.setRequestHeader('Authorization', )
-        // },
-        success: (data, status) => {
-          console.log(data)
-          console.log(status)
-          this.setState({
-            user: data,
-            toggle: false
-          })
-          console.log('this is toggle: ' + toggle);
-        },
-        error: (xhr, status, error) => {
-          console.log(xhr)
-          console.log(status)
-          console.log(error)
-        }
-      })
+        var token = getParameterByName('access_token')
+        sessionStorage.setItem('token', token)
     }
+    $.ajax({
+      type: 'GET',
+      url: 'http://localhost:6060/api/user/' + sessionStorage.token,
+      headers: {'Access-Control-Allow-Origin': 'http://localhost:6060'},
+      // beforeSend: function(xhr){
+      //   xhr.withCredentials = true;
+      //   xhr.setRequestHeader('Authorization', )
+      // },
+      success: (data, status) => {
+        console.log(data)
+        console.log(status)
+        this.setState({
+          user: data,
+          toggle: false
+        })
+        console.log('this is toggle: ' + toggle);
+      },
+      error: (xhr, status, error) => {
+        console.log(xhr)
+        console.log(status)
+        console.log(error)
+      }
+    })
   },
   logout: function(){
-    localStorage.removeItem('token')
+    sessionStorage.removeItem('token')
     this.setState({user: '',
                    events: '',
                    toggle: true})
@@ -100,13 +98,10 @@ var RootApp = React.createClass({
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
                 </button>
-                <a className="navbar-brand" href="#">Common Radar</a>
+                <a className="navbar-brand" href="#">VivaCity</a>
               </div>
               <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav">
-
-                  <li className="active"><a href="">Interests</a></li>
-                  <li><a href="">Search Me</a></li>
                   <li style={classShow}>
                       <a className="btn btn-primary fb-login"  id="fbLogin" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a>
                   </li>
