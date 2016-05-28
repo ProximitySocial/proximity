@@ -5,12 +5,15 @@ const User = require(__dirname + '/../models/user')
 const Event = require(__dirname + '/../models/event')
 const authRouter = module.exports = exports = express.Router()
 
-authRouter.get('/api/mobile/facebook/shake', (req, res) => {
+authRouter.get('/mobile/facebook/shake', (req, res) => {
   console.log(req.headers)
+  console.log(req.body)
   console.log('headers ahead of this line')
+
   authorization = req.headers.authorization
   fbid = passort.deserialize(authorization)
   console.log(fbid)
+  new User
 
 
 })

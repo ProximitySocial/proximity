@@ -33,7 +33,6 @@ user.methods.setHash = function(fbid){
   this.hash = crypto.pbkdf2Sync(fbid, this.salt, 1000, 64).toString('hex');
 };
 
-
 //the Hash is a 'WANNA BE' valid hash.    So its wbHash//// IF YOUR STUCK.....get to the moment, its the place when all releases and the answer is right around the corner.. NOW.  GET THERE!!!
 user.methods.validHash = function(hash){
   var wbHash = crypto.pbkdf2Sync(hash, this.salt, 1000, 64).toString('hex');
