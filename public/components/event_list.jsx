@@ -1,5 +1,7 @@
 const React = require('react')
 const ReactDOM = require('react-dom')
+import { Router, Route, Link, hashHistory } from 'react-router'
+
 var SingleEvent = require(__dirname + '/single_event.jsx')
 var port = process.env.PORT
 
@@ -62,8 +64,3 @@ module.exports = React.createClass({
     )
   }
 })
-
-// ReactDOM.render(
-//   <EventList url="http://localhost:" + port + "/api/events"/>,
-//   document.getElementById('eventList')
-// )

@@ -1,14 +1,19 @@
+import React from 'react'
+import { render } from 'react-dom'
+import { Router, Route, Link, browserHistory } from 'react-router'
+import { IndexRoute } from 'react-router'
 const port = process.env.PORT || 8080
-const React = require('react')
-const ReactDOM = require('react-dom')
+// const React = require('react')
+// const ReactDOM = require('react-dom')
 
 // const { Router, Route, browserHistory, IndexRoute } = require('react-router');
-
+const Dashboard = require(__dirname + '/components/dashboard.jsx')
 const EventList = require(__dirname + '/components/event_list.jsx')
-const DisplayUser = require(__dirname + '/components/display_user.jsx')
+const Profile = require(__dirname + '/components/display_user.jsx')
 const CreateEventForm = require(__dirname + '/components/event_form.jsx')
 const CreateUserForm = require(__dirname + '/components/user_form.jsx')
-const UpdateUserForm = require(__dirname + '/components/user_update.jsx')
+const SingleEvent = require(__dirname + '/components/single_event.jsx')
+const EventView = require(__dirname + '/components/event_view.jsx')
 
 
 // for testing purposes
@@ -26,7 +31,7 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-var RootApp = React.createClass({
+var App = React.createClass({
   getInitialState: function(){
     if (sessionStorage.token){
       console.log('Yes there is a sessionStorage token')
@@ -62,7 +67,7 @@ var RootApp = React.createClass({
           user: data,
           toggle: false
         })
-        console.log('this is toggle: ' + toggle);
+        console.log('this is toggle: ' + this.state.toggle);
       },
       error: (xhr, status, error) => {
         console.log(xhr)
@@ -86,6 +91,8 @@ var RootApp = React.createClass({
       classHide = {}
       classShow = {display: "none"}
     }
+    console.log('Grabbing App Children');
+    console.log(this.props.children);
     return (
       <div>
         <section>
@@ -108,55 +115,35 @@ var RootApp = React.createClass({
                   <li style={classHide}>
                       <a className="btn btn-primary" id="fbLogin" onClick={this.logout} role="button">Logout &raquo;</a>
                   </li>
+                  <li><Link to='/test'>Test</Link></li>
+                  <li><Link to='/profile'>Profile</Link></li>
                 </ul>
               </div>
             </div>
           </nav>
         </section>
-        <section style={classHide}>
-          <div className="container row">
-            <div className="col-lg-4">
-              <h2>Profile</h2>
-              <DisplayUser className="row profile" user={this.state.user} />
-              <CreateUserForm className="row form" user={this.state.user}/>
-            </div>
-            <div className="col-lg-4" id="eventList">
-              <h2>Events</h2>
-              <EventList className="row events" user={this.state.user}/>
-            </div>
-            <div className="col-lg-4">
-              <h2>CreateEvent</h2>
-              <CreateEventForm className="row form" />
-              <div className="row form" id="eventUpdate"></div>
-            </div>
-          </div>
-        </section>
+        {this.props.children}
       </div>
     )
   }
 })
 
-// require('font-awesome/css/font-awesome.css')
-// require('normalize-css')
+const Test = React.createClass({
+  render: function() {
+    return (<div><h1>TESTING</h1></div>)
+  }
+})
 
-// require(__dirname + "/sass/main.scss")
+          // <Route path="attendees" component={AttendeeList}/>
+          // <Route path="myevents" component={MyEvents}/>
 
-
-//render((
-//  <Router history={browserHistory}>
-//    <Route path="/" component={ App }>
-
-      // <Route path="/program-highlights" component={ ProgramHighlights }/>
-      // <Route path="/contact"  component={ Contact }/>
-
-//    </Route>
-//  </Router>
-//), document.getElementById('root'))
-// ReactDOM.render( <CreateUserForm />, document.getElementById('userForm'))
-// ReactDOM.render( <UpdateUserForm url={userUrl}/>, document.getElementById('userUpdate'))
-
-// ReactDOM.render( <EventList url={userId}/>, document.getElementById('eventList'))
-
-// ReactDOM.render( <CreateEventForm />, document.getElementById('eventForm'))
-// ReactDOM.render( <UpdateEventForm url={eventUrl}/>, document.getElementById('eventUpdate'))
-ReactDOM.render( <RootApp />, document.getElementById('root'))
+render((
+  <Router history={browserHistory}>
+    <Route path="/" component={App}>
+      <IndexRoute component={Dashboard}/>
+      <Route path="/event/:id" component={EventView}/>
+      <Route path="/profile" component={Profile}/>
+      <Route path="/test" component={Test}/>
+    </Route>
+  </Router>
+), document.getElementById('root'))

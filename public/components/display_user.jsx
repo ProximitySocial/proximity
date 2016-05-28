@@ -86,8 +86,3 @@ module.exports = React.createClass({
      )
    }
  })
-
- // ReactDOM.render(
- //   <DisplayUser url="http://localhost:" + port + "/api/user/573373c18026b52b5f052ea0"/>,
- //   document.getElementById('userProfile')
- // );
