@@ -26,7 +26,6 @@ passport.use(new LocalStrategy(function(fbid, hash, done) {
 
 passport.serializeUser(function(user , done) {
     done(null, SHA256(user._profile.id, process.env.VC_SECRET_CRYPTO || 'secret'));
-    console
 });
 
 passport.deserializeUser(function(id, done) {

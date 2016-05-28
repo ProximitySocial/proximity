@@ -4,16 +4,26 @@ const passport = require('../config/passport')
 const User = require(__dirname + '/../models/user')
 const Event = require(__dirname + '/../models/event')
 const authRouter = module.exports = exports = express.Router()
+const SHA256   = require("crypto-js/sha256");
 
-authRouter.get('/mobile/facebook/shake', (req, res) => {
+authRouter.post('/mobile/facebook/shake', (req, res) => {
+  console.log('From the top of the handshake')
   console.log(req.headers)
   console.log(req.body)
   console.log('headers ahead of this line')
 
   authorization = req.headers.authorization
-  fbid = passort.deserialize(authorization)
+  console.log(typeof authorization)
+  console.log('##########################')
+  // SHA256.decrypt(authorization, process.env.VC_SECRET_CRYPTO || 'secret'));
+  fbid = SHA256.decrypt(authorization, process.env.VC_SECRET_CRYPTO || 'secret');
+  // fbid = passport.deserialize(authorization)
   console.log(fbid)
-  new User
+  new User(req.body).save((err, success) => {
+    if(err) return res.status(500).json({msg: 'could not save user properly', error: err})
+    console.log('success from /mobile/facebook/shake route inside authRouter')
+    console.log(success)
+  })
 
 
 })
@@ -36,4 +46,4 @@ authRouter.get('/auth/facebook/callback',
     // res.redirect('/dashboard?access_token=' + req.user.access_token);
   }
 )
-  return JWT = JWT???
+ // return JWT = JWT???

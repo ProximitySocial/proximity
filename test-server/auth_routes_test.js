@@ -1,16 +1,18 @@
 const chai = require('chai');
 const expect = chai.expect;
+const CryptoJS   = require("crypto-js");
+
 chai.use(require('chai-http'));
 
 /* Necessary so that new DB created for test cases!! */
 process.env.NODE_ENV = 'test';
 
-const server = require(__dirname + '/../server.js');
+const server = require('./../server.js');
 const mongoose = require('mongoose');
-const Event = require(__dirname + '/../models/event.js');
+const User = require('./../models/user.js');
 const baseUri = 'localhost:2323';
 
-describe('event routes', () => {
+describe('AUTH ROUTES', () => {
 
   // before((done) => {
   //   this.server = server(2323, done);
@@ -30,31 +32,47 @@ describe('event routes', () => {
   });
 
 
-  describe('make handshake from mobile, return JWT', () => {
+  describe('make handshake from mobile', () => {
     beforeEach((done) => {
       User.create({
-        title: 'test event',
-        description: 'test description',
-        address: '511 Boren Ave N Seattle',
-        fbid: '3939393939'
+        firstName:     'tester',
+        lastName:      'teste',
+        email:         'tester@tester.com',
+        bio:           'This is my life, testing all the the tests...I stand for all test objects out there everywhere.',
+        pic:           'https://www.espn.com',
+        rating:        5,
+        _favorites:    [],
+        provider:      'facebook',
+        facebook:      {"id": 12345678910, display_name: 'tester teste'},
+        access_token:  'A_FAKE_ACCESS_TOKEN',
+        interests:     ['golf', 'running', 'dancing', 'vivaCity'],
+        neighborhoods: ['Capitol Hill', 'Belltown']
       }, (err, data) => {
         if (err) return console.log(err);
-        this.testEvent = data;
-        console.log(this.testEvent);
+        this.testUser = data;
         done();
       });
     });
 
-    it('should be able to update an event', (done) => {
+    it('should receive a JWT token', (done) => {
+      var token = CryptoJS.AES.encrypt(JSON.stringify(this.testUser.facebook.id), 'secret B')
+      console.log(token)
+      var bytes = CryptoJS.AES.decrypt(token.toString(), 'secret')
+      console.log(bytes)
+      console.log('(((((((TOKEN ^^^^^^ ABOVE')
       chai.request(baseUri)
-        .put(`/api/event/${this.testEvent._id}`)
-        .send({ title: 'Updated Title', address: '845 depot rd boxboro ma' })
+        .post(`/api/mobile/facebook/shake`, this.testUser)
+        .set('Authorization', token)
+        .send(this.testUser)
         .end((err, res) => {
+          console.log(err.req)
           // NEED TO ACCOUNT FOR CASES WHERE ADDRESS IS NOT SENT IN THE UPDATE
-          expect(err).to.eql(null);
+          // expect(err).to.eql(null);
           expect(res).to.have.status(200);
           expect(res.body.msg).to.eql('Successfully updated event');
           expect(res.body.result.nModified).to.eql(1);
           done();
         });
     });
+  })
+})

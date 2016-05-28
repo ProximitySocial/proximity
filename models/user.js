@@ -1,4 +1,9 @@
 const mongoose = require('mongoose')
+const SHA256   = require("crypto-js/sha256");
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+
+
 
 function arrayLimit(val) {
   return val.length <= 2;
@@ -48,7 +53,7 @@ user.methods.generateJWT = function() {
 
   return jwt.sign({
     _id: this._id,
-    username: this.username,
+    fbid: this.facebook.id,
     exp: parseInt(exp.getTime() / 1000),
   }, process.env.VC_SECRET_CRYPTO || 'secret');
 };

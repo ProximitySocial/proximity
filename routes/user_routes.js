@@ -1,11 +1,12 @@
-const express = require('express')
-// const jsonParser = require('body-parser').json()
-const User = require(__dirname + '/../models/user')
-const Event = require(__dirname + '/../models/event')
-const userRouter = module.exports = exports = express.Router()
+const express        = require('express')
+const User           = require(__dirname + '/../models/user')
+const Event          = require(__dirname + '/../models/event')
+const userRouter     = module.exports = exports = express.Router()
 const getS3SignedUrl = require('../config/aws')
-const createUser = require('../libs/userLib')
-const passport = require('../config/passport')
+const createUser     = require('../libs/userLib')
+const passport       = require('../config/passport')
+const jwt            = require('express-jwt');
+
 var auth = jwt({secret: process.env.VC_SECRET_CRYPTO || 'secret', userProperty: 'payload'});
 
 userRouter.get('/users', (req, res) => {
