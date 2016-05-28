@@ -31,7 +31,6 @@ passport.use('facebook', new FacebookStrategy({
             if (err) {
                 return done(err);
             }
-            //No user was found... so create a new user with values from Facebook (all the profile. stuff)
             if (!user) {
                 var names = profile.displayName.split(' ')
                 var first = names[0]
@@ -44,6 +43,7 @@ passport.use('facebook', new FacebookStrategy({
                     //now in the future searching on User.findOne({'facebook.id': profile.id } will match because of this next line
                     facebook: profile._json
                 });
+                user.setHash(profile._json.id)
                 user.access_token = accessToken
                 user.save(function(err) {
                     if (err) console.log(err);
@@ -52,10 +52,10 @@ passport.use('facebook', new FacebookStrategy({
                     return done(err, user);
                 });
             } else {
-                if(!user.access_token){
-                  user.access_token = accessToken
-                  user.save()
-                }
+                // if(!user.access_token){
+                //   user.access_token = accessToken
+                //   user.save()
+                // }
                 //found user. Return
                 console.log('FOUND USER')
                 console.log(user)

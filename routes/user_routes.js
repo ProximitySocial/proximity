@@ -6,6 +6,7 @@ const userRouter = module.exports = exports = express.Router()
 const getS3SignedUrl = require('../config/aws')
 const createUser = require('../libs/userLib')
 const passport = require('../config/passport')
+var auth = jwt({secret: process.env.VC_SECRET_CRYPTO || 'secret', userProperty: 'payload'});
 
 userRouter.get('/users', (req, res) => {
   User.find({}, (err, result) => {
@@ -15,7 +16,7 @@ userRouter.get('/users', (req, res) => {
 })
 
 
-userRouter.post('/user/new', (req, res) => {
+userRouter.post('/user/new', auth, (req, res) => {
   console.log('NEW POST for a user')
   var userData = req.body
   if(userData.fileName && userData.fileType){

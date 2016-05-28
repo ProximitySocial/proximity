@@ -9,8 +9,9 @@ const mongoose       = require('mongoose')
     , authRouter    = require(__dirname + '/routes/auth_routes')
 
 const User           = require(__dirname + '/models/user')
-var passport         = require('passport')
-// var jwt            = require('express-jwt');
+const passport         = require('passport')
+const jwt            = require('express-jwt');
+const auth = jwt({secret: process.env.VC_SECRET_CRYPTO || 'secret', userProperty: 'payload'});
 
 //// configuration ===========================================
 console.log(process.env.NODE_ENV + ' :::: Environment');
