@@ -23,7 +23,7 @@ passport.use('facebook', new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
         console.log('OAUTH CALLBACK RETURNED PROFILE')
-        console.log(profile)
+        // console.log(profile)
         //check user table for anyone with a facebook ID of profile.id
         User.findOne({
             'facebook.id': profile.id

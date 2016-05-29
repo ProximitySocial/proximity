@@ -2,15 +2,16 @@ const mongoose = require('mongoose')
 const SHA256   = require("crypto-js/sha256");
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const HOOD_MAX = 2
+const INTEREST_MAX = 2
 
 
-
-function arrayLimit(val) {
-  return val.length <= 2;
+function neighborhoodLimit(val) {
+  return val.length <= HOOD_MAX
 }
 
 function interestsLimit(val) {
-  return val.length <= 5;
+  return val.length <= INTEREST_MAX
 }
 
 var user = new mongoose.Schema({
@@ -29,7 +30,7 @@ var user = new mongoose.Schema({
     interests:     {type: Array,
                     validate: [interestsLimit, '{PATH} exceeds the limit of 5']}, //max of 5
     neighborhoods: {type: Array,
-                    validate: [arrayLimit, '{PATH} exceeds the limit of 2']}, //max 2
+                    validate: [neighborhoodLimit, '{PATH} exceeds the limit of 2']}, //max 2
     created_at:    {type: Date, required: true, default: Date.now }
     // modified_at:   {type: Date, required: true, default: Date.now }
 })

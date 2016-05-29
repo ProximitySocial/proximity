@@ -1,29 +1,42 @@
 const express = require('express')
 const passport = require('../config/passport')
 // const jsonParser = require('body-parser').json()
-const User = require(__dirname + '/../models/user')
+const User = require('./../models/user')
 const Event = require(__dirname + '/../models/event')
 const authRouter = module.exports = exports = express.Router()
-const SHA256   = require("crypto-js/sha256");
+const CryptoJS   = require("crypto-js");
 
 authRouter.post('/mobile/facebook/shake', (req, res) => {
   console.log('From the top of the handshake')
-  console.log(req.headers)
-  console.log(req.body)
-  console.log('headers ahead of this line')
+  userData = req.body
+  var token = req.headers.authorization
+  // console.log('token: '+ token)
+  // var decrypted = CryptoJS.AES.decrypt(token.toString(), 'secret')  // var fbid = decrypted.toString(CryptoJS.enc.Utf8);
+  var bytes = CryptoJS.AES.decrypt(token, process.env.VC_SECRET_CRYPTO)
+  // console.log(bytes)
+  var fbid = bytes.toString(CryptoJS.enc.Utf8);
 
-  authorization = req.headers.authorization
-  console.log(typeof authorization)
-  console.log('##########################')
-  // SHA256.decrypt(authorization, process.env.VC_SECRET_CRYPTO || 'secret'));
-  fbid = SHA256.decrypt(authorization, process.env.VC_SECRET_CRYPTO || 'secret');
-  // fbid = passport.deserialize(authorization)
-  console.log(fbid)
-  new User(req.body).save((err, success) => {
-    if(err) return res.status(500).json({msg: 'could not save user properly', error: err})
-    console.log('success from /mobile/facebook/shake route inside authRouter')
-    console.log(success)
-  })
+  User.find({"facebook.id": fbid.slice(1, -1)}, (err, array) => {
+      if (err) return res.status(500).json({msg: 'Error, with findOne', error: err})
+      console.log(array.length)
+      if (array.length === 0) {
+          console.log('no user found, (!user)')
+          user = new User(userData)
+          user.setHash(fbid)
+          user.save(function(err, result) {
+              if (err) console.log(err);
+              console.log('CREATED USER')
+              // console.log(result)
+              var jwtoken = user.generateJWT()
+              res.status(200).json({msg: 'Created User', jwt: jwtoken})
+          });
+      } else {
+        console.log('FOUND USER')
+        console.log(array)
+        var jwtoken = array[0].generateJWT()
+        res.status(200).json({msg: 'Found User', jwt: jwtoken})
+      }
+  });
 
 
 })
