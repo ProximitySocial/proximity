@@ -1,5 +1,7 @@
 const React = require('react')
 const ReactDOM = require('react-dom')
+import { Router, Route, Link, hashHistory } from 'react-router'
+
 var SingleEvent = require(__dirname + '/single_event.jsx')
 var port = process.env.PORT
 
@@ -22,7 +24,7 @@ module.exports = React.createClass({
     if (user._id) {
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:6060/api/events/' + user._id,
+        url: 'http://localhost:2323/api/events/' + user._id,
         dataType: 'json',
         cache: false,
         success: function(data){
@@ -62,8 +64,3 @@ module.exports = React.createClass({
     )
   }
 })
-
-// ReactDOM.render(
-//   <EventList url="http://localhost:" + port + "/api/events"/>,
-//   document.getElementById('eventList')
-// )
