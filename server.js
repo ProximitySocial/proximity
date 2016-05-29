@@ -9,8 +9,9 @@ const mongoose       = require('mongoose')
     , authRouter    = require(__dirname + '/routes/auth_routes')
 
 const User           = require(__dirname + '/models/user')
-var passport         = require('passport')
-// var jwt            = require('express-jwt');
+const passport       = require('passport')
+const jwt            = require('express-jwt');
+const auth = jwt({secret: process.env.VC_SECRET_CRYPTO || 'secret', userProperty: 'payload'});
 
 //// configuration ===========================================
 console.log(process.env.NODE_ENV + ' :::: Environment');
@@ -20,9 +21,11 @@ var db = require('./config/db');
 console.log('DB: ' + db.url);
 
 // set our port
-var port = process.env.PORT || 2323;
-
-var localhost = 'http://localhost:' + port
+if (process.env.NODE_ENV === 'test'){
+  var port = 4343
+} else {
+  var port = process.env.PORT || 2323;
+}
 
 // connect to mongoDB database
 mongoose.connect(db.url);

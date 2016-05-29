@@ -16,7 +16,15 @@ module.exports = React.createClass({
                 url: '',
                 fileName: '',
                 fileType: '',
-                fileSize: ''});
+                fileSize: '',
+                update: false});
+      },
+      componentWillReceiveProps: function(nextProps) {
+        console.log(typeof nextProps)
+        console.log(nextProps)
+        this.setState({update: nextProps.update})
+        console.log('This is the state : ')
+        console.log(this.state.update)
       },
       handleIdChange: function(e) {
         this.setState({eventId: e.target.value});
@@ -88,6 +96,10 @@ module.exports = React.createClass({
 
         })
       },
+      updateUpdate: function(){
+        var updated = !this.state.update
+        this.setState({update: updated})
+      },
       handleSubmit: function(e) {
         e.preventDefault()
         console.log('somehting to see')
@@ -148,12 +160,22 @@ module.exports = React.createClass({
         if (imagePreviewUrl) {
           $imagePreview = (<img src={imagePreviewUrl} />)
         }
+        var hidden = {display: 'none'}
+        var show = {}
+        if (this.state.update){
+          hidden = {}
+          show = {display: 'none'}
+        }
         return (
           <div>
             <h2>Create/Update Event</h2>
+            <button className='btn btn-primary' style={show} onClick={this.updateUpdate}>Update Event</button>
+            <button className='btn btn-primary' style={hidden} onClick={this.updateUpdate}>Create Event</button>
             <form className="eventForm" onSubmit={this.handleSubmit} >
-              <label for="eventId">Event ID:</label>
-              <input type="text" placeholder="eventID" value={this.state.eventId}  onChange={this.handleIdChange} />
+              <div className="eventIdDiv" style={hidden}>
+                <label for="eventId">Event ID:</label>
+                <input type="text" placeholder="eventID" value={this.state.eventId}  onChange={this.handleIdChange} />
+              </div>
               <label for="title">Title:</label>
               <input type="text" placeholder="Title" value={this.state.title}  onChange={this.handleTitleChange} />
               <label for="description">Description:</label>
