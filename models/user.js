@@ -3,7 +3,7 @@ const SHA256   = require("crypto-js/sha256");
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const HOOD_MAX = 2
-const INTEREST_MAX = 2
+const INTEREST_MAX = 5
 
 
 function neighborhoodLimit(val) {
@@ -54,7 +54,7 @@ user.methods.generateJWT = function() {
 
   return jwt.sign({
     _id: this._id,
-    fbid: this.facebook.id,
+    hash: this.hash,
     exp: parseInt(exp.getTime() / 1000),
   }, process.env.VC_SECRET_CRYPTO || 'secret');
 };

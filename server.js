@@ -21,9 +21,11 @@ var db = require('./config/db');
 console.log('DB: ' + db.url);
 
 // set our port
-var port = process.env.PORT || 2323;
-
-var localhost = 'http://localhost:' + port
+if (process.env.NODE_ENV === 'test'){
+  var port = 4343
+} else {
+  var port = process.env.PORT || 2323;
+}
 
 // connect to mongoDB database
 mongoose.connect(db.url);

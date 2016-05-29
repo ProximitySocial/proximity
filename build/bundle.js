@@ -98,8 +98,8 @@
 	    }
 	    $.ajax({
 	      type: 'GET',
-	      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
-	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
+	      url: 'http://localhost:6060/api/user/' + sessionStorage.token,
+	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:6060' },
 	      // beforeSend: function(xhr){
 	      //   xhr.withCredentials = true;
 	      //   xhr.setRequestHeader('Authorization', )
@@ -15316,7 +15316,7 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @typechecks
-	 *
+	 * 
 	 */
 
 	/*eslint-disable no-self-compare */
@@ -20383,7 +20383,7 @@
 	    if (user._id) {
 	      $.ajax({
 	        type: 'GET',
-	        url: 'http://localhost:2323/api/events/' + user._id,
+	        url: 'http://localhost:6060/api/events/' + user._id,
 	        dataType: 'json',
 	        cache: false,
 	        success: function (data) {
