@@ -1,5 +1,7 @@
 const React = require('react')
 const ReactDOM = require('react-dom')
+import { Router, Route, Link, hashHistory } from 'react-router'
+
 
 function formatDate(date) {
   var d = new Date(date);
@@ -28,6 +30,8 @@ function formatDate(date) {
 
 module.exports = React.createClass({
   getInitialState: function(){
+    console.log('Getting Initial State of Single Event');
+    console.log(this.props.event);
     return {event: this.props.event}
   },
   componentDidMount: function(){
@@ -35,7 +39,7 @@ module.exports = React.createClass({
   },
   render: function() {
     if (!this.props.event.picture) {
-      this.props.event.picture = "http://lorempixel.com/640/480/transport"
+      // this.props.event.picture = "http://lorempixel.com/640/480/transport"
     }
     var divStyle = {background: "url(" + this.props.event.picture + ") center center",
                     minHeight: "25rem",
@@ -47,14 +51,15 @@ module.exports = React.createClass({
     var timeTill = Date.parse(this.props.event.startTime) - now
     var x = timeTill / 1000
     var hour = formatDate(this.props.event.startTime)
-    console.log('startTime: ' + startTime)
-    console.log('hours: ' + (x % 24))
-    console.log('days: ' + (x))
+    // console.log('startTime: ' + startTime)
+    // console.log('hours: ' + (x % 24))
+    // console.log('days: ' + (x))
     var day = x
-
-
+    console.log('Rendering Single Event');
+    console.log(this.props.event);
+    // var id = "/event/" + this.props.event._id;
     return (
-      <li>
+      <li><Link to={'/event/' + this.props.event._id}>
         <div className="eventPicture" style={divStyle}>
           <div className="eventTitle">
             <h3 style={{marginTop:0}}>{this.props.event.title}</h3>
@@ -70,7 +75,7 @@ module.exports = React.createClass({
             <h3>{this.props.event._attendees.length}</h3>
             <p>&nbsp;&nbsp;attendees</p>
           </div>
-        </div>
+        </div></Link>
       </li>
     )
   }

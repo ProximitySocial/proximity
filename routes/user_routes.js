@@ -2,7 +2,7 @@ const express = require('express')
 // const jsonParser = require('body-parser').json()
 const User = require(__dirname + '/../models/user')
 const Event = require(__dirname + '/../models/event')
-const updateUser = require('../libs/userslib').updateUser
+const updateUser = require('../libs/userLib').createUser
 const userRouter = module.exports = exports = express.Router()
 const getS3SignedUrl = require('../config/aws')
 // const createUser = require('../libs/userLib')
