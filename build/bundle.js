@@ -57,10 +57,6 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var port = process.env.PORT || 8080;
-	// const React = require('react')
-	// const ReactDOM = require('react-dom')
-
-	// const { Router, Route, browserHistory, IndexRoute } = require('react-router');
 	var Dashboard = __webpack_require__(229);
 	var EventList = __webpack_require__(230);
 	var Profile = __webpack_require__(232);
@@ -69,11 +65,6 @@
 	var SingleEvent = __webpack_require__(231);
 	var EventView = __webpack_require__(235);
 
-	// for testing purposes
-	var userId = "574390a51831bd0d9abfe74a";
-	var userUrl = "/api/user/" + userId;
-	var eventUrl = "/api/events/" + userId;
-	// var eventUrl = "http://localhost:2323/api/event/" + eventId
 	function getParameterByName(name, url) {
 	  if (!url) url = window.location.href;
 	  name = name.replace(/[\[\]]/g, "\\$&");
@@ -89,18 +80,17 @@
 
 	  getInitialState: function getInitialState() {
 	    if (sessionStorage.token) {
-	      console.log('Yes there is a sessionStorage token');
-	      console.log(sessionStorage.token);
+	      // console.log('Yes there is a sessionStorage token')
 	      var userObj = sessionStorage.token;
 	      var toggleVar = false;
 	    } else {
-	      console.log('No token');
 	      var userObj = '';
 	      var toggleVar = true;
 	    }
 	    return { user: userObj,
 	      events: '',
-	      toggle: toggleVar };
+	      toggle: toggleVar,
+	      hideForm: true };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    var _this = this;
@@ -118,13 +108,10 @@
 	      //   xhr.setRequestHeader('Authorization', )
 	      // },
 	      success: function success(data, status) {
-	        console.log(data);
-	        console.log(status);
 	        _this.setState({
 	          user: data,
 	          toggle: false
 	        });
-	        console.log('this is toggle: ' + _this.state.toggle);
 	      },
 	      error: function error(xhr, status, _error) {
 	        console.log(xhr);
@@ -139,6 +126,10 @@
 	      events: '',
 	      toggle: true });
 	  },
+	  showForm: function showForm() {
+	    var state = !this.state.hideForm;
+	    this.setState({ hideForm: state });
+	  },
 	  render: function render() {
 	    var classHide, classShow;
 	    if (this.state.toggle) {
@@ -150,6 +141,12 @@
 	    }
 	    console.log('Grabbing App Children');
 	    console.log(this.props.children);
+	    var hidden;
+	    if (this.state.hideForm) {
+	      hidden = { display: "none" };
+	    } else {
+	      hidden = {};
+	    }
 	    return _react2.default.createElement(
 	      'div',
 	      null,
@@ -161,28 +158,7 @@
 	          { className: 'navbar navbar-default navbar-fixed-top' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'container' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'navbar-header' },
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#navbar', 'aria-expanded': 'false', 'aria-controls': 'navbar' },
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'sr-only' },
-	                  'Toggle navigation'
-	                ),
-	                _react2.default.createElement('span', { className: 'icon-bar' }),
-	                _react2.default.createElement('span', { className: 'icon-bar' }),
-	                _react2.default.createElement('span', { className: 'icon-bar' })
-	              ),
-	              _react2.default.createElement(
-	                'a',
-	                { className: 'navbar-brand', href: '#' },
-	                'VivaCity'
-	              )
-	            ),
+	            { className: 'container nav-contain' },
 	            _react2.default.createElement(
 	              'div',
 	              { id: 'navbar', className: 'navbar-collapse collapse' },
@@ -191,10 +167,43 @@
 	                { className: 'nav navbar-nav' },
 	                _react2.default.createElement(
 	                  'li',
+	                  { className: 'logo' },
+	                  _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/' },
+	                    _react2.default.createElement(
+	                      'span',
+	                      { className: 'one' },
+	                      'V'
+	                    ),
+	                    _react2.default.createElement(
+	                      'span',
+	                      { className: 'two' },
+	                      'I'
+	                    ),
+	                    _react2.default.createElement(
+	                      'span',
+	                      { className: 'three' },
+	                      'V'
+	                    ),
+	                    _react2.default.createElement(
+	                      'span',
+	                      { className: 'four' },
+	                      'A'
+	                    ),
+	                    _react2.default.createElement(
+	                      'span',
+	                      { className: 'city' },
+	                      'city'
+	                    )
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'li',
 	                  { style: classShow },
 	                  _react2.default.createElement(
 	                    'a',
-	                    { className: 'btn btn-primary fb-login', id: 'fbLogin', href: '/api/auth/facebook', role: 'button' },
+	                    { className: 'btn fb-login', id: 'fbLogin', href: '/api/auth/facebook', role: 'button' },
 	                    'Facebook Login »'
 	                  )
 	                ),
@@ -203,7 +212,7 @@
 	                  { style: classHide },
 	                  _react2.default.createElement(
 	                    'a',
-	                    { className: 'btn btn-primary', id: 'fbLogin', onClick: this.logout, role: 'button' },
+	                    { className: 'btn fb-login', id: 'fbLogin', onClick: this.logout, role: 'button' },
 	                    'Logout »'
 	                  )
 	                ),
@@ -250,9 +259,6 @@
 	    );
 	  }
 	});
-
-	// <Route path="attendees" component={AttendeeList}/>
-	// <Route path="myevents" component={MyEvents}/>
 
 	(0, _reactDom.render)(_react2.default.createElement(
 	  _reactRouter.Router,
@@ -21062,7 +21068,6 @@
 	 * - **             Consumes (greedy) all characters up to the next character
 	 *                  in the pattern, or to the end of the URL if there is none
 	 *
-	 *  The function calls callback(error, matched) when finished.
 	 * The return value is an object with the following properties:
 	 *
 	 * - remainingPathname
@@ -23865,17 +23870,13 @@
 	  // Only try to match the path if the route actually has a pattern, and if
 	  // we're not just searching for potential nested absolute paths.
 	  if (remainingPathname !== null && pattern) {
-	    try {
-	      var matched = (0, _PatternUtils.matchPattern)(pattern, remainingPathname);
-	      if (matched) {
-	        remainingPathname = matched.remainingPathname;
-	        paramNames = [].concat(paramNames, matched.paramNames);
-	        paramValues = [].concat(paramValues, matched.paramValues);
-	      } else {
-	        remainingPathname = null;
-	      }
-	    } catch (error) {
-	      callback(error);
+	    var matched = (0, _PatternUtils.matchPattern)(pattern, remainingPathname);
+	    if (matched) {
+	      remainingPathname = matched.remainingPathname;
+	      paramNames = [].concat(paramNames, matched.paramNames);
+	      paramValues = [].concat(paramValues, matched.paramValues);
+	    } else {
+	      remainingPathname = null;
 	    }
 
 	    // By assumption, pattern is non-empty here, which is the prerequisite for
@@ -24511,15 +24512,13 @@
 	};
 
 	module.exports = function hoistNonReactStatics(targetComponent, sourceComponent) {
-	    if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
-	        var keys = Object.getOwnPropertyNames(sourceComponent);
-	        for (var i=0; i<keys.length; ++i) {
-	            if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]]) {
-	                try {
-	                    targetComponent[keys[i]] = sourceComponent[keys[i]];
-	                } catch (error) {
+	    var keys = Object.getOwnPropertyNames(sourceComponent);
+	    for (var i=0; i<keys.length; ++i) {
+	        if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]]) {
+	            try {
+	                targetComponent[keys[i]] = sourceComponent[keys[i]];
+	            } catch (error) {
 
-	                }
 	            }
 	        }
 	    }
@@ -25689,11 +25688,7 @@
 	  var useRefresh = !isSupported || forceRefresh;
 
 	  function getCurrentLocation(historyState) {
-	    try {
-	      historyState = historyState || window.history.state || {};
-	    } catch (e) {
-	      historyState = {};
-	    }
+	    historyState = historyState || window.history.state || {};
 
 	    var path = _DOMUtils.getWindowPath();
 	    var _historyState = historyState;
@@ -25885,13 +25880,13 @@
 
 	var EventList = __webpack_require__(230);
 	var DisplayUser = __webpack_require__(232);
-	var CreateEventForm = __webpack_require__(233);
-	var CreateUserForm = __webpack_require__(234);
+	var EventForm = __webpack_require__(233);
+	var UserForm = __webpack_require__(234);
 
-	// for testing purposes
-	var userId = "574390a51831bd0d9abfe74a";
-	var userUrl = "/api/user/" + userId;
-	var eventUrl = "/api/events/" + userId;
+	// // for testing purposes
+	// var userId = "574390a51831bd0d9abfe74a"
+	// var userUrl = "/api/user/" + userId
+	// var eventUrl = "/api/events/" + userId
 	// var eventUrl = "http://localhost:2323/api/event/" + eventId
 	function getParameterByName(name, url) {
 	  if (!url) url = window.location.href;
@@ -25918,8 +25913,9 @@
 	      var toggleVar = true;
 	    }
 	    return { user: userObj,
-	      events: '',
-	      toggle: toggleVar };
+	      events: [],
+	      toggle: toggleVar,
+	      addEvent: false };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    var _this = this;
@@ -25952,6 +25948,10 @@
 	      }
 	    });
 	  },
+	  showModal: function showModal() {
+	    var answer = !this.state.addEvent;
+	    this.setState({ addEvent: answer });
+	  },
 	  logout: function logout() {
 	    sessionStorage.removeItem('token');
 	    this.setState({ user: '',
@@ -25959,20 +25959,40 @@
 	      toggle: true });
 	  },
 	  render: function render() {
-	    var classHide, classShow;
+	    var hide, show;
 	    if (this.state.toggle) {
-	      classHide = { display: "none" };
-	      classShow = {};
+	      hide = { display: 'none' };
+	      show = {};
 	    } else {
-	      classHide = {};
-	      classShow = { display: "none" };
+	      hide = {};
+	      show = { display: 'none' };
 	    }
+	    var hideModal, showModal;
+	    if (this.state.addEvent) {
+	      showModal = { position: 'absolute',
+	        height: '100%',
+	        width: '100%',
+	        background: 'rgba(0, 0, 0, .7)',
+	        zIndex: 999,
+	        padding: 'auto',
+	        textAlign: 'center' };
+	      hideModal = { display: 'none' };
+	    } else {
+	      showModal = { display: 'none' };
+	      hideModal = {};
+	    }
+	    // margin: auto;
+	    // border: 1px solid black;
+	    // border-radius: 3px;
+	    // padding: 2em;
+
+	    // if(this.state.addEvent){
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
 	        'section',
-	        { style: classHide },
+	        { className: 'dashboard', style: hide },
 	        React.createElement(
 	          'div',
 	          { className: 'container row' },
@@ -25985,7 +26005,7 @@
 	              'Profile'
 	            ),
 	            React.createElement(DisplayUser, { className: 'row profile', user: this.state.user }),
-	            React.createElement(CreateUserForm, { className: 'row form', user: this.state.user })
+	            React.createElement(UserForm, { className: 'row form', user: this.state.user })
 	          ),
 	          React.createElement(
 	            'div',
@@ -26001,16 +26021,26 @@
 	            'div',
 	            { className: 'col-lg-4' },
 	            React.createElement(
-	              'h2',
-	              null,
-	              'CreateEvent'
-	            ),
-	            React.createElement(CreateEventForm, { className: 'row form' }),
-	            React.createElement('div', { className: 'row form', id: 'eventUpdate' })
+	              'button',
+	              { className: 'btn btn-primary', onClick: this.showModal },
+	              'Make Event'
+	            )
+	          ),
+	          React.createElement(
+	            'section',
+	            { className: 'fullModal', style: showModal },
+	            React.createElement(EventForm, { className: 'row form' })
 	          )
 	        )
 	      )
 	    );
+	    // } else {
+	    //   return(
+	    //     <section className="fullModal" style={showModal}>
+	    //       <EventForm className="row form" />
+	    //     </section>
+	    //   )
+	    // }
 	  }
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
@@ -26041,12 +26071,9 @@
 	    user: React.PropTypes.object.isRequired;
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    console.log(nextProps);
 	    this.handleGetEvents(nextProps.user);
 	  },
 	  handleGetEvents: function handleGetEvents(user) {
-	    console.log('inside handleGet mount');
-	    console.log(user);
 	    if (user._id) {
 	      $.ajax({
 	        type: 'GET',
@@ -26055,7 +26082,6 @@
 	        cache: false,
 	        success: function (data) {
 	          console.log('Successfully retrieved DATA');
-	          console.log(data);
 	          this.setState({ events: data.events });
 	          this.handleEvents(this.state.events);
 	        }.bind(this),
@@ -26068,18 +26094,14 @@
 	  },
 	  handleEvents: function handleEvents(events) {
 	    var rows = [];
-	    console.log('inside handle events');
-	    console.log(events);
 	    if (events) {
 	      events.forEach(function (event, index) {
 	        rows.push(React.createElement(SingleEvent, { event: event, key: index }));
 	      });
-	      console.log('Rendering Event List');
 	      this.setState({ rowes: rows });
 	    }
 	  },
 	  render: function render() {
-	    console.log('inside event list render');
 	    return React.createElement(
 	      'div',
 	      { className: 'eventList' },
@@ -26150,18 +26172,13 @@
 	      margin: 0,
 	      verticalAlign: "bottom" };
 
-	    var startTime = Date.parse(this.props.event.startTime);
+	    // var startTime = Date.parse(this.props.event.startTime)
 	    var now = Date.now(); //- Date.parse(Date.now())
 	    var timeTill = Date.parse(this.props.event.startTime) - now;
 	    var x = timeTill / 1000;
 	    var hour = formatDate(this.props.event.startTime);
-	    // console.log('startTime: ' + startTime)
-	    // console.log('hours: ' + (x % 24))
-	    // console.log('days: ' + (x))
 	    var day = x;
-	    console.log('Rendering Single Event');
-	    console.log(this.props.event);
-	    // var id = "/event/" + this.props.event._id;
+
 	    return React.createElement(
 	      'li',
 	      null,
@@ -26281,9 +26298,6 @@
 	      neighborhoods: [] };
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    console.log(nextProps);
-	    console.log('^^^^^^^^^^^^^');
-	    console.log('^^^^^^^^^^^^^');
 	    this.handleNeighborhoods(nextProps.user);
 	    this.handleInterests(nextProps.user);
 	  },
@@ -26422,11 +26436,15 @@
 
 	'use strict';
 
+	var _reactRouter = __webpack_require__(168);
+
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(33);
 
+
 	module.exports = React.createClass({
 	  displayName: 'eventForm',
+	  mixins: [_reactRouter.Router.Navigation],
 	  getInitialState: function getInitialState() {
 	    return {
 	      eventId: '',
@@ -26440,7 +26458,11 @@
 	      url: '',
 	      fileName: '',
 	      fileType: '',
-	      fileSize: '' };
+	      fileSize: '',
+	      update: false };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    this.setState({ update: nextProps.update });
 	  },
 	  handleIdChange: function handleIdChange(e) {
 	    this.setState({ eventId: e.target.value });
@@ -26514,9 +26536,15 @@
 
 	    });
 	  },
+	  navigateBack: function navigateBack() {
+	    this.goBack();
+	  },
+	  updateUpdate: function updateUpdate() {
+	    var updated = !this.state.update;
+	    this.setState({ update: updated });
+	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
-	    console.log('somehting to see');
 	    var title = this.state.title.trim();
 	    var description = this.state.description.trim();
 	    var interestTags = this.state.interestTags.trim();
@@ -26575,23 +26603,48 @@
 	    if (imagePreviewUrl) {
 	      $imagePreview = React.createElement('img', { src: imagePreviewUrl });
 	    }
+	    var hidden = { display: 'none' };
+	    var show = {};
+	    if (this.state.update) {
+	      hidden = {};
+	      show = { display: 'none' };
+	    }
 	    return React.createElement(
-	      'div',
-	      null,
+	      'section',
+	      { className: 'modalEvent' },
 	      React.createElement(
-	        'h2',
-	        null,
-	        'Create/Update Event'
+	        'div',
+	        { className: 'modalNav' },
+	        React.createElement(
+	          'button',
+	          { className: 'btn back-btn', onClick: this.navigateBack },
+	          'Back'
+	        ),
+	        React.createElement('div', { className: 'spacer' }),
+	        React.createElement(
+	          'button',
+	          { className: 'btn btn-primary', style: show, onClick: this.updateUpdate },
+	          'Update Event'
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'btn btn-primary', style: hidden, onClick: this.updateUpdate },
+	          'Create Event'
+	        )
 	      ),
 	      React.createElement(
 	        'form',
 	        { className: 'eventForm', onSubmit: this.handleSubmit },
 	        React.createElement(
-	          'label',
-	          { 'for': 'eventId' },
-	          'Event ID:'
+	          'div',
+	          { className: 'eventIdDiv', style: hidden },
+	          React.createElement(
+	            'label',
+	            { 'for': 'eventId' },
+	            'Event ID:'
+	          ),
+	          React.createElement('input', { type: 'text', placeholder: 'eventID', value: this.state.eventId, onChange: this.handleIdChange })
 	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'eventID', value: this.state.eventId, onChange: this.handleIdChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'title' },
@@ -26603,7 +26656,7 @@
 	          { 'for': 'description' },
 	          'Description:'
 	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'Description', value: this.state.description, onChange: this.handleDescriptionChange }),
+	        React.createElement('textarea', { type: 'text', placeholder: 'Description', maxlength: '5', value: this.state.description, onChange: this.handleDescriptionChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'Address' },

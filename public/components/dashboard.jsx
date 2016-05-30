@@ -6,14 +6,14 @@ import { Router, Route, Link, hashHistory } from 'react-router'
 
 const EventList = require(__dirname + '/event_list.jsx')
 const DisplayUser = require(__dirname + '/display_user.jsx')
-const CreateEventForm = require(__dirname + '/event_form.jsx')
-const CreateUserForm = require(__dirname + '/user_form.jsx')
+const EventForm = require(__dirname + '/event_form.jsx')
+const UserForm = require(__dirname + '/user_form.jsx')
 
 
-// for testing purposes
-var userId = "574390a51831bd0d9abfe74a"
-var userUrl = "/api/user/" + userId
-var eventUrl = "/api/events/" + userId
+// // for testing purposes
+// var userId = "574390a51831bd0d9abfe74a"
+// var userUrl = "/api/user/" + userId
+// var eventUrl = "/api/events/" + userId
 // var eventUrl = "http://localhost:2323/api/event/" + eventId
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -38,8 +38,9 @@ module.exports = React.createClass({
       var toggleVar = true
     }
     return ({user: userObj,
-            events: '',
-            toggle: toggleVar})
+            events: [],
+            toggle: toggleVar,
+            addEvent: false})
   },
   componentDidMount: function() {
     if (!this.state.user){
@@ -70,6 +71,10 @@ module.exports = React.createClass({
       }
     })
   },
+  showModal: function(){
+    var answer = !this.state.addEvent
+    this.setState({addEvent: answer})
+  },
   logout: function(){
     sessionStorage.removeItem('token')
     this.setState({user: '',
@@ -77,35 +82,63 @@ module.exports = React.createClass({
                    toggle: true})
   },
   render: function(){
-    var classHide, classShow
+    var hide, show
     if (this.state.toggle){
-      classHide = {display: "none"}
-      classShow = {}
+      hide = {display: 'none'}
+      show = {}
     } else {
-      classHide = {}
-      classShow = {display: "none"}
+      hide = {}
+      show = {display: 'none'}
     }
-    return (
-      <div>
-        <section style={classHide}>
-          <div className="container row">
-            <div className="col-lg-4">
-              <h2>Profile</h2>
-              <DisplayUser className="row profile" user={this.state.user} />
-              <CreateUserForm className="row form" user={this.state.user}/>
+    var hideModal, showModal
+    if (this.state.addEvent){
+      showModal = {  position: 'absolute',
+                     height: '100%',
+                     width: '100%',
+                     background: 'rgba(0, 0, 0, .7)',
+                     zIndex: 999,
+                     padding: 'auto',
+                     textAlign: 'center'}
+      hideModal = {display: 'none'}
+    } else {
+      showModal = {display: 'none'}
+      hideModal = {}
+    }
+    // margin: auto;
+    // border: 1px solid black;
+    // border-radius: 3px;
+    // padding: 2em;
+
+    // if(this.state.addEvent){
+      return (
+        <div>
+          <section className="dashboard" style={hide}>
+            <div className="container row">
+              <div className="col-lg-4">
+                <h2>Profile</h2>
+                <DisplayUser className="row profile" user={this.state.user} />
+                <UserForm className="row form" user={this.state.user}/>
+              </div>
+              <div className="col-lg-4" id="eventList">
+                <h2>Events</h2>
+                <EventList className="row events" user={this.state.user}/>
+              </div>
+              <div className="col-lg-4">
+                <button className='btn btn-primary' onClick={this.showModal}>Make Event</button>
+              </div>
+               <section className="fullModal" style={showModal}>
+                <EventForm className="row form" />
+              </section>
             </div>
-            <div className="col-lg-4" id="eventList">
-              <h2>Events</h2>
-              <EventList className="row events" user={this.state.user}/>
-            </div>
-            <div className="col-lg-4">
-              <h2>CreateEvent</h2>
-              <CreateEventForm className="row form" />
-              <div className="row form" id="eventUpdate"></div>
-            </div>
-          </div>
-        </section>
-      </div>
-    )
+          </section>
+        </div>
+      )
+    // } else {
+    //   return(
+    //     <section className="fullModal" style={showModal}>
+    //       <EventForm className="row form" />
+    //     </section>
+    //   )
+    // }
   }
 })

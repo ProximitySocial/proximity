@@ -3,10 +3,6 @@ import { render } from 'react-dom'
 import { Router, Route, Link, browserHistory } from 'react-router'
 import { IndexRoute } from 'react-router'
 const port = process.env.PORT || 8080
-// const React = require('react')
-// const ReactDOM = require('react-dom')
-
-// const { Router, Route, browserHistory, IndexRoute } = require('react-router');
 const Dashboard = require(__dirname + '/components/dashboard.jsx')
 const EventList = require(__dirname + '/components/event_list.jsx')
 const Profile = require(__dirname + '/components/display_user.jsx')
@@ -15,12 +11,6 @@ const CreateUserForm = require(__dirname + '/components/user_form.jsx')
 const SingleEvent = require(__dirname + '/components/single_event.jsx')
 const EventView = require(__dirname + '/components/event_view.jsx')
 
-
-// for testing purposes
-var userId = "574390a51831bd0d9abfe74a"
-var userUrl = "/api/user/" + userId
-var eventUrl = "/api/events/" + userId
-// var eventUrl = "http://localhost:2323/api/event/" + eventId
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -34,18 +24,17 @@ function getParameterByName(name, url) {
 var App = React.createClass({
   getInitialState: function(){
     if (sessionStorage.token){
-      console.log('Yes there is a sessionStorage token')
-      console.log(sessionStorage.token)
+      // console.log('Yes there is a sessionStorage token')
       var userObj = sessionStorage.token
       var toggleVar = false
     } else {
-      console.log('No token')
       var userObj = ''
       var toggleVar = true
     }
     return ({user: userObj,
             events: '',
-            toggle: toggleVar})
+            toggle: toggleVar,
+            hideForm: true})
   },
   componentDidMount: function() {
     if (!this.state.user){
@@ -61,13 +50,10 @@ var App = React.createClass({
       //   xhr.setRequestHeader('Authorization', )
       // },
       success: (data, status) => {
-        console.log(data)
-        console.log(status)
         this.setState({
           user: data,
           toggle: false
         })
-        console.log('this is toggle: ' + this.state.toggle);
       },
       error: (xhr, status, error) => {
         console.log(xhr)
@@ -82,6 +68,10 @@ var App = React.createClass({
                    events: '',
                    toggle: true})
   },
+  showForm: function(){
+    var state = !this.state.hideForm
+    this.setState({hideForm: state})
+  },
   render: function(){
     var classHide, classShow
     if (this.state.toggle){
@@ -93,27 +83,25 @@ var App = React.createClass({
     }
     console.log('Grabbing App Children');
     console.log(this.props.children);
+    var hidden
+    if (this.state.hideForm){
+      hidden = {display: "none"}
+    } else {
+      hidden = {}
+    }
     return (
       <div>
         <section>
           <nav className="navbar navbar-default navbar-fixed-top">
-            <div className="container">
-              <div className="navbar-header">
-                <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                  <span className="sr-only">Toggle navigation</span>
-                  <span className="icon-bar"></span>
-                  <span className="icon-bar"></span>
-                  <span className="icon-bar"></span>
-                </button>
-                <a className="navbar-brand" href="#">VivaCity</a>
-              </div>
+            <div className="container nav-contain">
               <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav">
+                  <li className="logo"><Link to='/'><span className="one">V</span><span className="two">I</span><span className="three">V</span><span className="four">A</span><span className="city">city</span></Link></li>
                   <li style={classShow}>
-                      <a className="btn btn-primary fb-login"  id="fbLogin" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a>
+                      <a className="btn fb-login"  id="fbLogin" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a>
                   </li>
                   <li style={classHide}>
-                      <a className="btn btn-primary" id="fbLogin" onClick={this.logout} role="button">Logout &raquo;</a>
+                      <a className="btn fb-login" id="fbLogin" onClick={this.logout} role="button">Logout &raquo;</a>
                   </li>
                   <li><Link to='/test'>Test</Link></li>
                   <li><Link to='/profile'>Profile</Link></li>
@@ -134,9 +122,6 @@ const Test = React.createClass({
   }
 })
 
-          // <Route path="attendees" component={AttendeeList}/>
-          // <Route path="myevents" component={MyEvents}/>
-
 render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
@@ -147,3 +132,4 @@ render((
     </Route>
   </Router>
 ), document.getElementById('root'))
+

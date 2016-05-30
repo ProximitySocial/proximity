@@ -46,18 +46,13 @@ module.exports = React.createClass({
                     margin: 0,
                     verticalAlign: "bottom"}
 
-    var startTime = Date.parse(this.props.event.startTime)
+    // var startTime = Date.parse(this.props.event.startTime)
     var now = Date.now() //- Date.parse(Date.now())
     var timeTill = Date.parse(this.props.event.startTime) - now
     var x = timeTill / 1000
     var hour = formatDate(this.props.event.startTime)
-    // console.log('startTime: ' + startTime)
-    // console.log('hours: ' + (x % 24))
-    // console.log('days: ' + (x))
     var day = x
-    console.log('Rendering Single Event');
-    console.log(this.props.event);
-    // var id = "/event/" + this.props.event._id;
+
     return (
       <li><Link to={'/event/' + this.props.event._id}>
         <div className="eventPicture" style={divStyle}>
