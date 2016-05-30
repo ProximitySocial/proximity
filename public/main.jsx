@@ -11,11 +11,6 @@ const CreateUserForm = require(__dirname + '/components/user_form.jsx')
 const SingleEvent = require(__dirname + '/components/single_event.jsx')
 const EventView = require(__dirname + '/components/event_view.jsx')
 
-// for testing purposes
-var userId = "574390a51831bd0d9abfe74a"
-var userUrl = "/api/user/" + userId
-var eventUrl = "/api/events/" + userId
-// var eventUrl = "http://localhost:2323/api/event/" + eventId
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -99,11 +94,9 @@ var App = React.createClass({
         <section>
           <nav className="navbar navbar-default navbar-fixed-top">
             <div className="container nav-contain">
-              <div className="navbar-header">
-                <a className="navbar-brand" href="#">VivaCity</a>
-              </div>
               <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav">
+                  <li className="logo"><Link to='/'><span className="one">V</span><span className="two">I</span><span className="three">V</span><span className="four">A</span><span className="city">city</span></Link></li>
                   <li style={classShow}>
                       <a className="btn fb-login"  id="fbLogin" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a>
                   </li>

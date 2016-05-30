@@ -29,8 +29,8 @@ passport.serializeUser(function(user , done) {
 });
 
 passport.deserializeUser(function(id, done) {
-    var ID = SHA256.decrypt(id, process.env.VC_SECRET_CRYPTO || 'secret');
-    User.findById(ID, function(err, user) {
+    SHA256.decrypt(id, process.env.VC_SECRET_CRYPTO || 'secret');
+    User.findById(id, function(err, user) {
         done(err, user);
     });
 });

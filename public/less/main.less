@@ -1,6 +1,12 @@
 @primary: #00F1AE; //green
 @secondary: #F6ECDA; //white-gray
 @import "./profile.less";
+@blue: #3399ff;
+@red: #ff0033;
+@purple: #5c2751;
+@yellow: #F9FF33;
+@green: #53dd6c;
+@radius: 3px;
 
 
 // for rem
@@ -11,6 +17,26 @@ h3 {
   margin-top: 0;
 }
 
+.logo {
+  font-size: 2.5rem;
+  margin-bottom: 0;
+  margin-top:0;
+  .one{
+    color: @red;
+  }
+  .two{
+    color: @purple;
+  }
+  .three{
+    color: @green;
+  }
+  .four{
+    color: @blue;
+  }
+  .city {
+    color: #555;
+  }
+}
 .nav-contain {
   width: 100%;
   .navbar-brand {
@@ -106,13 +132,13 @@ h3 {
         max-height: 250px !important;
         vertical-align: bottom !important;
         .eventTitle {
-          min-height: 250px;
+          width: 100%;
           h3 {
             margin: 0 !important;
             padding: .1rem;
-            min-height: 250px;
+            text-decoration: underline;
+            background: rgba(9, 9, 9, .8);
           }
-          background: rgba(9, 9, 9, .6);
           color: #BBB;
           padding: .7rem;
         }
@@ -147,12 +173,72 @@ h3 {
   max-height:800px;
 }
 
-.eventForm {
-  max-width: 400px;
-  label {
-    width: 100%;
-  }
-  input {
-    width: 100%;
+.btn-back{
+  border: 1px solid #555;
+  border-radius: @radius;
+}
+
+.fullModal{
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, .85);
+  z-index: 999
+  padding: auto;
+  text-align: center;
+  min-width:400px;
+  .modalEvent {
+    background: rgba(255, 255, 255, .85);
+    z-index: 1000;
+    margin: auto;
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 2em;
+    max-width: 400px;
+    margin-top: 2em;
+    .modalNav{
+      display: -webkit-flex;
+      display: flex;
+      // display: inline-block;
+      margin: 0;
+      width: 100%;
+      .back-btn {
+        border: .5px solid black;
+        width: 100px;
+      }
+      .spacer{
+        -webkit-flex: 1;
+                flex: 1;
+      }
+      .updateCreateBtn{
+        width: 100px;
+      }
+    }
+    .eventForm {
+      text-align: left;
+      max-width: 400px;
+      margin: 0;
+      border-radius: @radius;
+      padding: 0;
+      label {
+        width: 100%;
+        margin-top: 1rem;
+      }
+      input, textarea {
+        height: 34px;
+        width: 100%;
+        border-radius: @radius;
+        border: 1px solid transparent;
+        border-top: none;
+        border-bottom: 1px solid #DDD;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,.39), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+      }
+      textarea{
+        min-height: 7rem;
+      }
+      button{
+        margin-top: .5rem;
+        border-radius: @radius;
+      }
+    }
   }
 }

@@ -52,8 +52,6 @@ module.exports = React.createClass({
     var x = timeTill / 1000
     var hour = formatDate(this.props.event.startTime)
     var day = x
-    console.log('Rendering Single Event')
-    console.log(this.props.event)
 
     return (
       <li><Link to={'/event/' + this.props.event._id}>

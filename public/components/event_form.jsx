@@ -1,8 +1,10 @@
 const React = require('react');
 const ReactDOM = require('react-dom')
+import { Router, Route, Link, browserHistory } from 'react-router'
 
 module.exports = React.createClass({
       displayName: 'eventForm',
+      mixins: [Router.Navigation],
       getInitialState: function() {
         return({
                 eventId: '',
@@ -20,11 +22,7 @@ module.exports = React.createClass({
                 update: false});
       },
       componentWillReceiveProps: function(nextProps) {
-        console.log(typeof nextProps)
-        console.log(nextProps)
         this.setState({update: nextProps.update})
-        console.log('This is the state : ')
-        console.log(this.state.update)
       },
       handleIdChange: function(e) {
         this.setState({eventId: e.target.value});
@@ -96,13 +94,15 @@ module.exports = React.createClass({
 
         })
       },
+      navigateBack: function(){
+        this.goBack()
+      },
       updateUpdate: function(){
         var updated = !this.state.update
         this.setState({update: updated})
       },
       handleSubmit: function(e) {
         e.preventDefault()
-        console.log('somehting to see')
         var title = this.state.title.trim()
         var description = this.state.description.trim()
         var interestTags = this.state.interestTags.trim()
@@ -167,10 +167,13 @@ module.exports = React.createClass({
           show = {display: 'none'}
         }
         return (
-          <div>
-            <h2>Create/Update Event</h2>
-            <button className='btn btn-primary' style={show} onClick={this.updateUpdate}>Update Event</button>
-            <button className='btn btn-primary' style={hidden} onClick={this.updateUpdate}>Create Event</button>
+          <section className='modalEvent'>
+            <div className='modalNav'>
+              <button className='btn back-btn' onClick={this.navigateBack} >Back</button>
+              <div className='spacer'></div>
+              <button className='btn btn-primary' style={show} onClick={this.updateUpdate}>Update Event</button>
+              <button className='btn btn-primary' style={hidden} onClick={this.updateUpdate}>Create Event</button>
+            </div>
             <form className="eventForm" onSubmit={this.handleSubmit} >
               <div className="eventIdDiv" style={hidden}>
                 <label for="eventId">Event ID:</label>
@@ -179,7 +182,7 @@ module.exports = React.createClass({
               <label for="title">Title:</label>
               <input type="text" placeholder="Title" value={this.state.title}  onChange={this.handleTitleChange} />
               <label for="description">Description:</label>
-              <input type="text" placeholder="Description" value={this.state.description} onChange={this.handleDescriptionChange} />
+              <textarea type="text" placeholder="Description" maxlength='5' value={this.state.description} onChange={this.handleDescriptionChange} />
               <label for="Address">InterestsTag:</label>
               <input type="text" placeholder="InterestTags" value={this.state.interestTags} onChange={this.handleInterestTagsChange} />
               <label for="Address Name">Address Name:</label>
@@ -191,7 +194,7 @@ module.exports = React.createClass({
               <button type="submit" onClick={this.handleSubmit}>Create Event!</button>
               <div>{$imagePreview }</div>
             </form>
-          </div>
+          </section>
         )
       }
     });
