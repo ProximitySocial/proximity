@@ -1,5 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom')
+import { Router, Route, Link, browserHistory } from 'react-router'
 
 module.exports = React.createClass({
       displayName: 'eventForm',
@@ -20,11 +21,7 @@ module.exports = React.createClass({
                 update: false});
       },
       componentWillReceiveProps: function(nextProps) {
-        console.log(typeof nextProps)
-        console.log(nextProps)
         this.setState({update: nextProps.update})
-        console.log('This is the state : ')
-        console.log(this.state.update)
       },
       handleIdChange: function(e) {
         this.setState({eventId: e.target.value});
@@ -102,7 +99,6 @@ module.exports = React.createClass({
       },
       handleSubmit: function(e) {
         e.preventDefault()
-        console.log('somehting to see')
         var title = this.state.title.trim()
         var description = this.state.description.trim()
         var interestTags = this.state.interestTags.trim()
@@ -167,10 +163,12 @@ module.exports = React.createClass({
           show = {display: 'none'}
         }
         return (
-          <div>
-            <h2>Create/Update Event</h2>
-            <button className='btn btn-primary' style={show} onClick={this.updateUpdate}>Update Event</button>
-            <button className='btn btn-primary' style={hidden} onClick={this.updateUpdate}>Create Event</button>
+          <section className='modalEvent'>
+            <div className='modalNav'>
+              <button className='btn back-btn'><Link to='/'>Back</Link></button>
+              <button className='btn btn-primary' style={show} onClick={this.updateUpdate}>Update Event</button>
+              <button className='btn btn-primary' style={hidden} onClick={this.updateUpdate}>Create Event</button>
+            </div>
             <form className="eventForm" onSubmit={this.handleSubmit} >
               <div className="eventIdDiv" style={hidden}>
                 <label for="eventId">Event ID:</label>
@@ -191,7 +189,7 @@ module.exports = React.createClass({
               <button type="submit" onClick={this.handleSubmit}>Create Event!</button>
               <div>{$imagePreview }</div>
             </form>
-          </div>
+          </section>
         )
       }
     });

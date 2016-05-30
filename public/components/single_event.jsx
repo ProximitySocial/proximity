@@ -47,6 +47,7 @@ module.exports = React.createClass({
     var timeTill = Date.parse(this.props.event.startTime) - now
     var x = timeTill / 1000
     var hour = formatDate(this.props.event.startTime)
+    var day = x
 
     return (
       <li>

@@ -9,11 +9,6 @@ const DisplayUser = require(__dirname + '/components/display_user.jsx')
 const EventForm = require(__dirname + '/components/event_form.jsx')
 const UserForm = require(__dirname + '/components/user_form.jsx')
 
-// for testing purposes
-var userId = "574390a51831bd0d9abfe74a"
-var userUrl = "/api/user/" + userId
-var eventUrl = "/api/events/" + userId
-// var eventUrl = "http://localhost:2323/api/event/" + eventId
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -95,11 +90,9 @@ var RootApp = React.createClass({
         <section>
           <nav className="navbar navbar-default navbar-fixed-top">
             <div className="container nav-contain">
-              <div className="navbar-header">
-                <a className="navbar-brand" href="#">VivaCity</a>
-              </div>
               <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav">
+                  <li className="logo"><Link to='/'><span className="one">V</span><span className="two">I</span><span className="three">V</span><span className="four">A</span><span className="city">city</span></Link></li>
                   <li style={classShow}>
                       <a className="btn fb-login"  id="fbLogin" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a>
                   </li>
@@ -154,8 +147,19 @@ var RootApp = React.createClass({
 // ReactDOM.render( <UserForm />, document.getElementById('userForm'))
 // ReactDOM.render( <UpdateUserForm url={userUrl}/>, document.getElementById('userUpdate'))
 
-// ReactDOM.render( <EventList url={userId}/>, document.getElementById('eventList'))
+
+render((
+  <Router history={browserHistory}>
+    <Route path="/" component={App}>
+      <IndexRoute component={Dashboard}/>
+      <Route path="/event/:id" component={EventView}/>
+      <Route path="/profile" component={Profile}/>
+      <Route path="/test" component={Test}/>
+    </Route>
+  </Router>
+), document.getElementById('root'))
+
 
 // ReactDOM.render( <EventForm />, document.getElementById('eventForm'))
 // ReactDOM.render( <UpdateEventForm url={eventUrl}/>, document.getElementById('eventUpdate'))
-ReactDOM.render( <RootApp />, document.getElementById('root'))
+// ReactDOM.render( <RootApp />, document.getElementById('root'))
