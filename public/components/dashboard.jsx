@@ -43,6 +43,7 @@ module.exports = React.createClass({
         var token = getParameterByName('access_token')
         sessionStorage.setItem('token', token)
     }
+    console.log('withing the component did mount')
     $.ajax({
       type: 'GET',
       url: '/api/user/' + sessionStorage.token,

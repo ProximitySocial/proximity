@@ -47,7 +47,8 @@ authRouter.get('/auth/facebook/callback',
   (req, res) => {
     console.log('TRIED TO REDIRECT TO ROOT with access Token')
     console.log(req.isAuthenticated());
-    res.redirect("/?access_token=" + req.user.access_token);
+
+    res.json();
   }
 )
  // return JWT = JWT???
