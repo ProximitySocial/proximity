@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const SHA256   = require("crypto-js/sha256");
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const HOOD_MAX = 2
