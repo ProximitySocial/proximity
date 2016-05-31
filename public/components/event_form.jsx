@@ -1,5 +1,5 @@
-const React = require('react');
-const ReactDOM = require('react-dom')
+import React from 'react'
+import { ReactDOM } from 'react-dom'
 import { Router, Route, Link, browserHistory } from 'react-router'
 
 module.exports = React.createClass({
@@ -171,8 +171,8 @@ module.exports = React.createClass({
             <div className='modalNav'>
               <button className='btn back-btn' onClick={this.navigateBack} >Back</button>
               <div className='spacer'></div>
-              <button className='btn btn-primary' style={show} onClick={this.updateUpdate}>Update Event</button>
-              <button className='btn btn-primary' style={hidden} onClick={this.updateUpdate}>Create Event</button>
+              <button className='btn btn-action' style={show} onClick={this.updateUpdate}>Update Event</button>
+              <button className='btn btn-action' style={hidden} onClick={this.updateUpdate}>Create Event</button>
             </div>
             <form className="eventForm" onSubmit={this.handleSubmit} >
               <div className="eventIdDiv" style={hidden}>

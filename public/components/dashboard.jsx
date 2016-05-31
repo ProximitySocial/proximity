@@ -1,13 +1,13 @@
-const port = process.env.PORT || 8080
-const React = require('react')
-const ReactDOM = require('react-dom')
+import React from 'react'
+import { ReactDOM } from 'react-dom'
 import { Router, Route, Link, hashHistory } from 'react-router'
 
 
-const EventList = require(__dirname + '/event_list.jsx')
 const DisplayUser = require(__dirname + '/display_user.jsx')
 const EventForm = require(__dirname + '/event_form.jsx')
+const EventList = require(__dirname + '/event_list.jsx')
 const UserForm = require(__dirname + '/user_form.jsx')
+const port = process.env.PORT || 8080
 
 
 // // for testing purposes
@@ -126,8 +126,8 @@ module.exports = React.createClass({
       <div>
         <section className="dashboard" style={hide}>
           <div className="container row">
-            <div className="col-lg-4">
-              <div className="dashHeader">
+            <div className="col-lg-4" id="profile">
+              <div className="profileHeader">
                 <h2>Profile</h2>
                 <div className='spacer'></div>
                 <button className='btn editRound' onClick={this.showUserModal}>Edit</button>
@@ -138,11 +138,14 @@ module.exports = React.createClass({
               <UserForm className="row form" user={this.state.user}/>
             </section>
             <div className="col-lg-4" id="eventList">
-              <h2>Events</h2>
+              <div className="eventsHeader">
+                <h2>Events</h2>
+                <div className="spacer"></div>
+                <div className="col-lg-4">
+                  <button className="btn btn-action" onClick={this.showEventModal}>Make Event</button>
+                </div>
+              </div>
               <EventList className="row events" user={this.state.user}/>
-            </div>
-            <div className="col-lg-4">
-              <button className='btn btn-primary' onClick={this.showEventModal}>Make Event</button>
             </div>
              <section className="fullModal" style={showModal}>
               <EventForm className="row form" />

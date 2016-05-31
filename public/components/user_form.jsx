@@ -181,8 +181,8 @@ module.exports = React.createClass({
             <div className='modalNav'>
               <button className='btn back-btn' onClick={this.navigateBack} >Back</button>
               <div className='spacer'></div>
-              <button className='btn btn-primary' style={show} onClick={this.updateUser}>Update User</button>
-              <button className='btn btn-primary' style={hidden} onClick={this.updateUser}>Create User</button>
+              <button className='btn btn-action' style={show} onClick={this.updateUser}>Update User</button>
+              <button className='btn btn-action' style={hidden} onClick={this.updateUser}>Create User</button>
             </div>
             <form className="userForm" onSubmit={this.handleSubmit} >
               <div className="userIdDiv" style={hidden}>
