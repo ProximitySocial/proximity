@@ -9,8 +9,9 @@ const mongoose       = require('mongoose')
     , authRouter    = require(__dirname + '/routes/auth_routes')
 
 const User           = require(__dirname + '/models/user')
-var passport         = require('passport')
-// var jwt            = require('express-jwt');
+const passport       = require('passport')
+const jwt            = require('express-jwt');
+const auth = jwt({secret: process.env.VC_SECRET_CRYPTO || 'secret', userProperty: 'payload'});
 
 //// configuration ===========================================
 console.log(process.env.NODE_ENV + ' :::: Environment');
@@ -20,16 +21,18 @@ var db = require('./config/db');
 console.log('DB: ' + db.url);
 
 // set our port
-var port = process.env.PORT || 2323;
-
-var localhost = 'http://localhost:' + port
+if (process.env.NODE_ENV === 'test'){
+  var port = 4343
+} else {
+  var port = process.env.PORT || 2323;
+}
 
 // connect to mongoDB database
 mongoose.connect(db.url);
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Origin', 'http://proximitysocial.herokuapp.com');
+  res.header('Access-Control-Allow-Headers', 'Cache-Control, Pragma, Authorization, Origin, X-Requested-With, Content-Type, Accept');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
 });
@@ -50,10 +53,26 @@ app.use('/api', userRouter)
 app.use('/api', eventRouter)
 
 app.get('/', (req, res) => {
-  res.sendfile(__dirname + '/build').status(200)
+  // if (req.query.access_token){
+  //   console.log('Access TOKEN found')
+  //   res.sendfile(__dirname + '/build').status(200)
+  // }
+  // console.log('no access TOKEN')
+  console.log('REDIRECTED AND AUTHENTICATED');
+  console.log(req.query.access_token);
+  res.render(__dirname + '/build.index.html');
 })
 
+// function ensureAuthenticated(req, res, next) {
+//   console.log('INSIDE ENSURE AUTHENTICATED');
+//   console.log(req);
+//   if (req.isAuthenticated()) { return next(); }
+//   res.redirect('/');
+// }
+
+
 app.get('/login', (req, res) => {
+  console.log('AT THE LOGIN ROUTE')
   res.status(200).json(req)
 })
 

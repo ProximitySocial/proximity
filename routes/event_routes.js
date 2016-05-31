@@ -2,6 +2,7 @@ const express = require('express')
 const User = require(__dirname + '/../models/user')
 const Event = require(__dirname + '/../models/event')
 const eventRouter = module.exports = exports = express.Router()
+const updateEvent = require('../libs/eventLib').updateEvent
 const http = require('http')
 const callGoogle = require('../libs/googleLocation')
 const getAndSendUserLocalEvents = require('../libs/getEventsPerUser')
@@ -24,22 +25,28 @@ eventRouter.get('/events', (req, res) => {
 eventRouter.get('/events/:userId', (req, res) => {
   console.log('Events per USER has been requested')
   var userId = req.params.userId
+  console.log(userId);
   getAndSendUserLocalEvents(userId, res)
 })
 
   //create new event
 eventRouter.post('/event/new', (req, res) => {
+  console.log("Made a POST request for NEW user")
   //add _creator from User _id
   var eventData = req.body
-  console.log("Made a POST request for NEW user")
   var address = req.body.address.split(' ').join('+')
   callGoogle(address)
     .then((data) => {
+      if(eventData.fileName && eventData.fileType){
+        getS3SignedUrl(eventData)
+          .then((s3Data) => { eventData = s3Data }).catch((err) => {throw err;})
+      }
       eventData.neighborhood = data.results[0].address_components[2].long_name
       eventData.locationData = data
+      eventData.picture = eventData.url
       new Event(eventData).save((err, result) => {
         if (err || result === null) return res.status(500).json({msg: 'Server Error'})
-        res.status(200).json({msg: 'event created', data: result})
+        res.status(200).json({msg: 'event created', signedRequest: eventData.awsData})
       })
     })
     .catch((err) => {
@@ -67,7 +74,7 @@ eventRouter.get('/event/attendees/:id', (req, res) => {
       console.log(result);
       const attendeePromises = result._attendees.map((attendeeId) => {
         console.log(attendeeId);
-        const attendeeProm = User.findOne({_id: attendeeId}, 'pic').exec()
+        const attendeeProm = User.findOne({_id: attendeeId}).exec()
           .catch((err) => {res.status(500).json({msg: 'Error retrieving user'})})
         return Promise.resolve(attendeeProm)
       })
@@ -86,27 +93,46 @@ eventRouter.get('/event/attendees/:id', (req, res) => {
 
 //update event  AUTH creator
 eventRouter.put('/event/:id', (req, res) => {
-  console.log('SERVER UPDATE EVENT ROUTE');
-  console.log(req.body);
-  //auth for creator
+  console.log('SERVER UPDATE EVENT called');
+  var cb = function() {};
   var newData = req.body
-  // delete newData._creator
-  // delete newData._id
-  var address = req.body.address.split(' ').join('+')
-  console.log(address);
-  callGoogle(address)
-    .then((data) => {
-      newData.neighborhood = data.results[0].address_components[2].long_name
-      newData.locationData = data
-      Event.update({_id: req.params.id}, newData, (err, result) => {
-        if (err) return res.status(500).json({msg: 'Server Error'})
-        res.status(200).json({msg: 'Successfully updated event', result: result})
-      })
-    })
-    .catch((err) => {
-      console.log('inside call google error');
-      throw err;
-    })
+  Object.keys(newData).forEach( (prop) => {
+    if (!newData[prop]){
+      console.log('deleting prop obj: ' + newData[prop])
+      delete newData[prop]
+    }
+  })
+  if (newData.address) {
+    var address = req.body.address.split(' ').join('+')
+    callGoogle(address)
+      .then((data) => {
+        newData.neighborhood = data.results[0].address_components[2].long_name
+        newData.locationData = data
+          if (newData.fileName && newData.fileType){
+            console.log('picture changed && address changed')
+            getS3SignedUrl(newData, cb)
+              .then((data) => {
+                newData = data
+                return updateEvent(newData, req.params.id, res)
+              }).catch((err) => { console.log('inside call google error'); throw err; })
+          } else {
+            console.log('no S3 change but Yes an address changed')
+            return updateEvent(newData, req.params.id, res)
+          }
+      }).catch((err) => { console.log('inside call google error'); throw err; })
+  }
+  if (newData.fileName && newData.fileType){
+    console.log('picture changed, no address change')
+    console.log(newData);
+    getS3SignedUrl(newData, cb)
+      .then((data) => {
+        newData = data
+        return updateEvent(newData, req.params.id, res)
+      }).catch((err) => { console.log('inside call S3 error'); throw err; })
+  } else {
+    console.log('no address change and no picture change')
+    return updateEvent(newData, req.params.id, res)
+  }
 })
 
 //add attendee

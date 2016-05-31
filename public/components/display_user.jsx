@@ -1,74 +1,83 @@
-const React = require('react')
-const ReactDOM = require('react-dom')
-var port = process.env.PORT
+import React from 'react'
+import { ReactDOM } from 'react-dom'
 
 module.exports = React.createClass({
    getInitialState: function() {
-     return {user: {}}
+     console.log('Getting initial state of display user class');
+     console.log(this.props.user);
+     return ({user: this.props.user,
+              neighborhoods: []})
    },
-   loadUserFromServer: function() {
-     $.ajax({
-       type: 'GET',
-       url: this.props.url,
-       dataType: 'json',
-       cache: false,
-       success: function(data) {
-         console.log(data.lastName)
-         this.setState({user:        data,
-                        lastInitial: data.lastName.charAt(0)});
-         this.handleInterests(data);
-         this.handleNeighborhoods(data);
-       }.bind(this),
-       error: function(xhr, status, err) {
-         console.error(this.props.url, status, err.toString());
-       }.bind(this)
-     });
+   componentWillReceiveProps: function(nextProps) {
+      this.handleNeighborhoods(nextProps.user)
+      this.handleInterests(nextProps.user)
    },
-   componentWillMount: function() {
-      this.loadUserFromServer()
-   },
+   // loadUserFromServer: function() {
+   //   $.ajax({
+   //     type: 'GET',
+   //     url: '',
+   //     dataType: 'json',
+   //     cache: false,
+   //     success: function(data) {
+   //       console.log(data.lastName)
+   //       this.setState({user:        data,
+   //                      lastInitial: data.lastName.charAt(0)});
+   //       this.handleInterests(data);
+   //       this.handleNeighborhoods(data);
+   //     }.bind(this),
+   //     error: function(xhr, status, err) {
+   //       console.error(this.props.url, status, err.toString());
+   //     }.bind(this)
+   //   });
+   // },
+   // componentWillMount: function() {
+      // this.loadUserFromServer()
+   // },
    handleUpdate: function(){
      console.log('make a request to handleUpdate')
    },
-   handleInterests: function(data) {
-     console.log(data.interests);
+   handleInterests: function(user) {
+     console.log(user.interests);
      var rows = [];
-     data.interests.forEach(function(interest, index) {
+     user.interests.forEach(function(interest, index) {
        rows.push(<li key={index}><a>#{interest}</a></li>);
      });
      this.setState({interests: rows});
    },
-   handleNeighborhoods: function(data) {
-     console.log(data.neighborhoods);
+   handleNeighborhoods: function(user) {
+     console.log(user.neighborhoods);
      var rows = [];
-     data.neighborhoods.forEach(function(neighborhood, index) {
+     user.neighborhoods.forEach(function(neighborhood, index) {
        rows.push(<li key={index}><a>#{neighborhood}</a></li>);
      });
      this.setState({neighborhoods: rows});
    },
    render: function() {
-
+     console.log('inside display user render');
+     console.log(this.props.user);
+     var interests = this.state.interests
+     var neighborhoods = this.state.neighborhoods
+     // var hoods = this.handleNeighborhoods(this.props.user)
+    //  if (this.props.user._id) {
+    //    this.componentWillReceiveProps();
+    //    this.props.user._id = null;
+    //  }
      return (
        <div>
-         <h3 className="userName">{this.state.user.firstName} {this.state.lastInitial}.</h3>
-         <img className="userPic" src={this.state.user.pic}/>
-         <p><strong>Email: </strong>{this.state.user.email}</p>
-         <p><strong>Member since: </strong>{this.state.user.created_at}</p>
-         <p>{this.state.user.bio}</p>
+         <h3 className="userName">{this.props.user.firstName} {this.props.user.lastName}</h3>
+         <img className="userPic" src={this.props.user.pic}/>
+         <p><strong>Email: </strong>{this.props.user.email}</p>
+         <p><strong>Member since: </strong>{this.props.user.created_at}</p>
+         <p>{this.props.user.bio}</p>
          <h3>Interests:</h3>
          <ul className="interests">
-           {this.state.interests}
+           {interests}
          </ul>
          <h3>Neighborhoods:</h3>
          <ul className="neighborhoods">
-           {this.state.neighborhoods}
+           {neighborhoods}
          </ul>
        </div>
      )
    }
  })
-
- // ReactDOM.render(
- //   <DisplayUser url="http://localhost:" + port + "/api/user/573373c18026b52b5f052ea0"/>,
- //   document.getElementById('userProfile')
- // );
