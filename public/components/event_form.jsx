@@ -191,7 +191,7 @@ module.exports = React.createClass({
               <input type="text" placeholder="Address" value={this.state.address} onChange={this.handleAddressChange} />
               <label for="Image">Image:</label>
               <input type="file" onChange={this.handleImageChange} />
-              <button type="submit" onClick={this.handleSubmit}>Create Event!</button>
+              <button type="submit" onClick={this.handleSubmit}>Submit Event!</button>
               <div>{$imagePreview }</div>
             </form>
           </section>

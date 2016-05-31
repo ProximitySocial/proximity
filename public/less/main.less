@@ -178,15 +178,34 @@ h3 {
   border-radius: @radius;
 }
 
+.dashHeader{
+  display: -webkit-flex;
+  display: flex;
+  // display: inline-block;
+  margin: 0;
+  width: 100%;
+  .spacer {
+    -webkit-flex: 1;
+            flex: 1;
+  }
+  .editRound {
+    border-radius: @radius;
+  }
+}
+
+
 .fullModal{
+  .imgPreview{
+    max-width: 30rem;
+  }
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background-color: rgba(0, 0, 0, .85);
   z-index: 999
   padding: auto;
   text-align: center;
   min-width:400px;
-  .modalEvent {
+  .modalEvent, .modalUser {
     background: rgba(255, 255, 255, .85);
     z-index: 1000;
     margin: auto;
@@ -213,7 +232,7 @@ h3 {
         width: 100px;
       }
     }
-    .eventForm {
+    .eventForm, .userForm {
       text-align: left;
       max-width: 400px;
       margin: 0;
@@ -236,7 +255,8 @@ h3 {
         min-height: 7rem;
       }
       button{
-        margin-top: .5rem;
+        margin-top: 2rem;
+        margin-left: 23rem;
         border-radius: @radius;
       }
     }

@@ -25915,7 +25915,8 @@
 	    return { user: userObj,
 	      events: [],
 	      toggle: toggleVar,
-	      addEvent: false };
+	      addEvent: false,
+	      addUser: false };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    var _this = this;
@@ -25948,7 +25949,11 @@
 	      }
 	    });
 	  },
-	  showModal: function showModal() {
+	  showUserModal: function showUserModal() {
+	    var answer = !this.state.addUser;
+	    this.setState({ addUser: answer });
+	  },
+	  showEventModal: function showEventModal() {
 	    var answer = !this.state.addEvent;
 	    this.setState({ addEvent: answer });
 	  },
@@ -25959,34 +25964,41 @@
 	      toggle: true });
 	  },
 	  render: function render() {
+	    var hiddenVar = { display: 'none' };
+	    var showVar = {};
+	    var modalObj = { position: 'absolute',
+	      height: '100%',
+	      width: '100%',
+	      background: 'rgba(0, 0, 0, .7)',
+	      zIndex: 999,
+	      padding: 'auto',
+	      textAlign: 'center' };
 	    var hide, show;
 	    if (this.state.toggle) {
-	      hide = { display: 'none' };
-	      show = {};
+	      hide = hiddenVar;
+	      show = showVar;
 	    } else {
-	      hide = {};
-	      show = { display: 'none' };
+	      hide = showVar;
+	      show = hiddenVar;
 	    }
+	    //Event modal
 	    var hideModal, showModal;
 	    if (this.state.addEvent) {
-	      showModal = { position: 'absolute',
-	        height: '100%',
-	        width: '100%',
-	        background: 'rgba(0, 0, 0, .7)',
-	        zIndex: 999,
-	        padding: 'auto',
-	        textAlign: 'center' };
-	      hideModal = { display: 'none' };
+	      showModal = modalObj;
+	      hideModal = hiddenVar;
 	    } else {
-	      showModal = { display: 'none' };
-	      hideModal = {};
+	      showModal = hiddenVar;
+	      hideModal = showVar;
 	    }
-	    // margin: auto;
-	    // border: 1px solid black;
-	    // border-radius: 3px;
-	    // padding: 2em;
-
-	    // if(this.state.addEvent){
+	    //User modal
+	    var hideUserModal, showUserModal;
+	    if (this.state.addUser) {
+	      showUserModal = modalObj;
+	      hideUserModal = hiddenVar;
+	    } else {
+	      showUserModal = hiddenVar;
+	      hideUserModal = showVar;
+	    }
 	    return React.createElement(
 	      'div',
 	      null,
@@ -26000,11 +26012,25 @@
 	            'div',
 	            { className: 'col-lg-4' },
 	            React.createElement(
-	              'h2',
-	              null,
-	              'Profile'
+	              'div',
+	              { className: 'dashHeader' },
+	              React.createElement(
+	                'h2',
+	                null,
+	                'Profile'
+	              ),
+	              React.createElement('div', { className: 'spacer' }),
+	              React.createElement(
+	                'button',
+	                { className: 'btn editRound', onClick: this.showUserModal },
+	                'Edit'
+	              )
 	            ),
-	            React.createElement(DisplayUser, { className: 'row profile', user: this.state.user }),
+	            React.createElement(DisplayUser, { className: 'row profile', user: this.state.user })
+	          ),
+	          React.createElement(
+	            'section',
+	            { className: 'fullModal', style: showUserModal },
 	            React.createElement(UserForm, { className: 'row form', user: this.state.user })
 	          ),
 	          React.createElement(
@@ -26022,7 +26048,7 @@
 	            { className: 'col-lg-4' },
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-primary', onClick: this.showModal },
+	              { className: 'btn btn-primary', onClick: this.showEventModal },
 	              'Make Event'
 	            )
 	          ),
@@ -26034,13 +26060,6 @@
 	        )
 	      )
 	    );
-	    // } else {
-	    //   return(
-	    //     <section className="fullModal" style={showModal}>
-	    //       <EventForm className="row form" />
-	    //     </section>
-	    //   )
-	    // }
 	  }
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
@@ -26684,7 +26703,7 @@
 	        React.createElement(
 	          'button',
 	          { type: 'submit', onClick: this.handleSubmit },
-	          'Create Event!'
+	          'Submit Event!'
 	        ),
 	        React.createElement(
 	          'div',
@@ -26707,10 +26726,10 @@
 	var port = process.env.PORT;
 
 	module.exports = React.createClass({
-	  displayName: 'CreateUserForm',
+	  displayName: 'userForm',
 	  getInitialState: function getInitialState() {
 	    return {
-	      userId: '5740b2dfb7c4e79bf41af122',
+	      userId: '',
 	      firstName: '',
 	      lastName: '',
 	      email: '',
@@ -26863,30 +26882,62 @@
 	      }
 	    });
 	  },
+	  navigateBack: function navigateBack() {
+	    this.goBack();
+	  },
+	  updateUser: function updateUser() {
+	    var updated = !this.state.update;
+	    this.setState({ update: updated });
+	  },
 	  render: function render() {
 	    var imagePreviewUrl = this.state.imagePreviewUrl;
 
 	    var $imagePreview = null;
 	    if (imagePreviewUrl) {
-	      $imagePreview = React.createElement('img', { src: imagePreviewUrl });
+	      $imagePreview = React.createElement('img', { className: 'imgPreview', src: imagePreviewUrl });
+	    }
+	    var hidden = { display: 'none' };
+	    var show = {};
+	    if (this.state.update) {
+	      hidden = {};
+	      show = { display: 'none' };
 	    }
 	    return React.createElement(
-	      'div',
-	      null,
+	      'section',
+	      { className: 'modalUser' },
 	      React.createElement(
-	        'h2',
-	        null,
-	        'Create User'
+	        'div',
+	        { className: 'modalNav' },
+	        React.createElement(
+	          'button',
+	          { className: 'btn back-btn', onClick: this.navigateBack },
+	          'Back'
+	        ),
+	        React.createElement('div', { className: 'spacer' }),
+	        React.createElement(
+	          'button',
+	          { className: 'btn btn-primary', style: show, onClick: this.updateUser },
+	          'Update User'
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'btn btn-primary', style: hidden, onClick: this.updateUser },
+	          'Create User'
+	        )
 	      ),
 	      React.createElement(
 	        'form',
-	        { className: 'createUserForm', onSubmit: this.handleSubmit },
+	        { className: 'userForm', onSubmit: this.handleSubmit },
 	        React.createElement(
-	          'label',
-	          { 'for': 'userID' },
-	          'User ID:'
+	          'div',
+	          { className: 'userIdDiv', style: hidden },
+	          React.createElement(
+	            'label',
+	            { 'for': 'userID' },
+	            'User ID:'
+	          ),
+	          React.createElement('input', { type: 'text', placeholder: 'userID', value: this.state.userId, onChange: this.handleIdChange })
 	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'userID', value: this.state.userId, onChange: this.handleIdChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'firstName' },
@@ -26910,19 +26961,13 @@
 	          { 'for': 'bio' },
 	          'Bio:'
 	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'bio', value: this.state.bio, onChange: this.handleDescriptionChange }),
+	        React.createElement('textarea', { type: 'text', placeholder: 'bio', value: this.state.bio, onChange: this.handleDescriptionChange }),
 	        React.createElement(
 	          'label',
-	          { 'for': 'Address' },
+	          { 'for': 'Interests' },
 	          'Interests:'
 	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'InterestTags', value: this.state.interests, onChange: this.handleInterestTagsChange }),
-	        React.createElement(
-	          'label',
-	          { 'for': 'Address Name' },
-	          'Address Name:'
-	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'Address Name', value: this.state.addressName, onChange: this.handleAddressNameChange }),
+	        React.createElement('input', { type: 'text', placeholder: 'golf, running, dancing, (comma seperated / 5 max)', value: this.state.interests, onChange: this.handleInterestTagsChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'Address' },
@@ -26938,7 +26983,7 @@
 	        React.createElement(
 	          'button',
 	          { type: 'submit' },
-	          'Create User!'
+	          'Submit User!'
 	        )
 	      ),
 	      $imagePreview
