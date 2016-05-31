@@ -52,15 +52,7 @@
 
 	var _reactDom = __webpack_require__(33);
 
-<<<<<<< HEAD
-	// for testing purposes
-	var userId = "574390a51831bd0d9abfe749";
-	var userUrl = "/api/user/" + userId;
-	var eventUrl = "/api/events/" + userId;
-	// var eventUrl = "http://localhost:6060/api/event/" + eventId
-=======
 	var _reactRouter = __webpack_require__(168);
->>>>>>> 4d8f1abb6544af42a4cee549b0556edd5c57aff4
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15154,7 +15146,7 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
 	 * @typechecks
-	 *
+	 * 
 	 */
 
 	/*eslint-disable no-self-compare */
@@ -20204,51 +20196,10 @@
 
 	var _RouteUtils = __webpack_require__(169);
 
-<<<<<<< HEAD
-	  getInitialState: function getInitialState() {
-	    return { events: [] };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    $.ajax({
-	      type: 'GET',
-	      url: 'https://proximitysocial.herokuapp.com/api/events/' + this.props.url,
-	      dataType: 'json',
-	      cache: false,
-	      success: function (data) {
-	        console.log('Successfully retrieved DATA');
-	        console.log(data);
-	        this.setState({ events: data.events });
-	        this.handleEvents(this.state.events);
-	      }.bind(this),
-	      error: function (xhr, status, err) {
-	        console.error(this.props.url, status, err);
-	      }.bind(this)
-	    });
-	  },
-	  handleEvents: function handleEvents(events) {
-	    var rows = [];
-	    events.forEach(function (event, index) {
-	      rows.push(React.createElement(SingleEvent, { event: event, key: index }));
-	    });
-	    console.log('Rendering Event List');
-	    this.setState({ rowes: rows });
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'eventList' },
-	      React.createElement(
-	        'ul',
-	        null,
-	        this.state.rowes
-	      )
-	    );
-=======
 	Object.defineProperty(exports, 'createRoutes', {
 	  enumerable: true,
 	  get: function get() {
 	    return _RouteUtils.createRoutes;
->>>>>>> 4d8f1abb6544af42a4cee549b0556edd5c57aff4
 	  }
 	});
 
@@ -20468,7 +20419,7 @@
 	 * nested.
 	 *
 	 *   import { Route, createRoutesFromReactChildren } from 'react-router'
-	 *
+	 *   
 	 *   const routes = createRoutesFromReactChildren(
 	 *     <Route component={App}>
 	 *       <Route path="home" component={Dashboard}/>
@@ -25799,8 +25750,8 @@
 	    }
 	    $.ajax({
 	      type: 'GET',
-	      url: 'http://proximitysocial.herokuapp.com/api/user/' + sessionStorage.token,
-	      headers: { 'Access-Control-Allow-Origin': 'http://proximitysocial.herokuapp.com' },
+	      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
+	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
 	      // beforeSend: function(xhr){
 	      //   xhr.withCredentials = true;
 	      //   xhr.setRequestHeader('Authorization', )
@@ -25966,11 +25917,6 @@
 	var UserForm = __webpack_require__(235);
 	var port = process.env.PORT || 8080;
 
-	// // for testing purposes
-	// var userId = "574390a51831bd0d9abfe74a"
-	// var userUrl = "/api/user/" + userId
-	// var eventUrl = "/api/events/" + userId
-	// var eventUrl = "http://proximitysocial.herokuapp.com/api/event/" + eventId
 	function getParameterByName(name, url) {
 	  if (!url) url = window.location.href;
 	  name = name.replace(/[\[\]]/g, "\\$&");
@@ -26010,8 +25956,8 @@
 	    }
 	    $.ajax({
 	      type: 'GET',
-	      url: 'http://proximitysocial.herokuapp.com/api/user/' + sessionStorage.token,
-	      headers: { 'Access-Control-Allow-Origin': 'http://proximitysocial.herokuapp.com' },
+	      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
+	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
 	      // beforeSend: function(xhr){
 	      //   xhr.withCredentials = true;
 	      //   xhr.setRequestHeader('Authorization', )
@@ -26605,11 +26551,28 @@
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 	    this.handleGetEvents(nextProps.user);
 	  },
+	  componentDidMount: function componentDidMount() {
+	    $.ajax({
+	      type: 'GET',
+	      url: 'https://proximitysocial.herokuapp.com/api/events/' + this.props.url,
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved DATA');
+	        console.log(data);
+	        this.setState({ events: data.events });
+	        this.handleEvents(this.state.events);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(this.props.url, status, err);
+	      }.bind(this)
+	    });
+	  },
 	  handleGetEvents: function handleGetEvents(user) {
 	    if (user._id) {
 	      $.ajax({
 	        type: 'GET',
-	        url: 'http://proximitysocial.herokuapp.com/api/events/' + user._id,
+	        url: 'http://localhost:2323/api/events/' + user._id,
 	        dataType: 'json',
 	        cache: false,
 	        success: function (data) {
@@ -27136,7 +27099,7 @@
 	    if (this.props.params.id) {
 	      $.ajax({
 	        type: 'GET',
-	        url: 'http://proximitysocial.herokuapp.com/api/event/' + this.props.params.id,
+	        url: 'http://localhost:2323/api/event/' + this.props.params.id,
 	        dataType: 'json',
 	        cache: false,
 	        success: function (data) {
