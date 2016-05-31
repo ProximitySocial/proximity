@@ -18,7 +18,7 @@ userRouter.get('/users', (req, res) => {
 })
 
 
-userRouter.post('/user/new', auth, (req, res) => {
+userRouter.post('/user/new', (req, res) => {
   console.log('NEW POST for a user')
   var userData = req.body
   if(userData.fileName && userData.fileType){
