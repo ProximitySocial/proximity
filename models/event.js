@@ -18,4 +18,3 @@ var eventSchema = new mongoose.Schema({
 })
 
 module.exports = exports = mongoose.model('Event', eventSchema)
-
