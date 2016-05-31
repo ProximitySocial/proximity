@@ -40,12 +40,13 @@ var appFiles = {
   less:     'public/less/*.less',
   misc:     [curr + '/app/**', curr + '/config/**'],
   server:   './server.js',
+  test:     ['test-server/user_routes_test.js', 'test-server/event_routes_test.js']
 };
 
 // TASKS ========================================================================
 
 gulp.task('test:server', () => {
-  gulp.src('./test-server/*.js')
+  gulp.src(appFiles.test)
     .pipe(mocha());
 });
 

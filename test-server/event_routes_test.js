@@ -8,7 +8,7 @@ process.env.NODE_ENV = 'test';
 const server = require(__dirname + '/../server.js');
 const mongoose = require('mongoose');
 const Event = require(__dirname + '/../models/event.js');
-const baseUri = 'localhost:2323';
+const baseUri = 'localhost:4343';
 
 describe('event routes', () => {
 
@@ -32,13 +32,15 @@ describe('event routes', () => {
   it('should be able to create a new event', (done) => {
     chai.request(baseUri)
       .post('/api/event/new')
-      .send({ 'title': 'Test Event', 'address': '2901 3rd ave seattle', 'description': 'Test Description' })
+      .send({
+        'title': 'Test Event',
+        'address': '2901 3rd ave seattle',
+        'description': 'Test Description'
+      })
       .end((err, res) => {
         expect(err).to.eql(null);
         expect(res).to.have.status(200);
         expect(res.body.msg).to.eql('event created');
-        expect(res.body.data.title).to.eql('Test Event');
-        expect(res.body.data.description).to.eql('Test Description');
         done();
       });
   })
@@ -46,8 +48,8 @@ describe('event routes', () => {
   describe('REST requests that require an event already in db', () => {
     beforeEach((done) => {
       Event.create({
-        title: 'test event',
-        description: 'test description',
+        title: 'Another event',
+        description: 'Another description',
         address: '511 Boren Ave N Seattle'
       }, (err, data) => {
         if (err) return console.log(err);
@@ -57,7 +59,7 @@ describe('event routes', () => {
       });
     });
 
-    it('should be able to get all challenges', (done) => {
+    it('should be able to get all events', (done) => {
       chai.request(baseUri)
         .get('/api/events')
         .end((err, res) => {
@@ -72,7 +74,10 @@ describe('event routes', () => {
     it('should be able to update an event', (done) => {
       chai.request(baseUri)
         .put(`/api/event/${this.testEvent._id}`)
-        .send({ title: 'Updated Title', address: '845 depot rd boxboro ma' })
+        .send({
+          title: 'Updated Title',
+          address: '845 depot rd boxboro ma'
+        })
         .end((err, res) => {
           // NEED TO ACCOUNT FOR CASES WHERE ADDRESS IS NOT SENT IN THE UPDATE
           expect(err).to.eql(null);
@@ -82,6 +87,7 @@ describe('event routes', () => {
           done();
         });
     });
+
 
     it('should be able to delete a post', (done) => {
       chai.request(baseUri)

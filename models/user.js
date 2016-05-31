@@ -60,4 +60,3 @@ user.methods.generateJWT = function() {
 };
 
 module.exports = exports = mongoose.model('User', user)
-
