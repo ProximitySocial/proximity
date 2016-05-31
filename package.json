@@ -34,6 +34,7 @@
     "cryptojs": "^2.5.3",
     "express": "^4.13.4",
     "express-history-api-fallback": "^2.0.0",
+    "express-jwt": "^3.4.0",
     "express-request-proxy": "^2.0.0",
     "express-session": "^1.13.0",
     "font-awesome": "^4.6.1",
