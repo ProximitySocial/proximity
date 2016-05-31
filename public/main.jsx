@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Router, Route, Link, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
 import { IndexRoute } from 'react-router'
 const port = process.env.PORT || 8080
 const Dashboard = require(__dirname + '/components/dashboard.jsx')
@@ -123,7 +123,7 @@ const Test = React.createClass({
 })
 
 render((
-  <Router history={browserHistory}>
+  <Router history={hashHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Dashboard}/>
       <Route path="/event/:id" component={EventView}/>
