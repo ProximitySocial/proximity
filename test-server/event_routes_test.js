@@ -46,9 +46,23 @@ describe('event routes', () => {
       });
   });
 
+  // NEED TO CHANGE SCHEMA TO MAKE ADDRESS A REQUIRED FIELD!!!!
+  it('should throw an error if required fields are left empty when creating a user', (done) => {
+    chai.request(baseUri)
+      .post('/api/event/new')
+      .send({ // required fields (title and address) are missing
+        'description': 'This is a description'
+      })
+      .end((err, res) => {
+        expect(err).to.not.eql(null);
+        expect(res).to.have.status(500);
+        done();
+      })
+  })
+
   describe('REST requests that require an event already in db', () => {
 
-    beforeEach((done) => {
+    beforeEach((done) => {  // Create user, then create event and assign user
 
       var picUrl = 'http://gazettereview.com/wp-content/uploads/2016/03/facebook-avatar.jpg';
 
