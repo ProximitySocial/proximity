@@ -121,7 +121,7 @@ eventRouter.put('/event/:id', (req, res) => {
           }
       }).catch((err) => { console.log('inside call google error'); throw err; })
   }
-  if (newData.fileName && newData.fileType){
+  if (newData.fileName && newData.fileType && !newData.address){
     console.log('picture changed, no address change')
     console.log(newData);
     getS3SignedUrl(newData, cb)
@@ -129,7 +129,8 @@ eventRouter.put('/event/:id', (req, res) => {
         newData = data
         return updateEvent(newData, req.params.id, res)
       }).catch((err) => { console.log('inside call S3 error'); throw err; })
-  } else {
+  }
+  if (!newData.address && !newData.fileName && !newData.fileType){
     console.log('no address change and no picture change')
     return updateEvent(newData, req.params.id, res)
   }
@@ -137,6 +138,7 @@ eventRouter.put('/event/:id', (req, res) => {
 
 //add attendee
 //body must contain {"userId": "494934930300030303"}, so that Event $addToSet will add user to _attendees array
+// eventually need to check that :id matches auth req.user._id
 eventRouter.put('/event/:id/join', (req, res) => {
   var userId = req.body.userId
   Event.update({_id: req.params.id}, {$addToSet: {_attendees: userId}}, (err, result) => {
