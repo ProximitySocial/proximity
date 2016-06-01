@@ -17,6 +17,15 @@ userRouter.get('/users', (req, res) => {
   })
 })
 
+userRouter.post('/getUserID', (req, res) =>{
+  console.log('new post to get a USER ID')
+  var fbid = req.body.fbid
+    User.findOne({"facebook.id": fbid}, {_id: true}, (err, data) => {
+    if (err) return res.status(500).json({msg: 'Server Error'})
+    if (data === null) return res.status(400).json({msg: 'fbID not found, bad request'})
+    res.status(200).json({msg: 'user found with fbid', id: data.id} )
+  })
+})
 
 userRouter.post('/user/new', (req, res) => {
   console.log('NEW POST for a user')

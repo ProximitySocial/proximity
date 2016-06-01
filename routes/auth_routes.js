@@ -9,7 +9,7 @@ const CryptoJS   = require("crypto-js");
 
 authRouter.post('/mobile/facebook/shake', (req, res) => {
   console.log('From the top of the handshake')
-  if(req.headers.authorization){
+  if(req.body.fbid){
     var fbid = req.body.facebook.id
     User.findOne({"facebook.id": fbid}, (err, user) => {
         if (err) return res.status(500).json({msg: 'Error, with findOne', error: err})
