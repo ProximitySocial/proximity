@@ -19,7 +19,7 @@ passport.use(new BearerStrategy(
 passport.use('facebook', new FacebookStrategy({
     clientID: process.env.PROXIMITY_FB_ID,
     clientSecret: process.env.PROXIMITY_FB_SECRET,
-    callbackURL: 'http://localhost:2323/api/auth/facebook/callback'
+    callbackURL: 'https://proximitysocial.herokuapp.com/api/auth/facebook/callback'
   },
   function(accessToken, refreshToken, profile, done) {
         console.log('OAUTH CALLBACK RETURNED PROFILE')
