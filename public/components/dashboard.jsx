@@ -27,7 +27,7 @@ function getParameterByName(name, url) {
 
 module.exports = React.createClass({
   getInitialState: function(){
-    if (sessionStorage.token){
+    if (sessionStorage.token || sessionStorage.token != null){
       console.log('Yes there is a sessionStorage token')
       console.log(sessionStorage.token)
       var userObj = sessionStorage.token
