@@ -37,7 +37,7 @@ module.exports = React.createClass({
       var userObj = ''
       var toggleVar = true
     }
-    return ({user: userObj,
+    return ({user: {},
             events: [],
             toggle: toggleVar,
             addEvent: false,

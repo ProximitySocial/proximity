@@ -17,7 +17,7 @@ function interestsLimit(val) {
 var user = new mongoose.Schema({
     firstName:     {type: String, required: true},
     lastName:      {type: String, minlength: 1},
-    email:         {type: String, required: true, default:'iGetTooMuchEmail@dontEmailMe.com'},
+    email:         {type: String, default:'iGetTooMuchEmail@dontEmailMe.com'},
     bio:           {type: String, default:'You will love me, enough said!'},
     pic:           {type: String},
     rating:        {type: Number},
