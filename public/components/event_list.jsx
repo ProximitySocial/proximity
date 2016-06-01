@@ -20,7 +20,7 @@ module.exports = React.createClass({
   componentDidMount: function() {
     $.ajax({
       type: 'GET',
-      url: 'https://proximitysocial.herokuapp.com/api/events/' + this.props.url,
+      url: '/api/events/' + this.props.user.id,
       dataType: 'json',
       cache: false,
       success: function(data){

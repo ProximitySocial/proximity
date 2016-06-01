@@ -36,7 +36,7 @@ module.exports = React.createClass({
             toggle: toggleVar,
             hideForm: true})
   },
-  componentDidMount: function() {
+  // componentDidMount: function() {
   //   if (!this.state.user){
   //       var token = getParameterByName('access_token')
   //       sessionStorage.setItem('token', token)
