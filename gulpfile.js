@@ -82,13 +82,17 @@ gulp.task('bundleit', function(){
           loaders: [
             {
               test: /.jsx?$/,
-              loader: ['babel-loader'],
-              exclude: /node_modules/,
-              query: {
-                presets: ['es2015', 'react']
-              }
-            }
-          ]
+              loaders: ['babel-loader'],
+              exclude: /node_modules/
+            },
+            { test: /\.json$/, loader: 'json-loader' }
+          ],
+          noParse: /node_modules\/json-schema\/lib\/validate\.js/
+        },
+        node: {
+          fs: 'empty',
+          net: 'empty',
+          tls: 'empty'
         }
       }))
       .pipe(gulp.dest(dest))

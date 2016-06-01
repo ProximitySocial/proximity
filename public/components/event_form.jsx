@@ -72,26 +72,31 @@ module.exports = React.createClass({
           file: ''
         })
       },
+     setImagePreview: function(url) {
+       this.setState({
+         imagePreviewUrl: url,
+       })
+     },
       srcImage: function(e){
-        console.log('trying to source image')
+        let setImagePreview = this.setImagePreview
         let title = this.state.title.trim()
         let arr = title.split(' ')
         let length = arr.length
         let query = arr.join('+')
         console.log(query)
+        let route = '/helpers/img/' + query
         $.ajax({
           type: 'GET',
-          url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
-          dataType: 'application/json',
-          success: (data) => {
-            console.log(data);
+          url: route,
+          contentType: 'application/json',
+          success: function(data){
+            setImagePreview(data.url)
           },
-          error: (data, status, xhr) => {
+          error: function(data, status, jqXHR){
             console.log(data)
             console.log(status)
-            console.log(xhr)
+            console.log(jqXHR)
           }
-
         })
       },
       navigateBack: function(){
@@ -177,10 +182,10 @@ module.exports = React.createClass({
             <form className="eventForm" onSubmit={this.handleSubmit} >
               <div className="eventIdDiv" style={hidden}>
                 <label for="eventId">Event ID:</label>
-                <input type="text" placeholder="eventID" value={this.state.eventId}  onChange={this.handleIdChange} />
+                <input type="text" placeholder="eventID" value={this.state.eventId}   onChange={this.handleIdChange} />
               </div>
               <label for="title">Title:</label>
-              <input type="text" placeholder="Title" value={this.state.title}  onChange={this.handleTitleChange} />
+              <input type="text" placeholder="Title" value={this.state.title}   onChange={this.handleTitleChange} />
               <label for="description">Description:</label>
               <textarea type="text" placeholder="Description" maxlength='5' value={this.state.description} onChange={this.handleDescriptionChange} />
               <label for="Address">InterestsTag:</label>
@@ -190,6 +195,7 @@ module.exports = React.createClass({
               <label for="Address">Address:</label>
               <input type="text" placeholder="Address" value={this.state.address} onChange={this.handleAddressChange} />
               <label for="Image">Image:</label>
+              <button type="submit" onClick={this.srcImage}>Source Image</button>
               <input type="file" onChange={this.handleImageChange} />
               <button type="submit" onClick={this.handleSubmit}>Create Event!</button>
               <div>{$imagePreview }</div>

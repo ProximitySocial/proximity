@@ -6,7 +6,8 @@ const mongoose       = require('mongoose')
     , methodOverride = require('method-override')
     , userRouter     = require(__dirname + '/routes/user_routes')
     , eventRouter    = require(__dirname + '/routes/event_routes')
-    , authRouter    = require(__dirname + '/routes/auth_routes')
+    , authRouter     = require(__dirname + '/routes/auth_routes')
+    , helpersRouter  = require(__dirname + '/routes/helper_routes')
 
 const User           = require(__dirname + '/models/user')
 const passport       = require('passport')
@@ -51,6 +52,7 @@ app.use(passport.session())
 app.use('/api', authRouter)
 app.use('/api', userRouter)
 app.use('/api', eventRouter)
+app.use('/helpers', helpersRouter)
 
 app.get('/', (req, res) => {
   // if (req.query.access_token){
