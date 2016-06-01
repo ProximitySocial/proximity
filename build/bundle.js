@@ -25748,34 +25748,32 @@
 	      toggle: toggleVar,
 	      hideForm: true };
 	  },
-	  componentDidMount: function componentDidMount() {
-	    var _this = this;
-
-	    if (!this.state.user) {
-	      var token = getParameterByName('access_token');
-	      sessionStorage.setItem('token', token);
-	    }
-	    $.ajax({
-	      type: 'GET',
-	      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
-	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
-	      // beforeSend: function(xhr){
-	      //   xhr.withCredentials = true;
-	      //   xhr.setRequestHeader('Authorization', )
-	      // },
-	      success: function success(data, status) {
-	        _this.setState({
-	          user: data,
-	          toggle: false
-	        });
-	      },
-	      error: function error(xhr, status, _error) {
-	        console.log(xhr);
-	        console.log(status);
-	        console.log(_error);
-	      }
-	    });
-	  },
+	  // componentDidMount: function() {
+	  //   if (!this.state.user){
+	  //       var token = getParameterByName('access_token')
+	  //       sessionStorage.setItem('token', token)
+	  //   }
+	  //   $.ajax({
+	  //     type: 'GET',
+	  //     url: '/api/user/' + sessionStorage.token,
+	  //     // headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
+	  //     // beforeSend: function(xhr){
+	  //     //   xhr.withCredentials = true;
+	  //     //   xhr.setRequestHeader('Authorization', )
+	  //     // },
+	  //     success: (data, status) => {
+	  //       this.setState({
+	  //         user: data,
+	  //         toggle: false
+	  //       })
+	  //     },
+	  //     error: (xhr, status, error) => {
+	  //       console.log(xhr)
+	  //       console.log(status)
+	  //       console.log(error)
+	  //     }
+	  //   })
+	  // },
 	  logout: function logout() {
 	    sessionStorage.removeItem('token');
 	    this.setState({ user: '',
@@ -25954,9 +25952,12 @@
 	      addEvent: false,
 	      addUser: false };
 	  },
-	  componentDidMount: function componentDidMount() {
+	  componentDidMount: function componentDidMount(e) {
 	    var _this = this;
 
+	    console.log('e below this console.log');
+	    console.log(e);
+	    console.log('withing the component did mount');
 	    if (!this.state.user) {
 	      var token = getParameterByName('access_token');
 	      sessionStorage.setItem('token', token);
@@ -26563,7 +26564,7 @@
 	  componentDidMount: function componentDidMount() {
 	    $.ajax({
 	      type: 'GET',
-	      url: 'https://proximitysocial.herokuapp.com/api/events/' + this.props.url,
+	      url: '/api/events/' + this.props.user.id,
 	      dataType: 'json',
 	      cache: false,
 	      success: function (data) {
