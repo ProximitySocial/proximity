@@ -10,11 +10,6 @@ const UserForm = require(__dirname + '/user_form.jsx')
 const port = process.env.PORT || 8080
 
 
-// // for testing purposes
-// var userId = "574390a51831bd0d9abfe74a"
-// var userUrl = "/api/user/" + userId
-// var eventUrl = "/api/events/" + userId
-// var eventUrl = "http://localhost:2323/api/event/" + eventId
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -50,6 +45,7 @@ module.exports = React.createClass({
     } else {
       var token = sessionStorage.token
     }
+    console.log('withing the component did mount')
     $.ajax({
       type: 'GET',
       url: '/api/user/' + sessionStorage.token,

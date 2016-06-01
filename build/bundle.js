@@ -25924,11 +25924,6 @@
 	var UserForm = __webpack_require__(235);
 	var port = process.env.PORT || 8080;
 
-	// // for testing purposes
-	// var userId = "574390a51831bd0d9abfe74a"
-	// var userUrl = "/api/user/" + userId
-	// var eventUrl = "/api/events/" + userId
-	// var eventUrl = "http://localhost:2323/api/event/" + eventId
 	function getParameterByName(name, url) {
 	  if (!url) url = window.location.href;
 	  name = name.replace(/[\[\]]/g, "\\$&");
@@ -26564,6 +26559,23 @@
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 	    this.handleGetEvents(nextProps.user);
+	  },
+	  componentDidMount: function componentDidMount() {
+	    $.ajax({
+	      type: 'GET',
+	      url: 'https://proximitysocial.herokuapp.com/api/events/' + this.props.url,
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved DATA');
+	        console.log(data);
+	        this.setState({ events: data.events });
+	        this.handleEvents(this.state.events);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(this.props.url, status, err);
+	      }.bind(this)
+	    });
 	  },
 	  handleGetEvents: function handleGetEvents(user) {
 	    if (user._id) {

@@ -18,7 +18,7 @@ userRouter.get('/users', (req, res) => {
 })
 
 
-userRouter.post('/user/new', auth, (req, res) => {
+userRouter.post('/user/new', (req, res) => {
   console.log('NEW POST for a user')
   var userData = req.body
   if(userData.fileName && userData.fileType){
@@ -43,7 +43,7 @@ userRouter.get('/user', passport.authenticate('bearer', {session: false}),
 
 userRouter.get('/user/:id', (req, res) => {
   console.log("GETTING REQUEST for a specific user")
-  User.findOne({access_token: req.params.id}, (err, result) => {
+  User.findOne({$or: [{access_token: req.params.id}, {_id: req.params.id}]}, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     if (result === null) return res.status(400).json({msg: "bad request, user doesn't exist"})
     res.status(200).json(result)

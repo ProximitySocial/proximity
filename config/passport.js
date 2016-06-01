@@ -38,7 +38,6 @@ passport.use('facebook', new FacebookStrategy({
                 user = new User({
                     firstName: first,
                     lastName: last,
-                    email: profile.email || profile.username + '@facebook.com',
                     provider: 'facebook',
                     //now in the future searching on User.findOne({'facebook.id': profile.id } will match because of this next line
                     facebook: profile._json
@@ -47,7 +46,7 @@ passport.use('facebook', new FacebookStrategy({
                 user.access_token = accessToken
                 user.save(function(err) {
                     if (err) console.log(err);
-                    console.log('CREATED USER')
+                    console.log('CREATED USER from Facebook strategy')
                     console.log(user)
                     return done(err, user);
                 });
@@ -57,7 +56,7 @@ passport.use('facebook', new FacebookStrategy({
                 //   user.save()
                 // }
                 //found user. Return
-                console.log('FOUND USER')
+                console.log('FOUND USER from Facebook strategy')
                 console.log(user)
                 return done(err, user);
             }
