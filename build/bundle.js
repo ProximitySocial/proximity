@@ -26074,7 +26074,7 @@
 	          _react2.default.createElement(
 	            'section',
 	            { className: 'fullModal', style: showUserModal },
-	            _react2.default.createElement(UserForm, { className: 'row form', user: this.state.user })
+	            _react2.default.createElement(UserForm, { className: 'row form', addUser: this.showUserModal, user: this.state.user })
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -26103,7 +26103,7 @@
 	          _react2.default.createElement(
 	            'section',
 	            { className: 'fullModal', style: showModal },
-	            _react2.default.createElement(EventForm, { className: 'row form' })
+	            _react2.default.createElement(EventForm, { addEvent: this.showEventModal, className: 'row form' })
 	          )
 	        )
 	      )
@@ -26458,7 +26458,7 @@
 	        { className: 'modalNav' },
 	        _react2.default.createElement(
 	          'button',
-	          { className: 'btn back-btn', onClick: this.navigateBack },
+	          { className: 'btn back-btn', onClick: this.props.addEvent },
 	          'Back'
 	        ),
 	        _react2.default.createElement('div', { className: 'spacer' }),
@@ -26969,7 +26969,7 @@
 	        { className: 'modalNav' },
 	        React.createElement(
 	          'button',
-	          { className: 'btn back-btn', onClick: this.navigateBack },
+	          { className: 'btn back-btn', onClick: this.props.addUser },
 	          'Back'
 	        ),
 	        React.createElement('div', { className: 'spacer' }),

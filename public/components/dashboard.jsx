@@ -137,7 +137,7 @@ module.exports = React.createClass({
               <DisplayUser className="row profile" user={this.state.user} />
             </div>
             <section className="fullModal" style={showUserModal}>
-              <UserForm className="row form" user={this.state.user}/>
+              <UserForm className="row form" addUser={this.showUserModal} user={this.state.user}/>
             </section>
             <div className="col-lg-4" id="eventList">
               <div className="eventsHeader">
@@ -150,7 +150,7 @@ module.exports = React.createClass({
               <EventList className="row events" user={this.state.user}/>
             </div>
              <section className="fullModal" style={showModal}>
-              <EventForm className="row form" />
+              <EventForm addEvent={this.showEventModal} className="row form" />
             </section>
           </div>
         </section>
