@@ -25965,11 +25965,13 @@
 	    if (!this.state.user) {
 	      var token = getParameterByName('access_token');
 	      sessionStorage.setItem('token', token);
+	    } else {
+	      var token = sessionStorage.token;
 	    }
 	    $.ajax({
 	      type: 'GET',
-	      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
-	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
+	      url: '/api/user/' + sessionStorage.token,
+	      headers: { 'Authorization': 'Bearer ' + token },
 	      // beforeSend: function(xhr){
 	      //   xhr.withCredentials = true;
 	      //   xhr.setRequestHeader('Authorization', )
@@ -26567,7 +26569,7 @@
 	    if (user._id) {
 	      $.ajax({
 	        type: 'GET',
-	        url: 'http://localhost:2323/api/events/' + user._id,
+	        url: '/api/events/' + user._id,
 	        dataType: 'json',
 	        cache: false,
 	        success: function (data) {

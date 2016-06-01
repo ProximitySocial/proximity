@@ -45,8 +45,6 @@ authRouter.get('/auth/facebook/callback',
   passport.authenticate('facebook', { session: false,
                                       failureRedirect: '/login' }),
   (req, res) => {
-    console.log('TRIED TO REDIRECT TO ROOT with access Token')
-    console.log(req.isAuthenticated());
     res.redirect("/?access_token=" + req.user.access_token);
   }
 )

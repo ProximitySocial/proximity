@@ -45,13 +45,15 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
     if (!this.state.user){
-        var token = getParameterByName('access_token')
-        sessionStorage.setItem('token', token)
+      var token = getParameterByName('access_token')
+      sessionStorage.setItem('token', token)
+    } else {
+      var token = sessionStorage.token
     }
     $.ajax({
       type: 'GET',
-      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
-      headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
+      url: '/api/user/' + sessionStorage.token,
+      headers: {'Authorization': 'Bearer ' + token},
       // beforeSend: function(xhr){
       //   xhr.withCredentials = true;
       //   xhr.setRequestHeader('Authorization', )
