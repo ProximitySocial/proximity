@@ -37,6 +37,7 @@
     "express-session": "^1.13.0",
     "font-awesome": "^4.6.1",
     "googlemaps": "^1.6.0",
+    "history": "^3.0.0",
     "method-override": "^2.3.5",
     "mongoose": "^4.4.16",
     "normalize-css": "^2.3.1",
