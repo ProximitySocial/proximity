@@ -23,7 +23,7 @@ eventRouter.get('/events', (req, res) => {
 
 //Get events, sorted by time per user specified neighborhoods
 eventRouter.get('/events/:userId', (req, res) => {
-  console.log('Events per USER has been requested')
+  console.log('Events per USER has been requested 2')
   var userId = req.params.userId
   console.log(userId);
   getAndSendUserLocalEvents(userId, res)

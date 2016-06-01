@@ -43,7 +43,8 @@ userRouter.get('/user', passport.authenticate('bearer', {session: false}),
 
 userRouter.get('/user/:id', (req, res) => {
   console.log("GETTING REQUEST for a specific user")
-  User.findOne({$or: [{access_token: req.params.id}, {_id: req.params.id}]}, (err, result) => {
+  var dbQuery = userId.length > 30 ? {access_token: userId} : {_id: userId}
+  User.findOne(dbQuery, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     if (result === null) return res.status(400).json({msg: "bad request, user doesn't exist"})
     res.status(200).json(result)
