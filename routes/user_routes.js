@@ -1,10 +1,10 @@
-const updateUser     = require('../libs/userLib').createUser
+const createUser     = require('../libs/userLib').createUser
 const express        = require('express')
 const User           = require(__dirname + '/../models/user')
 const Event          = require(__dirname + '/../models/event')
 const userRouter     = module.exports = exports = express.Router()
 const getS3SignedUrl = require('../config/aws')
-const createUser     = require('../libs/userLib')
+const updateUser     = require('../libs/userLib').updateUser
 const passport       = require('../config/passport')
 const jwt            = require('express-jwt');
 
@@ -33,12 +33,12 @@ userRouter.post('/user/new', (req, res) => {
   if(userData.fileName && userData.fileType){
     getS3SignedUrl(userData)
       .then((data) => {
-        updateUser(data, res)
+        createUser(data, res)
       }).catch((err) => {
         throw err;
       })
   } else {
-    updateUser(userData, res)
+    createUser(userData, res)
   }
 })
 
