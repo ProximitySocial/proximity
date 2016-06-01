@@ -1,3 +1,5 @@
+'use strict'
+
 const express = require('express')
 const helperRouter     = module.exports = exports = express.Router()
 const request = require('request');

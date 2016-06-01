@@ -78,6 +78,7 @@ module.exports = React.createClass({
        })
      },
       srcImage: function(e){
+        let state = this.state
         let setImagePreview = this.setImagePreview
         let title = this.state.title.trim()
         let arr = title.split(' ')
@@ -91,6 +92,7 @@ module.exports = React.createClass({
           contentType: 'application/json',
           success: function(data){
             setImagePreview(data.url)
+
           },
           error: function(data, status, jqXHR){
             console.log(data)
