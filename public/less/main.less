@@ -1,6 +1,6 @@
+@import "./profile.less";
 @primary: #00F1AE; //green
 @secondary: #F6ECDA; //white-gray
-@import "./profile.less";
 @blue: #3399ff;
 @red: #ff0033;
 @purple: #5c2751;
@@ -15,6 +15,10 @@ html {
 }
 h3 {
   margin-top: 0;
+}
+
+.btn-action {
+  background: @blue;
 }
 
 .logo {
@@ -58,9 +62,22 @@ h3 {
   width: 150px;
 }
 
+#navbar {
+   display: -webkit-flex;
+   display: flex;
+   width: 100%;
+   ul {
+    width: 300px;
+   }
+   .spacer{
+    -webkit-flex: 1;
+            flex: 1;
+   }
+}
+
  body {
-   min-height: 2000px;
-   padding-top: 70px;
+   margin-top: 55px !important;
+   // padding-top: 70px;
  }
  .head{
    display: -webkit-flex;
@@ -178,15 +195,49 @@ h3 {
   border-radius: @radius;
 }
 
+.profileHeader{
+  display: -webkit-flex;
+  display: flex;
+  // display: inline-block;
+  margin: 0;
+  width: 100%;
+  .spacer {
+    -webkit-flex: 1;
+            flex: 1;
+  }
+  .editRound {
+    width: 40px;
+    border-radius: 100%;
+    height: 40px;
+    padding: 0;
+    background: @blue;
+  }
+}
+
+.eventsHeader{
+  display: -webkit-flex;
+  display: flex;
+  // display: inline-block;
+  margin: 0;
+  width: 100%;
+  .spacer {
+    -webkit-flex: 1;
+            flex: 1;
+  }
+}
+
 .fullModal{
+  .imgPreview{
+    max-width: 30rem;
+  }
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background-color: rgba(0, 0, 0, .85);
   z-index: 999
   padding: auto;
   text-align: center;
   min-width:400px;
-  .modalEvent {
+  .modalEvent, .modalUser {
     background: rgba(255, 255, 255, .85);
     z-index: 1000;
     margin: auto;
@@ -213,7 +264,7 @@ h3 {
         width: 100px;
       }
     }
-    .eventForm {
+    .eventForm, .userForm {
       text-align: left;
       max-width: 400px;
       margin: 0;
@@ -236,7 +287,9 @@ h3 {
         min-height: 7rem;
       }
       button{
-        margin-top: .5rem;
+        background: @blue;
+        margin-top: 2rem;
+        margin-left: 23rem;
         border-radius: @radius;
       }
     }

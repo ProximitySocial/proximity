@@ -1,6 +1,6 @@
 const React = require('react')
 const ReactDOM = require('react-dom')
-import { Router, Route, Link, hashHistory } from 'react-router'
+import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router'
 
 
 function formatDate(date) {
