@@ -5,7 +5,7 @@ import { IndexRoute } from 'react-router'
 const port = process.env.PORT || 8080
 const Dashboard = require(__dirname + '/components/dashboard.jsx')
 const EventList = require(__dirname + '/components/event_list.jsx')
-const Profile = require(__dirname + '/components/display_user.jsx')
+const Profile = require(__dirname + '/components/user_profile.jsx')
 const CreateEventForm = require(__dirname + '/components/event_form.jsx')
 const CreateUserForm = require(__dirname + '/components/user_form.jsx')
 const SingleEvent = require(__dirname + '/components/single_event.jsx')
@@ -126,10 +126,9 @@ render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Dashboard}/>
-      <Route path="/event/:id" component={EventView}/>
+      <Route path="/event/:eventID/:userID" component={EventView}/>
       <Route path="/profile" component={Profile}/>
       <Route path="/test" component={Test}/>
     </Route>
   </Router>
 ), document.getElementById('root'))
-

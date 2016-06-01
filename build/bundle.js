@@ -59,11 +59,11 @@
 	var port = process.env.PORT || 8080;
 	var Dashboard = __webpack_require__(229);
 	var EventList = __webpack_require__(230);
-	var Profile = __webpack_require__(232);
+	var Profile = __webpack_require__(235);
 	var CreateEventForm = __webpack_require__(233);
 	var CreateUserForm = __webpack_require__(234);
 	var SingleEvent = __webpack_require__(231);
-	var EventView = __webpack_require__(235);
+	var EventView = __webpack_require__(236);
 
 	function getParameterByName(name, url) {
 	  if (!url) url = window.location.href;
@@ -267,7 +267,7 @@
 	    _reactRouter.Route,
 	    { path: '/', component: App },
 	    _react2.default.createElement(_reactRouter.IndexRoute, { component: Dashboard }),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/event/:id', component: EventView }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '/event/:eventID/:userID', component: EventView }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: Profile }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/test', component: Test })
 	  )
@@ -26093,8 +26093,8 @@
 	        cache: false,
 	        success: function (data) {
 	          console.log('Successfully retrieved DATA');
-	          this.setState({ events: data.events });
-	          this.handleEvents(this.state.events);
+	          this.setState({ events: data.events, userID: user._id });
+	          this.handleEvents(this.state.events, user._id);
 	        }.bind(this),
 	        error: function (xhr, status, err) {
 	          console.error(this.props.url, status, err);
@@ -26103,11 +26103,13 @@
 	      });
 	    }
 	  },
-	  handleEvents: function handleEvents(events) {
+	  handleEvents: function handleEvents(events, userID) {
+	    console.log('Handling Events from Event List');
+	    console.log(userID);
 	    var rows = [];
 	    if (events) {
 	      events.forEach(function (event, index) {
-	        rows.push(React.createElement(SingleEvent, { event: event, key: index }));
+	        rows.push(React.createElement(SingleEvent, { event: event, userID: userID, key: index }));
 	      });
 	      this.setState({ rowes: rows });
 	    }
@@ -26168,7 +26170,7 @@
 
 	  getInitialState: function getInitialState() {
 	    console.log('Getting Initial State of Single Event');
-	    console.log(this.props.event);
+	    console.log(this.props);
 	    return { event: this.props.event };
 	  },
 	  componentDidMount: function componentDidMount() {
@@ -26190,12 +26192,14 @@
 	    var hour = formatDate(this.props.event.startTime);
 	    var day = x;
 
+	    console.log('Inside Render of Single Event');
+	    console.log(this.props.userID);
 	    return React.createElement(
 	      'li',
 	      null,
 	      React.createElement(
 	        _reactRouter.Link,
-	        { to: '/event/' + this.props.event._id },
+	        { to: '/event/' + this.props.event._id + '/' + this.props.userID },
 	        React.createElement(
 	          'div',
 	          { className: 'eventPicture', style: divStyle },
@@ -26962,9 +26966,163 @@
 /* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var React = __webpack_require__(2);
+	var ReactDOM = __webpack_require__(33);
+	var port = process.env.PORT;
+
+	module.exports = React.createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    if (sessionStorage.token) {
+	      console.log('Yes there is a sessionStorage token');
+	      console.log(sessionStorage.token);
+	      var userObj = sessionStorage.token;
+	      var toggleVar = false;
+	    } else {
+	      console.log('No token');
+	      var userObj = '';
+	      var toggleVar = true;
+	    }
+	    return { user: userObj,
+	      toggle: toggleVar };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var _this = this;
+
+	    // if (!this.state.user){
+	    //     var token = getParameterByName('access_token')
+	    //     sessionStorage.setItem('token', token)
+	    // }
+	    $.ajax({
+	      type: 'GET',
+	      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
+	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
+	      success: function success(data, status) {
+	        console.log(data);
+	        console.log(status);
+	        _this.setState({
+	          user: data,
+	          toggle: false
+	        });
+	        _this.handleInterests(data);
+	        _this.handleNeighborhoods(data);
+	        console.log('this is toggle: ' + _this.state.toggle);
+	      },
+	      error: function error(xhr, status, _error) {
+	        console.log(xhr);
+	        console.log(status);
+	        console.log(_error);
+	      }
+	    });
+	  },
+	  handleInterests: function handleInterests(user) {
+	    console.log(user.interests);
+	    var rows = [];
+	    user.interests.forEach(function (interest, index) {
+	      rows.push(React.createElement(
+	        'li',
+	        { key: index },
+	        React.createElement(
+	          'a',
+	          null,
+	          '#',
+	          interest
+	        )
+	      ));
+	    });
+	    this.setState({ interests: rows });
+	  },
+	  handleNeighborhoods: function handleNeighborhoods(user) {
+	    console.log(user.neighborhoods);
+	    var rows = [];
+	    user.neighborhoods.forEach(function (neighborhood, index) {
+	      rows.push(React.createElement(
+	        'li',
+	        { key: index },
+	        React.createElement(
+	          'a',
+	          null,
+	          '#',
+	          neighborhood
+	        )
+	      ));
+	    });
+	    this.setState({ neighborhoods: rows });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h3',
+	        { className: 'userName' },
+	        this.state.user.firstName,
+	        ' ',
+	        this.state.user.lastName
+	      ),
+	      React.createElement('img', { className: 'userPic', src: this.state.user.pic }),
+	      React.createElement(
+	        'p',
+	        null,
+	        React.createElement(
+	          'strong',
+	          null,
+	          'Email: '
+	        ),
+	        this.state.user.email
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        React.createElement(
+	          'strong',
+	          null,
+	          'Member since: '
+	        ),
+	        this.state.user.created_at
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        this.state.user.bio
+	      ),
+	      React.createElement(
+	        'h3',
+	        null,
+	        'Interests:'
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'interests' },
+	        this.state.interests
+	      ),
+	      React.createElement(
+	        'h3',
+	        null,
+	        'Neighborhoods:'
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'neighborhoods' },
+	        this.state.neighborhoods
+	      )
+	    );
+	  }
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ },
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	var _reactRouter = __webpack_require__(168);
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(33);
@@ -27003,11 +27161,12 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    console.log('Mounting Event View');
-	    console.log(this.props.params.id);
-	    if (this.props.params.id) {
+	    console.log(this.props.params.eventID);
+	    console.log(this.props.params.userID);
+	    if (this.props.params.eventID) {
 	      $.ajax({
 	        type: 'GET',
-	        url: 'http://localhost:2323/api/event/' + this.props.params.id,
+	        url: 'http://localhost:2323/api/event/' + this.props.params.eventID,
 	        dataType: 'json',
 	        cache: false,
 	        success: function (data) {
@@ -27022,6 +27181,46 @@
 	      });
 	      // this.setState({timeTill: 'NOW'})
 	    }
+	  },
+	  handleEventJoin: function handleEventJoin() {
+	    console.log(this.props.params.eventID);
+	    $.ajax({
+	      type: 'PUT',
+	      url: 'http://localhost:2323/api/event/' + this.props.params.eventID + '/join',
+	      dataType: 'json',
+	      data: {
+	        userID: this.props.params.userID
+	      },
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved single EVENT');
+	        console.log(data);
+	        this.setState({ event: data });
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        // console.error(this.props.url, status, err)
+	        // this.props.user._id = null;
+	      }.bind(this)
+	    });
+	  },
+	  handleEventLeave: function handleEventLeave() {
+	    var _$$ajax;
+
+	    $.ajax((_$$ajax = {
+	      type: 'PUT',
+	      url: 'http://localhost:2323/api/event/' + this.props.params.eventID + '/leave',
+	      dataType: 'json',
+	      data: {
+	        userID: this.props.params.userID
+	      }
+	    }, _defineProperty(_$$ajax, 'dataType', 'json'), _defineProperty(_$$ajax, 'cache', false), _defineProperty(_$$ajax, 'success', function (data) {
+	      console.log('Successfully retrieved single EVENT');
+	      console.log(data);
+	      this.setState({ event: data });
+	    }.bind(this)), _defineProperty(_$$ajax, 'error', function (xhr, status, err) {
+	      // console.error(this.props.url, status, err)
+	      // this.props.user._id = null;
+	    }.bind(this)), _$$ajax));
 	  },
 	  render: function render() {
 	    if (!this.state.event.picture) {
@@ -27143,6 +27342,16 @@
 	          'p',
 	          null,
 	          '  attendees'
+	        ),
+	        React.createElement(
+	          'a',
+	          { onClick: this.handleEventJoin },
+	          'Join Event'
+	        ),
+	        React.createElement(
+	          'a',
+	          { onClick: this.handleEventLeave },
+	          'Leave Event'
 	        )
 	      )
 	    );
