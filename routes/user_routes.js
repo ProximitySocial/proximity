@@ -1,10 +1,10 @@
 const createUser     = require('../libs/userLib').createUser
-const updateUser     = require('../libs/userLib').updateUser
 const express        = require('express')
 const User           = require(__dirname + '/../models/user')
 const Event          = require(__dirname + '/../models/event')
 const userRouter     = module.exports = exports = express.Router()
 const getS3SignedUrl = require('../config/aws')
+const updateUser     = require('../libs/userLib').updateUser
 const passport       = require('../config/passport')
 const jwt            = require('express-jwt');
 
@@ -18,8 +18,16 @@ console.log(auth);
 //   })
 // })
 
+userRouter.post('/getUserID', (req, res) =>{
+  console.log('new post to get a USER ID')
+  var fbid = req.body.fbid
+    User.findOne({"facebook.id": fbid}, {_id: true}, (err, data) => {
+    if (err) return res.status(500).json({msg: 'Server Error'})
+    if (data === null) return res.status(400).json({msg: 'fbID not found, bad request'})
+    res.status(200).json({msg: 'user found with fbid', id: data.id} )
+  })
+})
 
-/* IS THIS REDUNDANT? OUR AUTH ROUTE NOW HANDLES CREATING NEW USER */
 userRouter.post('/user/new', (req, res) => {
   console.log('NEW POST for a user')
   var userData = req.body
@@ -46,7 +54,8 @@ userRouter.post('/user/new', (req, res) => {
 
 userRouter.get('/user/:id', (req, res) => {
   console.log("GETTING REQUEST for a specific user")
-  User.findOne({access_token: req.params.id}, (err, result) => {
+  var dbQuery = req.params.id.length > 30 ? {access_token: req.params.id} : {_id: req.params.id}
+  User.findOne(dbQuery, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     if (result === null) return res.status(400).json({msg: "bad request, user doesn't exist"})
     console.log('here is the result:::')

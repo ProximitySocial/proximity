@@ -9,7 +9,8 @@ function createUser(userData, res){
     } else {
       new User(userData).save((err, result) => {
         if(err) {return res.status(500).json({error: err})}
-        res.status(200).json({msg: 'user created', signedRequest: userData.awsData, url: userData.url})
+        console.log('User _id: ' + result._id)
+        res.status(200).json({msg: 'user created', id: result._id, signedRequest: userData.awsData, url: userData.url})
       })
     }
   })

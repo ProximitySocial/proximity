@@ -1,1 +1,1 @@
-#userProfile{text-align:center;margin:auto}#userProfile img{border-radius:100%}#userProfile .userName{margin:1em auto}#userProfile .interests{display:inline-block}#userProfile .interests li{list-style-type:none}#testTest{border:3px solid orange}
+#userProfile{text-align:center;margin:auto}#userProfile img{border-radius:100%;max-width:150px}#userProfile .userName{margin:1em auto}#userProfile .interests{display:inline-block}#userProfile .interests li{list-style-type:none}#testTest{border:3px solid orange}

@@ -17,6 +17,23 @@ module.exports = React.createClass({
   componentWillReceiveProps: function(nextProps) {
     this.handleGetEvents(nextProps.user)
   },
+  componentDidMount: function() {
+    $.ajax({
+      type: 'GET',
+      url: '/api/events/' + this.props.user.id,
+      dataType: 'json',
+      cache: false,
+      success: function(data){
+        console.log('Successfully retrieved DATA');
+        console.log(data);
+        this.setState({events: data.events})
+        this.handleEvents(this.state.events)
+      }.bind(this),
+      error: function(xhr, status, err){
+        console.error(this.props.url, status, err)
+      }.bind(this)
+    })
+  },
   handleGetEvents: function(user){
     if (user._id) {
       $.ajax({

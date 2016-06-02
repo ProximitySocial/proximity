@@ -23,7 +23,10 @@ eventRouter.get('/events', (req, res) => {
 
 //Get events, sorted by time per user specified neighborhoods
 eventRouter.get('/events/:userId', (req, res) => {
-  console.log('Events per USER has been requested')
+  if(req.headers.authorization){
+    cosole.log(req.headers.authorization)
+  }
+  console.log('Events per USER has been requested 2')
   var userId = req.params.userId
   console.log(userId);
   getAndSendUserLocalEvents(userId, res)
@@ -87,12 +90,14 @@ eventRouter.get('/event/attendees/:id', (req, res) => {
     .catch((err) => {
       res.status(500).json({msg: 'Error retrieving event'});
     })
-
 })
 
 
 //update event  AUTH creator
 eventRouter.put('/event/:id', (req, res) => {
+  if(req.headers.authorization){
+    cosole.log(req.headers.authorization)
+  }
   console.log('SERVER UPDATE EVENT called');
   var cb = function() {};
   var newData = req.body
