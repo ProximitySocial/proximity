@@ -1,17 +1,10 @@
 const createUser     = require('../libs/userLib').createUser
-<<<<<<< HEAD
-=======
-const updateUser     = require('../libs/userLib').updateUser
->>>>>>> dev
 const express        = require('express')
 const User           = require(__dirname + '/../models/user')
 const Event          = require(__dirname + '/../models/event')
 const userRouter     = module.exports = exports = express.Router()
 const getS3SignedUrl = require('../config/aws')
-<<<<<<< HEAD
 const updateUser     = require('../libs/userLib').updateUser
-=======
->>>>>>> dev
 const passport       = require('../config/passport')
 const jwt            = require('express-jwt');
 
@@ -35,10 +28,6 @@ userRouter.post('/getUserID', (req, res) =>{
   })
 })
 
-<<<<<<< HEAD
-=======
-/* IS THIS REDUNDANT? OUR AUTH ROUTE NOW HANDLES CREATING NEW USER */
->>>>>>> dev
 userRouter.post('/user/new', (req, res) => {
   console.log('NEW POST for a user')
   var userData = req.body
