@@ -36,32 +36,32 @@ module.exports = React.createClass({
             toggle: toggleVar,
             hideForm: true})
   },
-  componentDidMount: function() {
-    if (!this.state.user){
-        var token = getParameterByName('access_token')
-        sessionStorage.setItem('token', token)
-    }
-    $.ajax({
-      type: 'GET',
-      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
-      headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
-      // beforeSend: function(xhr){
-      //   xhr.withCredentials = true;
-      //   xhr.setRequestHeader('Authorization', )
-      // },
-      success: (data, status) => {
-        this.setState({
-          user: data,
-          toggle: false
-        })
-      },
-      error: (xhr, status, error) => {
-        console.log(xhr)
-        console.log(status)
-        console.log(error)
-      }
-    })
-  },
+  // componentDidMount: function() {
+  //   if (!this.state.user){
+  //       var token = getParameterByName('access_token')
+  //       sessionStorage.setItem('token', token)
+  //   }
+  //   $.ajax({
+  //     type: 'GET',
+  //     url: 'http://localhost:2323/api/user/' + sessionStorage.token,
+  //     headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
+  //     // beforeSend: function(xhr){
+  //     //   xhr.withCredentials = true;
+  //     //   xhr.setRequestHeader('Authorization', )
+  //     // },
+  //     success: (data, status) => {
+  //       this.setState({
+  //         user: data,
+  //         toggle: false
+  //       })
+  //     },
+  //     error: (xhr, status, error) => {
+  //       console.log(xhr)
+  //       console.log(status)
+  //       console.log(error)
+  //     }
+  //   })
+  // },
   logout: function(){
     sessionStorage.removeItem('token')
     this.setState({user: '',

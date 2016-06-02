@@ -44,7 +44,7 @@ module.exports = React.createClass({
             addUser: false})
   },
   componentDidMount: function() {
-    if (!this.state.user){
+    if (!this.state.user || !sessionStorage.token){
       var token = getParameterByName('access_token')
       sessionStorage.setItem('token', token)
     } else {

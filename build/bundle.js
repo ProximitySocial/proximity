@@ -25748,34 +25748,32 @@
 	      toggle: toggleVar,
 	      hideForm: true };
 	  },
-	  componentDidMount: function componentDidMount() {
-	    var _this = this;
-
-	    if (!this.state.user) {
-	      var token = getParameterByName('access_token');
-	      sessionStorage.setItem('token', token);
-	    }
-	    $.ajax({
-	      type: 'GET',
-	      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
-	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
-	      // beforeSend: function(xhr){
-	      //   xhr.withCredentials = true;
-	      //   xhr.setRequestHeader('Authorization', )
-	      // },
-	      success: function success(data, status) {
-	        _this.setState({
-	          user: data,
-	          toggle: false
-	        });
-	      },
-	      error: function error(xhr, status, _error) {
-	        console.log(xhr);
-	        console.log(status);
-	        console.log(_error);
-	      }
-	    });
-	  },
+	  // componentDidMount: function() {
+	  //   if (!this.state.user){
+	  //       var token = getParameterByName('access_token')
+	  //       sessionStorage.setItem('token', token)
+	  //   }
+	  //   $.ajax({
+	  //     type: 'GET',
+	  //     url: 'http://localhost:2323/api/user/' + sessionStorage.token,
+	  //     headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
+	  //     // beforeSend: function(xhr){
+	  //     //   xhr.withCredentials = true;
+	  //     //   xhr.setRequestHeader('Authorization', )
+	  //     // },
+	  //     success: (data, status) => {
+	  //       this.setState({
+	  //         user: data,
+	  //         toggle: false
+	  //       })
+	  //     },
+	  //     error: (xhr, status, error) => {
+	  //       console.log(xhr)
+	  //       console.log(status)
+	  //       console.log(error)
+	  //     }
+	  //   })
+	  // },
 	  logout: function logout() {
 	    sessionStorage.removeItem('token');
 	    this.setState({ user: '',
@@ -25962,7 +25960,7 @@
 	  componentDidMount: function componentDidMount() {
 	    var _this = this;
 
-	    if (!this.state.user) {
+	    if (!this.state.user || !sessionStorage.token) {
 	      var token = getParameterByName('access_token');
 	      sessionStorage.setItem('token', token);
 	    } else {
