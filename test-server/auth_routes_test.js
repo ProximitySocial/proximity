@@ -1,6 +1,6 @@
 const chai = require('chai');
 const expect = chai.expect;
-const CryptoJS   = require("crypto-js");
+const CryptoJS   = require('crypto-js');
 
 chai.use(require('chai-http'));
 

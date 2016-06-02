@@ -1,21 +1,29 @@
 const createUser     = require('../libs/userLib').createUser
+<<<<<<< HEAD
+=======
+const updateUser     = require('../libs/userLib').updateUser
+>>>>>>> dev
 const express        = require('express')
 const User           = require(__dirname + '/../models/user')
 const Event          = require(__dirname + '/../models/event')
 const userRouter     = module.exports = exports = express.Router()
 const getS3SignedUrl = require('../config/aws')
+<<<<<<< HEAD
 const updateUser     = require('../libs/userLib').updateUser
+=======
+>>>>>>> dev
 const passport       = require('../config/passport')
 const jwt            = require('express-jwt');
 
 var auth = jwt({secret: process.env.VC_SECRET_CRYPTO || 'secret', userProperty: 'payload'});
-
-userRouter.get('/users', (req, res) => {
-  User.find({}, (err, result) => {
-    if (err) return res.status(500).json({msg: 'Server Error'})
-    res.status(200).json(result)
-  })
-})
+console.log(auth);
+/* WILL ONLY NEED THIS ROUTE FOR ADMIN? */
+// userRouter.get('/users', (req, res) => {
+//   User.find({}, (err, result) => {
+//     if (err) return res.status(500).json({msg: 'Server Error'})
+//     res.status(200).json(result)
+//   })
+// })
 
 userRouter.post('/getUserID', (req, res) =>{
   console.log('new post to get a USER ID')
@@ -27,6 +35,10 @@ userRouter.post('/getUserID', (req, res) =>{
   })
 })
 
+<<<<<<< HEAD
+=======
+/* IS THIS REDUNDANT? OUR AUTH ROUTE NOW HANDLES CREATING NEW USER */
+>>>>>>> dev
 userRouter.post('/user/new', (req, res) => {
   console.log('NEW POST for a user')
   var userData = req.body
@@ -42,12 +54,13 @@ userRouter.post('/user/new', (req, res) => {
   }
 })
 
-userRouter.get('/user', passport.authenticate('bearer', {session: false}),
-  (req, res) => {
-    console.log("GETTING REQUEST for a specific user")
-    res.status(200).json(req.user).header()
-  }
-)
+/* DELETE THIS ROUTE? */
+// userRouter.get('/user', passport.authenticate('bearer', {session: false}),
+//   (req, res) => {
+//     console.log("GETTING REQUEST for a specific user")
+//     res.status(200).json(req.user).header()
+//   }
+// )
 
 
 userRouter.get('/user/:id', (req, res) => {
@@ -120,6 +133,6 @@ userRouter.put('/user/:id', (req, res) => {
 userRouter.delete('/user/:id', (req, res) => {
   User.remove({_id: req.params.id}, (err) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
-    res.status(200).json({msg: 'Successfully destroyed User'})
+    res.status(200).json({msg: 'Successfully destroyed user'})
   })
 })

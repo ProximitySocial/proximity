@@ -88,7 +88,7 @@
 	    _reactRouter.Route,
 	    { path: '/', component: App },
 	    _react2.default.createElement(_reactRouter.IndexRoute, { component: Dashboard }),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/event/:id', component: EventView }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '/event/:eventID/:userID', component: EventView }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: Profile }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/test', component: Test })
 	  )
@@ -25946,7 +25946,7 @@
 	      var userObj = '';
 	      var toggleVar = true;
 	    }
-	    return { user: userObj,
+	    return { user: {},
 	      events: [],
 	      toggle: toggleVar,
 	      addEvent: false,
@@ -26070,7 +26070,7 @@
 	          _react2.default.createElement(
 	            'section',
 	            { className: 'fullModal', style: showUserModal },
-	            _react2.default.createElement(UserForm, { className: 'row form', user: this.state.user })
+	            _react2.default.createElement(UserForm, { className: 'row form', addUser: this.showUserModal, user: this.state.user })
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -26099,7 +26099,7 @@
 	          _react2.default.createElement(
 	            'section',
 	            { className: 'fullModal', style: showModal },
-	            _react2.default.createElement(EventForm, { className: 'row form' })
+	            _react2.default.createElement(EventForm, { addEvent: this.showEventModal, className: 'row form' })
 	          )
 	        )
 	      )
@@ -26454,7 +26454,7 @@
 	        { className: 'modalNav' },
 	        _react2.default.createElement(
 	          'button',
-	          { className: 'btn back-btn', onClick: this.navigateBack },
+	          { className: 'btn back-btn', onClick: this.props.addEvent },
 	          'Back'
 	        ),
 	        _react2.default.createElement('div', { className: 'spacer' }),
@@ -26587,8 +26587,8 @@
 	        cache: false,
 	        success: function (data) {
 	          console.log('Successfully retrieved DATA');
-	          this.setState({ events: data.events });
-	          this.handleEvents(this.state.events);
+	          this.setState({ events: data.events, userID: user._id });
+	          this.handleEvents(this.state.events, user._id);
 	        }.bind(this),
 	        error: function (xhr, status, err) {
 	          console.error(this.props.url, status, err);
@@ -26597,11 +26597,13 @@
 	      });
 	    }
 	  },
-	  handleEvents: function handleEvents(events) {
+	  handleEvents: function handleEvents(events, userID) {
+	    console.log('Handling Events from Event List');
+	    console.log(userID);
 	    var rows = [];
 	    if (events) {
 	      events.forEach(function (event, index) {
-	        rows.push(React.createElement(SingleEvent, { event: event, key: index }));
+	        rows.push(React.createElement(SingleEvent, { event: event, userID: userID, key: index }));
 	      });
 	      this.setState({ rowes: rows });
 	    }
@@ -26662,7 +26664,7 @@
 
 	  getInitialState: function getInitialState() {
 	    console.log('Getting Initial State of Single Event');
-	    console.log(this.props.event);
+	    console.log(this.props);
 	    return { event: this.props.event };
 	  },
 	  componentDidMount: function componentDidMount() {
@@ -26684,12 +26686,14 @@
 	    var hour = formatDate(this.props.event.startTime);
 	    var day = x;
 
+	    console.log('Inside Render of Single Event');
+	    console.log(this.props.userID);
 	    return React.createElement(
 	      'li',
 	      null,
 	      React.createElement(
 	        _reactRouter.Link,
-	        { to: '/event/' + this.props.event._id },
+	        { to: '/event/' + this.props.event._id + '/' + this.props.userID },
 	        React.createElement(
 	          'div',
 	          { className: 'eventPicture', style: divStyle },
@@ -26978,7 +26982,7 @@
 	        { className: 'modalNav' },
 	        React.createElement(
 	          'button',
-	          { className: 'btn back-btn', onClick: this.navigateBack },
+	          { className: 'btn back-btn', onClick: this.props.addUser },
 	          'Back'
 	        ),
 	        React.createElement('div', { className: 'spacer' }),
@@ -27068,6 +27072,8 @@
 
 	var _reactRouter = __webpack_require__(168);
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(33);
 
@@ -27105,11 +27111,12 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    console.log('Mounting Event View');
-	    console.log(this.props.params.id);
-	    if (this.props.params.id) {
+	    console.log(this.props.params.eventID);
+	    console.log(this.props.params.userID);
+	    if (this.props.params.eventID) {
 	      $.ajax({
 	        type: 'GET',
-	        url: 'http://localhost:2323/api/event/' + this.props.params.id,
+	        url: 'http://localhost:2323/api/event/' + this.props.params.eventID,
 	        dataType: 'json',
 	        cache: false,
 	        success: function (data) {
@@ -27124,6 +27131,46 @@
 	      });
 	      // this.setState({timeTill: 'NOW'})
 	    }
+	  },
+	  handleEventJoin: function handleEventJoin() {
+	    console.log(this.props.params.eventID);
+	    $.ajax({
+	      type: 'PUT',
+	      url: 'http://localhost:2323/api/event/' + this.props.params.eventID + '/join',
+	      dataType: 'json',
+	      data: {
+	        userID: this.props.params.userID
+	      },
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved single EVENT');
+	        console.log(data);
+	        this.setState({ event: data });
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        // console.error(this.props.url, status, err)
+	        // this.props.user._id = null;
+	      }.bind(this)
+	    });
+	  },
+	  handleEventLeave: function handleEventLeave() {
+	    var _$$ajax;
+
+	    $.ajax((_$$ajax = {
+	      type: 'PUT',
+	      url: 'http://localhost:2323/api/event/' + this.props.params.eventID + '/leave',
+	      dataType: 'json',
+	      data: {
+	        userID: this.props.params.userID
+	      }
+	    }, _defineProperty(_$$ajax, 'dataType', 'json'), _defineProperty(_$$ajax, 'cache', false), _defineProperty(_$$ajax, 'success', function (data) {
+	      console.log('Successfully retrieved single EVENT');
+	      console.log(data);
+	      this.setState({ event: data });
+	    }.bind(this)), _defineProperty(_$$ajax, 'error', function (xhr, status, err) {
+	      // console.error(this.props.url, status, err)
+	      // this.props.user._id = null;
+	    }.bind(this)), _$$ajax));
 	  },
 	  render: function render() {
 	    if (!this.state.event.picture) {
@@ -27245,6 +27292,16 @@
 	          'p',
 	          null,
 	          '  attendees'
+	        ),
+	        React.createElement(
+	          'a',
+	          { onClick: this.handleEventJoin },
+	          'Join Event'
+	        ),
+	        React.createElement(
+	          'a',
+	          { onClick: this.handleEventLeave },
+	          'Leave Event'
 	        )
 	      )
 	    );

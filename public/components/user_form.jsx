@@ -179,7 +179,7 @@ module.exports = React.createClass({
         return (
           <section className="modalUser">
             <div className='modalNav'>
-              <button className='btn back-btn' onClick={this.navigateBack} >Back</button>
+              <button className='btn back-btn' onClick={this.props.addUser} >Back</button>
               <div className='spacer'></div>
               <button className='btn btn-action' style={show} onClick={this.updateUser}>Update User</button>
               <button className='btn btn-action' style={hidden} onClick={this.updateUser}>Create User</button>

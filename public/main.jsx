@@ -10,8 +10,6 @@ const Profile     = require(__dirname + '/components/display_user.jsx')
 const SingleEvent = require(__dirname + '/components/single_event.jsx')
 const UserForm    = require(__dirname + '/components/user_form.jsx')
 
-
-
 const Test = React.createClass({
   render: function() {
     return (<div><h1>TESTING</h1></div>)
@@ -22,10 +20,9 @@ render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Dashboard}/>
-      <Route path="/event/:id" component={EventView}/>
+      <Route path="/event/:eventID/:userID" component={EventView}/>
       <Route path="/profile" component={Profile}/>
       <Route path="/test" component={Test}/>
     </Route>
   </Router>
 ), document.getElementById('root'))
-

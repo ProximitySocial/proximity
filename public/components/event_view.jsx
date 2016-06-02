@@ -34,11 +34,12 @@ module.exports = React.createClass({
   },
   componentDidMount: function(){
     console.log('Mounting Event View');
-    console.log(this.props.params.id);
-    if (this.props.params.id) {
+    console.log(this.props.params.eventID);
+    console.log(this.props.params.userID);
+    if (this.props.params.eventID) {
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:2323/api/event/' + this.props.params.id,
+        url: 'http://localhost:2323/api/event/' + this.props.params.eventID,
         dataType: 'json',
         cache: false,
         success: function(data){
@@ -54,6 +55,48 @@ module.exports = React.createClass({
       // this.setState({timeTill: 'NOW'})
     }
 
+  },
+  handleEventJoin: function() {
+    console.log(this.props.params.eventID);
+    $.ajax({
+      type: 'PUT',
+      url: 'http://localhost:2323/api/event/' + this.props.params.eventID + '/join',
+      dataType: 'json',
+      data: {
+        userID: this.props.params.userID
+      },
+      cache: false,
+      success: function(data){
+        console.log('Successfully retrieved single EVENT');
+        console.log(data);
+        this.setState({event: data})
+      }.bind(this),
+      error: function(xhr, status, err){
+        // console.error(this.props.url, status, err)
+        // this.props.user._id = null;
+      }.bind(this)
+    })
+  },
+  handleEventLeave: function() {
+    $.ajax({
+      type: 'PUT',
+      url: 'http://localhost:2323/api/event/' + this.props.params.eventID + '/leave',
+      dataType: 'json',
+      data: {
+        userID: this.props.params.userID
+      },
+      dataType: 'json',
+      cache: false,
+      success: function(data){
+        console.log('Successfully retrieved single EVENT');
+        console.log(data);
+        this.setState({event: data})
+      }.bind(this),
+      error: function(xhr, status, err){
+        // console.error(this.props.url, status, err)
+        // this.props.user._id = null;
+      }.bind(this)
+    })
   },
   render: function() {
     if (!this.state.event.picture) {
@@ -105,8 +148,9 @@ module.exports = React.createClass({
         <div className="eventAttCount">
           <h3>{this.state.event._attendees}</h3>
           <p>&nbsp;&nbsp;attendees</p>
+          <a onClick={this.handleEventJoin}>Join Event</a>
+          <a onClick={this.handleEventLeave}>Leave Event</a>
         </div>
-
       </div>
     )
   }
