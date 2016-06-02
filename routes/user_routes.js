@@ -69,12 +69,15 @@ userRouter.put('/user/:id', (req, res) => {
   console.log('SERVER UPDATE USER called');
   var cb = function() {};
   var newData = req.body
+  console.log(newData);
   Object.keys(newData).forEach( (prop) => {
     if (!newData[prop]){
       console.log('deleting prop obj: ' + newData[prop])
       delete newData[prop]
     }
   })
+  console.log('newData after processing');
+  console.log(newData);
   if (newData.address) {
     var address = req.body.address.split(' ').join('+')
     callGoogle(address)
