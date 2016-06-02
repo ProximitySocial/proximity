@@ -31,7 +31,7 @@ function formatDate(date) {
 module.exports = React.createClass({
   getInitialState: function(){
     console.log('Getting Initial State of Single Event');
-    console.log(this.props.event);
+    console.log(this.props);
     return {event: this.props.event}
   },
   componentDidMount: function(){
@@ -53,8 +53,10 @@ module.exports = React.createClass({
     var hour = formatDate(this.props.event.startTime)
     var day = x
 
+    console.log('Inside Render of Single Event');
+    console.log(this.props.userID);
     return (
-      <li><Link to={'/event/' + this.props.event._id}>
+      <li><Link to={'/event/' + this.props.event._id + '/' + this.props.userID}>
         <div className="eventPicture" style={divStyle}>
           <div className="eventTitle">
             <h3 style={{marginTop:0}}>{this.props.event.title}</h3>

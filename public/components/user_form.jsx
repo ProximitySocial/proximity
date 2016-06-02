@@ -3,10 +3,10 @@ const ReactDOM = require('react-dom')
 var port = process.env.PORT
 
 module.exports = React.createClass({
-      displayName: 'CreateUserForm',
+      displayName: 'userForm',
       getInitialState: function() {
         return({
-                userId: '5740b2dfb7c4e79bf41af122',
+                userId: '',
                 firstName: '',
                 lastName: '',
                 email: '',
@@ -157,18 +157,38 @@ module.exports = React.createClass({
           }
         })
       },
+      navigateBack: function(){
+        this.goBack()
+      },
+      updateUser: function(){
+        var updated = !this.state.update
+        this.setState({update: updated})
+      },
       render: function() {
         let {imagePreviewUrl} = this.state
         let $imagePreview = null;
         if (imagePreviewUrl) {
-          $imagePreview = (<img src={imagePreviewUrl} />)
+          $imagePreview = (<img className="imgPreview" src={imagePreviewUrl} />)
+        }
+        var hidden = {display: 'none'}
+        var show = {}
+        if (this.state.update){
+          hidden = {}
+          show = {display: 'none'}
         }
         return (
-          <div>
-            <h2>Create User</h2>
-            <form className="createUserForm" onSubmit={this.handleSubmit} >
-              <label for="userID">User ID:</label>
-              <input type="text" placeholder="userID" value={this.state.userId}  onChange={this.handleIdChange} />
+          <section className="modalUser">
+            <div className='modalNav'>
+              <button className='btn back-btn' onClick={this.props.addUser} >Back</button>
+              <div className='spacer'></div>
+              <button className='btn btn-action' style={show} onClick={this.updateUser}>Update User</button>
+              <button className='btn btn-action' style={hidden} onClick={this.updateUser}>Create User</button>
+            </div>
+            <form className="userForm" onSubmit={this.handleSubmit} >
+              <div className="userIdDiv" style={hidden}>
+                <label for="userID">User ID:</label>
+                <input type="text" placeholder="userID" value={this.state.userId}  onChange={this.handleIdChange} />
+              </div>
               <label for="firstName">First Name:</label>
               <input type="text" placeholder="First" value={this.state.firstName}  onChange={this.handleFirstChange} />
               <label for="lastName">Last Name:</label>
@@ -176,19 +196,17 @@ module.exports = React.createClass({
               <label for="email">Email:</label>
               <input type="text" placeholder="Email" value={this.state.email} onChange={this.handleEmailChange} />
               <label for="bio">Bio:</label>
-              <input type="text" placeholder="bio" value={this.state.bio} onChange={this.handleDescriptionChange} />
-              <label for="Address">Interests:</label>
-              <input type="text" placeholder="InterestTags" value={this.state.interests} onChange={this.handleInterestTagsChange} />
-              <label for="Address Name">Address Name:</label>
-              <input type="text" placeholder="Address Name" value={this.state.addressName} onChange={this.handleAddressNameChange} />
+              <textarea type="text" placeholder="bio" value={this.state.bio} onChange={this.handleDescriptionChange} />
+              <label for="Interests">Interests:</label>
+              <input type="text" placeholder="golf, running, dancing, (comma seperated / 5 max)" value={this.state.interests} onChange={this.handleInterestTagsChange} />
               <label for="Address">Address:</label>
               <input type="text" placeholder="Address" value={this.state.address} onChange={this.handleAddressChange} />
               <label for="Image">Image:</label>
               <input type="file" onChange={this.handleImageChange} />
-              <button type="submit">Create User!</button>
+              <button type="submit">Submit User!</button>
             </form>
             {$imagePreview}
-          </div>
+          </section>
         );
       }
     });

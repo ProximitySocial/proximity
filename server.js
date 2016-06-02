@@ -72,7 +72,7 @@ app.get('/', (req, res) => {
 
 
 app.get('/login', (req, res) => {
-  console.log('AT THE LOGIN ROUTE')
+  console.log('login route')
   res.status(200).json(req)
 })
 

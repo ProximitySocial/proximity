@@ -1,6 +1,5 @@
-const React = require('react')
-const ReactDOM = require('react-dom')
-var port = process.env.PORT
+import React from 'react'
+import { ReactDOM } from 'react-dom'
 
 module.exports = React.createClass({
    getInitialState: function() {

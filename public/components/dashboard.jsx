@@ -1,13 +1,13 @@
-const port = process.env.PORT || 8080
-const React = require('react')
-const ReactDOM = require('react-dom')
+import React from 'react'
+import { ReactDOM } from 'react-dom'
 import { Router, Route, Link, hashHistory } from 'react-router'
 
 
-const EventList = require(__dirname + '/event_list.jsx')
 const DisplayUser = require(__dirname + '/display_user.jsx')
 const EventForm = require(__dirname + '/event_form.jsx')
+const EventList = require(__dirname + '/event_list.jsx')
 const UserForm = require(__dirname + '/user_form.jsx')
+const port = process.env.PORT || 8080
 
 
 // // for testing purposes
@@ -27,7 +27,7 @@ function getParameterByName(name, url) {
 
 module.exports = React.createClass({
   getInitialState: function(){
-    if (sessionStorage.token){
+    if (sessionStorage.token || sessionStorage.token != null){
       console.log('Yes there is a sessionStorage token')
       console.log(sessionStorage.token)
       var userObj = sessionStorage.token
@@ -37,20 +37,23 @@ module.exports = React.createClass({
       var userObj = ''
       var toggleVar = true
     }
-    return ({user: userObj,
+    return ({user: {},
             events: [],
             toggle: toggleVar,
-            addEvent: false})
+            addEvent: false,
+            addUser: false})
   },
   componentDidMount: function() {
     if (!this.state.user){
-        var token = getParameterByName('access_token')
-        sessionStorage.setItem('token', token)
+      var token = getParameterByName('access_token')
+      sessionStorage.setItem('token', token)
+    } else {
+      var token = sessionStorage.token
     }
     $.ajax({
       type: 'GET',
-      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
-      headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
+      url: '/api/user/' + sessionStorage.token,
+      headers: {'Authorization': 'Bearer ' + token},
       // beforeSend: function(xhr){
       //   xhr.withCredentials = true;
       //   xhr.setRequestHeader('Authorization', )
@@ -71,7 +74,11 @@ module.exports = React.createClass({
       }
     })
   },
-  showModal: function(){
+  showUserModal: function(){
+    var answer = !this.state.addUser
+    this.setState({addUser: answer})
+  },
+  showEventModal: function(){
     var answer = !this.state.addEvent
     this.setState({addEvent: answer})
   },
@@ -82,63 +89,72 @@ module.exports = React.createClass({
                    toggle: true})
   },
   render: function(){
-    var hide, show
-    if (this.state.toggle){
-      hide = {display: 'none'}
-      show = {}
-    } else {
-      hide = {}
-      show = {display: 'none'}
-    }
-    var hideModal, showModal
-    if (this.state.addEvent){
-      showModal = {  position: 'absolute',
+    var hiddenVar = {display: 'none'}
+    var showVar = {}
+    var modalObj = { position: 'absolute',
                      height: '100%',
                      width: '100%',
                      background: 'rgba(0, 0, 0, .7)',
                      zIndex: 999,
                      padding: 'auto',
                      textAlign: 'center'}
-      hideModal = {display: 'none'}
+    var hide, show
+    if (this.state.toggle){
+      hide = hiddenVar
+      show = showVar
     } else {
-      showModal = {display: 'none'}
-      hideModal = {}
+      hide = showVar
+      show = hiddenVar
     }
-    // margin: auto;
-    // border: 1px solid black;
-    // border-radius: 3px;
-    // padding: 2em;
-
-    // if(this.state.addEvent){
-      return (
-        <div>
-          <section className="dashboard" style={hide}>
-            <div className="container row">
-              <div className="col-lg-4">
+    //Event modal
+    var hideModal, showModal
+    if (this.state.addEvent){
+      showModal = modalObj
+      hideModal = hiddenVar
+    } else {
+      showModal = hiddenVar
+      hideModal = showVar
+    }
+    //User modal
+    var hideUserModal, showUserModal
+    if (this.state.addUser) {
+      showUserModal = modalObj
+      hideUserModal = hiddenVar
+    } else {
+      showUserModal = hiddenVar
+      hideUserModal = showVar
+    }
+    return (
+      <div>
+        <section className="dashboard" style={hide}>
+          <div className="container row">
+            <div className="col-lg-4" id="profile">
+              <div className="profileHeader">
                 <h2>Profile</h2>
-                <DisplayUser className="row profile" user={this.state.user} />
-                <UserForm className="row form" user={this.state.user}/>
+                <div className='spacer'></div>
+                <button className='btn editRound' onClick={this.showUserModal}>Edit</button>
               </div>
-              <div className="col-lg-4" id="eventList">
-                <h2>Events</h2>
-                <EventList className="row events" user={this.state.user}/>
-              </div>
-              <div className="col-lg-4">
-                <button className='btn btn-primary' onClick={this.showModal}>Make Event</button>
-              </div>
-               <section className="fullModal" style={showModal}>
-                <EventForm className="row form" />
-              </section>
+              <DisplayUser className="row profile" user={this.state.user} />
             </div>
-          </section>
-        </div>
-      )
-    // } else {
-    //   return(
-    //     <section className="fullModal" style={showModal}>
-    //       <EventForm className="row form" />
-    //     </section>
-    //   )
-    // }
+            <section className="fullModal" style={showUserModal}>
+              <UserForm className="row form" addUser={this.showUserModal} user={this.state.user}/>
+            </section>
+            <div className="col-lg-4" id="eventList">
+              <div className="eventsHeader">
+                <h2>Events</h2>
+                <div className="spacer"></div>
+                <div className="col-lg-4">
+                  <button className="btn btn-action" onClick={this.showEventModal}>Make Event</button>
+                </div>
+              </div>
+              <EventList className="row events" user={this.state.user}/>
+            </div>
+             <section className="fullModal" style={showModal}>
+              <EventForm addEvent={this.showEventModal} className="row form" />
+            </section>
+          </div>
+        </section>
+      </div>
+    )
   }
 })

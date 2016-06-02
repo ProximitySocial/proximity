@@ -140,8 +140,10 @@ eventRouter.put('/event/:id', (req, res) => {
 //body must contain {"userId": "494934930300030303"}, so that Event $addToSet will add user to _attendees array
 // eventually need to check that :id matches auth req.user._id
 eventRouter.put('/event/:id/join', (req, res) => {
-  var userId = req.body.userId
-  Event.update({_id: req.params.id}, {$addToSet: {_attendees: userId}}, (err, result) => {
+  var userID = req.body.userID
+  console.log('Attempting to join event');
+  console.log(req.body.userID);
+  Event.update({_id: req.params.id}, {$addToSet: {_attendees: userID}}, (err, result) => {
       if (err) return res.status(500).json({msg: 'Server Error'})
       console.log(result)
       res.status(200).json({msg: 'Successfully added attendee to Event'})
@@ -150,8 +152,10 @@ eventRouter.put('/event/:id/join', (req, res) => {
 
 //remove attendee
 eventRouter.put('/event/:id/leave', (req, res) => {
-  var userId = req.body.userId
-  Event.update({_id: req.params.id}, {$pull: { _attendees: userId}}, (err, result) => {
+  var userID = req.body.userID
+  console.log('Attempting to leave event');
+  console.log(req.body.userID);
+  Event.update({_id: req.params.id}, {$pull: { _attendees: userID}}, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     res.status(200).json({msg: 'Successfully removed attendee from Event'})
   })
