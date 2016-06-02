@@ -4,7 +4,7 @@ function createUser(userData, res){
   console.log('Attempting to create a user with this userData: ');
   console.log(userData);
   userData.pic = userData.url
-  User.find({email: userData.email}, (err, data) => {
+  User.find({facebook.id: facebook.id}, (err, data) => {
     console.log('Result of user search: ');
     console.log(data);
     if (err) return res.status(500).json({msg: 'Server Error'})
