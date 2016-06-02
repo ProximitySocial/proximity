@@ -25952,13 +25952,11 @@
 	      addEvent: false,
 	      addUser: false };
 	  },
-	  componentDidMount: function componentDidMount(e) {
+
+	  componentDidMount: function componentDidMount() {
 	    var _this = this;
 
-	    console.log('e below this console.log');
-	    console.log(e);
-	    console.log('withing the component did mount');
-	    if (!this.state.user) {
+	    if (!this.state.user || !sessionStorage.token) {
 	      var token = getParameterByName('access_token');
 	      sessionStorage.setItem('token', token);
 	    } else {

@@ -58,6 +58,8 @@ userRouter.get('/user/:id', (req, res) => {
   User.findOne(dbQuery, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     if (result === null) return res.status(400).json({msg: "bad request, user doesn't exist"})
+    console.log('here is the result:::')
+    console.log(result)
     res.status(200).json(result)
   })
 })
