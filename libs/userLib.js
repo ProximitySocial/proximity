@@ -3,7 +3,7 @@ const User = require('../models/user')
 function createUser(userData, res){
   console.log('Attempting to create a user with this userData: ');
   console.log(userData);
-  userData.pic = userData.url
+  // userData.pic = userData.url
   User.find({'facebook.id': userData.facebook.id}, (err, data) => {
     console.log('Result of user search: ');
     console.log(data);
