@@ -24,8 +24,7 @@ module.exports = React.createClass({
     // }
     $.ajax({
       type: 'GET',
-      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
-      headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
+      url: '/api/user/' + sessionStorage.token,
       success: (data, status) => {
         console.log(data)
         console.log(status)

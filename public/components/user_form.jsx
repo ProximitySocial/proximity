@@ -6,14 +6,14 @@ module.exports = React.createClass({
       displayName: 'userForm',
       getInitialState: function() {
         return({
-                userId: '',
-                firstName: '',
-                lastName: '',
-                email: '',
-                bio: '',
-                interests: '',
-                addressName: '',
-                address: '',
+                userId: this.props.user._id,
+                firstName: this.props.user.firstName,
+                lastName: this.props.user.lastName,
+                email: this.props.user.email,
+                bio: this.props.user.bio,
+                interests: this.props.user.interests,
+                addressName: this.props.user.addressName,
+                address: this.props.user.address,
                 file: '',
                 imagePreviewUrl: '',
                 url: '',
@@ -22,6 +22,20 @@ module.exports = React.createClass({
                 fileSize: ''
               });
       },
+      componentWillReceiveProps: function(){
+        console.log('componentWillReceiveProps')
+        this.setState({
+                        userId: this.props.user.id,
+                        firstName: this.props.user.firstName,
+                        lastName: this.props.user.lastName,
+                        email: this.props.user.email,
+                        bio: this.props.user.bio,
+                        interests: this.props.user.interests,
+                        addressName: this.props.user.addressName,
+                        address: this.props.user.address
+                      })
+      }
+      ,
       handleIdChange: function(e) {
         this.setState({userId: e.target.value});
       },
@@ -185,14 +199,14 @@ module.exports = React.createClass({
               <button className='btn btn-action' style={hidden} onClick={this.updateUser}>Create User</button>
             </div>
             <form className="userForm" onSubmit={this.handleSubmit} >
-              <div className="userIdDiv" style={hidden}>
+              <div className="adminForUser" style={hidden}>
                 <label for="userID">User ID:</label>
-                <input type="text" placeholder="userID" value={this.state.userId}  onChange={this.handleIdChange} />
+                <input placeholder="userID" value={this.state.userId}  onChange={this.handleIdChange} />
+                <label for="firstName">First Name:</label>
+                <input type="text" placeholder="First" value={this.state.firstName}  onChange={this.handleFirstChange} />
+                <label for="lastName">Last Name:</label>
+                <input type="text" placeholder="Last" value={this.state.lastName} onChange={this.handleLastChange} />
               </div>
-              <label for="firstName">First Name:</label>
-              <input type="text" placeholder="First" value={this.state.firstName}  onChange={this.handleFirstChange} />
-              <label for="lastName">Last Name:</label>
-              <input type="text" placeholder="Last" value={this.state.lastName} onChange={this.handleLastChange} />
               <label for="email">Email:</label>
               <input type="text" placeholder="Email" value={this.state.email} onChange={this.handleEmailChange} />
               <label for="bio">Bio:</label>

@@ -26799,14 +26799,14 @@
 	  displayName: 'userForm',
 	  getInitialState: function getInitialState() {
 	    return {
-	      userId: '',
-	      firstName: '',
-	      lastName: '',
-	      email: '',
-	      bio: '',
-	      interests: '',
-	      addressName: '',
-	      address: '',
+	      userId: this.props.user._id,
+	      firstName: this.props.user.firstName,
+	      lastName: this.props.user.lastName,
+	      email: this.props.user.email,
+	      bio: this.props.user.bio,
+	      interests: this.props.user.interests,
+	      addressName: this.props.user.addressName,
+	      address: this.props.user.address,
 	      file: '',
 	      imagePreviewUrl: '',
 	      url: '',
@@ -26815,6 +26815,20 @@
 	      fileSize: ''
 	    };
 	  },
+	  componentWillReceiveProps: function componentWillReceiveProps() {
+	    console.log('componentWillReceiveProps');
+	    this.setState({
+	      userId: this.props.user.id,
+	      firstName: this.props.user.firstName,
+	      lastName: this.props.user.lastName,
+	      email: this.props.user.email,
+	      bio: this.props.user.bio,
+	      interests: this.props.user.interests,
+	      addressName: this.props.user.addressName,
+	      address: this.props.user.address
+	    });
+	  },
+
 	  handleIdChange: function handleIdChange(e) {
 	    this.setState({ userId: e.target.value });
 	  },
@@ -27000,26 +27014,26 @@
 	        { className: 'userForm', onSubmit: this.handleSubmit },
 	        React.createElement(
 	          'div',
-	          { className: 'userIdDiv', style: hidden },
+	          { className: 'adminForUser', style: hidden },
 	          React.createElement(
 	            'label',
 	            { 'for': 'userID' },
 	            'User ID:'
 	          ),
-	          React.createElement('input', { type: 'text', placeholder: 'userID', value: this.state.userId, onChange: this.handleIdChange })
+	          React.createElement('input', { placeholder: 'userID', value: this.state.userId, onChange: this.handleIdChange }),
+	          React.createElement(
+	            'label',
+	            { 'for': 'firstName' },
+	            'First Name:'
+	          ),
+	          React.createElement('input', { type: 'text', placeholder: 'First', value: this.state.firstName, onChange: this.handleFirstChange }),
+	          React.createElement(
+	            'label',
+	            { 'for': 'lastName' },
+	            'Last Name:'
+	          ),
+	          React.createElement('input', { type: 'text', placeholder: 'Last', value: this.state.lastName, onChange: this.handleLastChange })
 	        ),
-	        React.createElement(
-	          'label',
-	          { 'for': 'firstName' },
-	          'First Name:'
-	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'First', value: this.state.firstName, onChange: this.handleFirstChange }),
-	        React.createElement(
-	          'label',
-	          { 'for': 'lastName' },
-	          'Last Name:'
-	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'Last', value: this.state.lastName, onChange: this.handleLastChange }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'email' },
