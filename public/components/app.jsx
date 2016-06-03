@@ -68,27 +68,27 @@ module.exports = React.createClass({
                    events: '',
                    toggle: true})
   },
-  showForm: function(){
-    var state = !this.state.hideForm
-    this.setState({hideForm: state})
-  },
+  // showForm: function(){
+  //   var state = !this.state.hideForm
+  //   this.setState({hideForm: state})
+  // },
   render: function(){
-    var classHide, classShow
+    var hiddenBtn, shotBtn
     if (this.state.toggle){
-      classHide = {display: "none"}
-      classShow = {}
+      hiddenBtn = {display: "none"}
+      shotBtn = {}
     } else {
-      classHide = {}
-      classShow = {display: "none"}
+      hiddenBtn = {}
+      shotBtn = {display: "none"}
     }
     console.log('Grabbing App Children');
     console.log(this.props.children);
-    var hidden
-    if (this.state.hideForm){
-      hidden = {display: "none"}
-    } else {
-      hidden = {}
-    }
+    // var hidden
+    // if (this.state.hideForm){
+    //   hidden = {display: "none"}
+    // } else {
+    //   hidden = {}
+    // }
     return (
       <div>
         <section>
@@ -101,10 +101,10 @@ module.exports = React.createClass({
                   <li><Link to='/profile'>Profile</Link></li>
                 </ul>
                 <div class='spacer'></div>
-                <div style={classShow}>
+                <div style={shotBtn}>
                     <a className="btn fb-login"  id="fbLogin" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a>
                 </div>
-                <div style={classHide}>
+                <div style={hiddenBtn}>
                     <button className="btn fb-login" id="fbLogin" onClick={this.logout} role="button">Logout &raquo;</button>
                 </div>
               </div>

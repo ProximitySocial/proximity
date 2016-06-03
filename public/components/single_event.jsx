@@ -53,8 +53,6 @@ module.exports = React.createClass({
     var hour = formatDate(this.props.event.startTime)
     var day = x
 
-    console.log('Inside Render of Single Event');
-    console.log(this.props.userID);
     return (
       <li><Link to={'/event/' + this.props.event._id + '/' + this.props.userID}>
         <div className="eventPicture" style={divStyle}>

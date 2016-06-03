@@ -1,13 +1,15 @@
 import React from 'react'
 import { ReactDOM } from 'react-dom'
 import { Router, Route, Link, browserHistory } from 'react-router'
+const LinkedStateMixin = require('react-addons-linked-state-mixin')
+
 
 module.exports = React.createClass({
       displayName: 'eventForm',
-      mixins: [Router.Navigation],
+      mixins: [LinkedStateMixin],
       getInitialState: function() {
         return({
-                eventId: '',
+                eventID: '',
                 title: '',
                 description: '',
                 interestTags: '',
@@ -24,24 +26,24 @@ module.exports = React.createClass({
       componentWillReceiveProps: function(nextProps) {
         this.setState({update: nextProps.update})
       },
-      handleIdChange: function(e) {
-        this.setState({eventId: e.target.value});
-      },
-      handleTitleChange: function(e) {
-        this.setState({title: e.target.value});
-      },
-      handleDescriptionChange: function(e) {
-        this.setState({description: e.target.value});
-      },
-      handleAddressNameChange: function(e) {
-        this.setState({addressName: e.target.value});
-      },
-      handleAddressChange: function(e) {
-        this.setState({address: e.target.value});
-      },
-      handleInterestTagsChange: function(e) {
-        this.setState({interestTags: e.target.value});
-      },
+      // handleIdChange: function(e) {
+      //   this.setState({eventID: e.target.value});
+      // },
+      // handleTitleChange: function(e) {
+      //   this.setState({title: e.target.value});
+      // },
+      // handleDescriptionChange: function(e) {
+      //   this.setState({description: e.target.value});
+      // },
+      // handleAddressNameChange: function(e) {
+      //   this.setState({addressName: e.target.value});
+      // },
+      // handleAddressChange: function(e) {
+      //   this.setState({address: e.target.value});
+      // },
+      // handleInterestTagsChange: function(e) {
+      //   this.setState({interestTags: e.target.value});
+      // },
       handleImageChange: function(e){
         e.preventDefault();
         let reader = new FileReader()
@@ -69,7 +71,8 @@ module.exports = React.createClass({
         xhr.send(this.state.file)
 
         this.setState({
-          file: ''
+          file: '',
+          imagePreviewUrl: ''
         })
       },
       srcImage: function(e){
@@ -130,9 +133,9 @@ module.exports = React.createClass({
         this.setState({title: '', description: '', interestTags: '', addressName: '', address: ''});
       },
       onFormSubmit: function(newEvent, callback) {
-        if(this.state.eventId){
+        if(this.state.eventID){
           var crudType = 'PUT'
-          var route = '/api/event/' + this.state.eventId
+          var route = '/api/event/' + this.state.eventID
         } else {
           var crudType = 'POST'
           var route = '/api/event/new'
@@ -146,6 +149,7 @@ module.exports = React.createClass({
           success: function(data){
             console.log(data)
             callback(data.signedRequest)
+            this.props.toggleEventModal()
           },
           error: function(data, status, jqXHR){
             console.log(data)
@@ -169,26 +173,26 @@ module.exports = React.createClass({
         return (
           <section className='modalEvent'>
             <div className='modalNav'>
-              <button className='btn back-btn' onClick={this.props.addEvent} >Back</button>
+              <button className='btn back-btn' onClick={this.props.toggleEventModal} >Back</button>
               <div className='spacer'></div>
               <button className='btn btn-action' style={show} onClick={this.updateUpdate}>Update Event</button>
               <button className='btn btn-action' style={hidden} onClick={this.updateUpdate}>Create Event</button>
             </div>
             <form className="eventForm" onSubmit={this.handleSubmit} >
               <div className="eventIdDiv" style={hidden}>
-                <label for="eventId">Event ID:</label>
-                <input type="text" placeholder="eventID" value={this.state.eventId}  onChange={this.handleIdChange} />
+                <label for="eventID">Event ID:</label>
+                <input type="text" placeholder="eventID" valueLink={this.linkState('eventID')}  />
               </div>
               <label for="title">Title:</label>
-              <input type="text" placeholder="Title" value={this.state.title}  onChange={this.handleTitleChange} />
+              <input type="text" placeholder="Title" valueLink={this.linkState('title')}  />
               <label for="description">Description:</label>
-              <textarea type="text" placeholder="Description" maxlength='5' value={this.state.description} onChange={this.handleDescriptionChange} />
+              <textarea type="text" placeholder="Description" maxlength='5' valueLink={this.linkState('description')} />
               <label for="Address">InterestsTag:</label>
-              <input type="text" placeholder="InterestTags" value={this.state.interestTags} onChange={this.handleInterestTagsChange} />
+              <input type="text" placeholder="InterestTags" valueLink={this.linkState('interestTags')} />
               <label for="Address Name">Address Name:</label>
-              <input type="text" placeholder="Address Name" value={this.state.addressName} onChange={this.handleAddressNameChange} />
+              <input type="text" placeholder="Address Name" valueLink={this.linkState('addressName')} />
               <label for="Address">Address:</label>
-              <input type="text" placeholder="Address" value={this.state.address} onChange={this.handleAddressChange} />
+              <input type="text" placeholder="Address" valueLink={this.linkState('address')} />
               <label for="Image">Image:</label>
               <input type="file" onChange={this.handleImageChange} />
               <button type="submit" onClick={this.handleSubmit}>Submit Event!</button>

@@ -1,12 +1,14 @@
 const React = require('react');
 const ReactDOM = require('react-dom')
+const LinkedStateMixin = require('react-addons-linked-state-mixin')
 var port = process.env.PORT
 
 module.exports = React.createClass({
       displayName: 'userForm',
+      mixins: [LinkedStateMixin],
       getInitialState: function() {
         return({
-                userId: this.props.user._id,
+                userID: this.props.user._id,
                 firstName: this.props.user.firstName,
                 lastName: this.props.user.lastName,
                 email: this.props.user.email,
@@ -25,7 +27,7 @@ module.exports = React.createClass({
       componentWillReceiveProps: function(){
         console.log('componentWillReceiveProps')
         this.setState({
-                        userId: this.props.user.id,
+                        userID: this.props.user.id,
                         firstName: this.props.user.firstName,
                         lastName: this.props.user.lastName,
                         email: this.props.user.email,
@@ -34,32 +36,31 @@ module.exports = React.createClass({
                         addressName: this.props.user.addressName,
                         address: this.props.user.address
                       })
-      }
-      ,
-      handleIdChange: function(e) {
-        this.setState({userId: e.target.value});
       },
-      handleFirstChange: function(e) {
-        this.setState({firstName: e.target.value});
-      },
-      handleLastChange: function(e) {
-        this.setState({lastName: e.target.value});
-      },
-      handleEmailChange: function(e) {
-        this.setState({email: e.target.value});
-      },
-      handleBioChange: function(e) {
-        this.setState({bio: e.target.value});
-      },
-      handleInterestsChange: function(e) {
-        this.setState({interests: e.target.value});
-      },
-      handleAddressNameChange: function(e) {
-        this.setState({addressName: e.target.value});
-      },
-      handleAddressChange: function(e) {
-        this.setState({address: e.target.value});
-      },
+      // handleIdChange: function(e) {
+      //   this.setState({userID: e.target.value});
+      // },
+      // handleFirstChange: function(e) {
+      //   this.setState({firstName: e.target.value});
+      // },
+      // handleLastChange: function(e) {
+      //   this.setState({lastName: e.target.value});
+      // },
+      // handleEmailChange: function(e) {
+      //   this.setState({email: e.target.value});
+      // },
+      // handleBioChange: function(e) {
+      //   this.setState({bio: e.target.value});
+      // },
+      // handleInterestsChange: function(e) {
+      //   this.setState({interests: e.target.value});
+      // },
+      // handleAddressNameChange: function(e) {
+      //   this.setState({addressName: e.target.value});
+      // },
+      // handleAddressChange: function(e) {
+      //   this.setState({address: e.target.value});
+      // },
       handleImageChange: function(e){
         e.preventDefault();
         let reader = new FileReader()
@@ -147,9 +148,9 @@ module.exports = React.createClass({
         this.setState({firstName: '', lastName: '', email: '', bio: '', interests: '', addressName: '', address: ''});
       },
       onFormSubmit: function(newUser, callback) {
-        if(this.state.userId){
+        if(this.state.userID){
           var crudType = 'PUT'
-          var route = '/api/user/' + this.state.userId
+          var route = '/api/user/' + this.state.userID
         } else {
           var crudType = 'POST'
           var route = '/api/user/new'
@@ -193,7 +194,7 @@ module.exports = React.createClass({
         return (
           <section className="modalUser">
             <div className='modalNav'>
-              <button className='btn back-btn' onClick={this.props.addUser} >Back</button>
+              <button className='btn back-btn' onClick={this.props.toggleUserModal} >Back</button>
               <div className='spacer'></div>
               <button className='btn btn-action' style={show} onClick={this.updateUser}>Update User</button>
               <button className='btn btn-action' style={hidden} onClick={this.updateUser}>Create User</button>
@@ -201,20 +202,20 @@ module.exports = React.createClass({
             <form className="userForm" onSubmit={this.handleSubmit} >
               <div className="adminForUser" style={hidden}>
                 <label for="userID">User ID:</label>
-                <input placeholder="userID" value={this.state.userId}  onChange={this.handleIdChange} />
+                <input placeholder="userID" valueLink={this.linkState('userID')} />
                 <label for="firstName">First Name:</label>
-                <input type="text" placeholder="First" value={this.state.firstName}  onChange={this.handleFirstChange} />
+                <input type="text" placeholder="First" valueLink={this.linkState('firstName')}/>
                 <label for="lastName">Last Name:</label>
-                <input type="text" placeholder="Last" value={this.state.lastName} onChange={this.handleLastChange} />
+                <input type="text" placeholder="Last" valueLink={this.linkState('lastName')} />
               </div>
               <label for="email">Email:</label>
-              <input type="text" placeholder="Email" value={this.state.email} onChange={this.handleEmailChange} />
+              <input type="text" placeholder="Email" valueLink={this.linkState('email')} />
               <label for="bio">Bio:</label>
-              <textarea type="text" placeholder="bio" value={this.state.bio} onChange={this.handleDescriptionChange} />
+              <textarea type="text" placeholder="bio" valueLink={this.linkState('bio')} />
               <label for="Interests">Interests:</label>
-              <input type="text" placeholder="golf, running, dancing, (comma seperated / 5 max)" value={this.state.interests} onChange={this.handleInterestTagsChange} />
+              <input type="text" placeholder="golf, running, dancing, (comma seperated / 5 max)" valueLink={this.linkState('interests')} />
               <label for="Address">Address:</label>
-              <input type="text" placeholder="Address" value={this.state.address} onChange={this.handleAddressChange} />
+              <input type="text" placeholder="We ask for address to select your neighborhood" valueLink={this.linkState('address')} />
               <label for="Image">Image:</label>
               <input type="file" onChange={this.handleImageChange} />
               <button type="submit">Submit User!</button>
