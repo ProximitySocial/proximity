@@ -244,7 +244,7 @@ h3 {
     border: 1px solid black;
     border-radius: 3px;
     padding: 2em;
-    max-width: 400px;
+    max-width: 800px;
     margin-top: 2em;
     .modalNav{
       display: -webkit-flex;
@@ -274,6 +274,9 @@ h3 {
         width: 100%;
         margin-top: 1rem;
       }
+      div img {
+        max-width: 375px;
+      }
       input, textarea {
         height: 34px;
         width: 100%;
@@ -293,5 +296,13 @@ h3 {
         border-radius: @radius;
       }
     }
+  }
+}
+
+.eventTotalForm {
+  display: inline-block;
+  .eventForm,
+  .eventPreview {
+    display: inline-block
   }
 }

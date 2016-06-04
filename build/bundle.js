@@ -59,10 +59,10 @@
 	var App = __webpack_require__(229);
 	var Dashboard = __webpack_require__(230);
 	var EventForm = __webpack_require__(232);
-	var EventList = __webpack_require__(237);
+	var EventList = __webpack_require__(238);
 	var EventView = __webpack_require__(240);
 	var Profile = __webpack_require__(231);
-	var SingleEvent = __webpack_require__(238);
+	var SingleEvent = __webpack_require__(237);
 	var UserForm = __webpack_require__(239);
 
 	var Test = _react2.default.createClass({
@@ -25891,11 +25891,11 @@
 
 	var Dashboard = __webpack_require__(230);
 	var EventForm = __webpack_require__(232);
-	var EventList = __webpack_require__(237);
+	var EventList = __webpack_require__(238);
 	var EventView = __webpack_require__(240);
 	var Profile = __webpack_require__(231);
 	var port = process.env.PORT || 8080;
-	var SingleEvent = __webpack_require__(238);
+	var SingleEvent = __webpack_require__(237);
 	var UserForm = __webpack_require__(239);
 
 	function getParameterByName(name, url) {
@@ -26095,7 +26095,7 @@
 
 	var DisplayUser = __webpack_require__(231);
 	var EventForm = __webpack_require__(232);
-	var EventList = __webpack_require__(237);
+	var EventList = __webpack_require__(238);
 	var UserForm = __webpack_require__(239);
 	var port = process.env.PORT || 8080;
 
@@ -26130,7 +26130,7 @@
 	      toggleUserModal: false };
 	  },
 
-	  componentDidMount: function componentDidMount() {
+	  componentWillMount: function componentWillMount() {
 	    var _this = this;
 
 	    if (!this.state.user || !sessionStorage.token) {
@@ -26455,6 +26455,32 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var LinkedStateMixin = __webpack_require__(233);
+	var SingleEvent = __webpack_require__(237);
+
+	function formatDate(date) {
+	  var d = new Date(date);
+	  var hh = d.getHours();
+	  var m = d.getMinutes();
+	  var s = d.getSeconds();
+	  var dd = "AM";
+	  var h = hh;
+	  if (h >= 12) {
+	    h = hh - 12;
+	    dd = "PM";
+	  }
+	  if (h == 0) {
+	    h = 12;
+	  }
+	  m = m < 10 ? "0" + m : m;
+	  s = s < 10 ? "0" + s : s;
+	  var pattern = new RegExp("0?" + hh + ":" + m + ":" + s);
+	  var replacement = h + ":" + m;
+	  /* if you want to add seconds
+	  replacement += ":"+s;  */
+	  replacement += " " + dd;
+
+	  return replacement;
+	}
 
 	module.exports = _react2.default.createClass({
 	  displayName: 'eventForm',
@@ -26478,24 +26504,6 @@
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 	    this.setState({ update: nextProps.update });
 	  },
-	  // handleIdChange: function(e) {
-	  //   this.setState({eventID: e.target.value});
-	  // },
-	  // handleTitleChange: function(e) {
-	  //   this.setState({title: e.target.value});
-	  // },
-	  // handleDescriptionChange: function(e) {
-	  //   this.setState({description: e.target.value});
-	  // },
-	  // handleAddressNameChange: function(e) {
-	  //   this.setState({addressName: e.target.value});
-	  // },
-	  // handleAddressChange: function(e) {
-	  //   this.setState({address: e.target.value});
-	  // },
-	  // handleInterestTagsChange: function(e) {
-	  //   this.setState({interestTags: e.target.value});
-	  // },
 	  handleImageChange: function handleImageChange(e) {
 	    var _this = this;
 
@@ -26511,14 +26519,12 @@
 	    };
 	    reader.readAsDataURL(file);
 	  },
-	  loadToS3: function loadToS3(signedRequest, done) {
-	    console.log('send off to S3');
-	    console.log(this.state.file);
+	  loadToS3: function loadToS3(signedRequest) {
 	    var xhr = new XMLHttpRequest();
 	    xhr.open("PUT", signedRequest);
 	    xhr.onload = function () {
 	      if (xhr.status === 200) {
-	        done();
+	        console.info('Success loading to S3');
 	      }
 	    };
 
@@ -26526,7 +26532,10 @@
 
 	    this.setState({
 	      file: '',
-	      imagePreviewUrl: ''
+	      imagePreviewUrl: '',
+	      fileName: '',
+	      fileType: '',
+	      fileSize: ''
 	    });
 	  },
 	  srcImage: function srcImage(e) {
@@ -26583,10 +26592,10 @@
 	      fileName: fileName,
 	      fileType: fileType,
 	      fileSize: fileSize
-	    }, this.loadToS3);
-	    this.setState({ title: '', description: '', interestTags: '', addressName: '', address: '' });
+	    });
 	  },
-	  onFormSubmit: function onFormSubmit(newEvent, callback) {
+	  onFormSubmit: function onFormSubmit(newEvent) {
+	    this.props.toggleEventModal();
 	    if (this.state.eventID) {
 	      var crudType = 'PUT';
 	      var route = '/api/event/' + this.state.eventID;
@@ -26600,16 +26609,18 @@
 	      url: route,
 	      data: JSON.stringify(newEvent),
 	      contentType: 'application/json',
-	      success: function success(data) {
-	        console.log(data);
-	        callback(data.signedRequest);
+	      success: function (data) {
+	        if (data.signedRequest) {
+	          this.loadToS3(data.signedRequest);
+	        }
+	        this.setState({ title: '', description: '', interestTags: '', addressName: '', address: '' });
+	      }.bind(this),
+	      error: function (data, status, jqXHR) {
 	        this.props.toggleEventModal();
-	      },
-	      error: function error(data, status, jqXHR) {
 	        console.log(data);
 	        console.log(status);
 	        console.log(jqXHR);
-	      }
+	      }.bind(this)
 	    });
 	  },
 	  render: function render() {
@@ -26625,87 +26636,192 @@
 	      hidden = {};
 	      show = { display: 'none' };
 	    }
+	    var divStyle = { background: "url(" + imagePreviewUrl + ") center center",
+	      minHeight: "25rem",
+	      margin: 0,
+	      verticalAlign: "bottom" };
+
+	    var now = Date.now(); //- Date.parse(Date.now())
+	    var x = (Date.parse(this.state.startTime) - now) / 1000;
+	    var hour = formatDate(this.state.startTime);
+	    var numberGoing = 1;
+
 	    return _react2.default.createElement(
 	      'section',
 	      { className: 'modalEvent' },
 	      _react2.default.createElement(
-	        'div',
-	        { className: 'modalNav' },
+	        'section',
+	        { className: 'eventTotalForm' },
 	        _react2.default.createElement(
-	          'button',
-	          { className: 'btn back-btn', onClick: this.props.toggleEventModal },
-	          'Back'
+	          'div',
+	          { className: 'modalNav' },
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'btn back-btn', onClick: this.props.toggleEventModal },
+	            'Back'
+	          ),
+	          _react2.default.createElement('div', { className: 'spacer' }),
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'btn btn-action', style: show, onClick: this.updateUpdate },
+	            'Update Event'
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'btn btn-action', style: hidden, onClick: this.updateUpdate },
+	            'Create Event'
+	          )
 	        ),
-	        _react2.default.createElement('div', { className: 'spacer' }),
 	        _react2.default.createElement(
-	          'button',
-	          { className: 'btn btn-action', style: show, onClick: this.updateUpdate },
-	          'Update Event'
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          { className: 'btn btn-action', style: hidden, onClick: this.updateUpdate },
-	          'Create Event'
+	          'form',
+	          { className: 'eventForm', onSubmit: this.handleSubmit },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'eventIdDiv', style: hidden },
+	            _react2.default.createElement(
+	              'label',
+	              { 'for': 'eventID' },
+	              'Event ID:'
+	            ),
+	            _react2.default.createElement('input', { type: 'text', placeholder: 'eventID', valueLink: this.linkState('eventID') })
+	          ),
+	          _react2.default.createElement(
+	            'label',
+	            { 'for': 'title' },
+	            'Title:'
+	          ),
+	          _react2.default.createElement('input', { type: 'text', placeholder: 'Title', valueLink: this.linkState('title') }),
+	          _react2.default.createElement(
+	            'label',
+	            { 'for': 'description' },
+	            'Description:'
+	          ),
+	          _react2.default.createElement('textarea', { type: 'text', placeholder: 'Description', maxlength: '5', valueLink: this.linkState('description') }),
+	          _react2.default.createElement(
+	            'label',
+	            { 'for': 'Address' },
+	            'InterestsTag:'
+	          ),
+	          _react2.default.createElement('input', { type: 'text', placeholder: 'InterestTags', valueLink: this.linkState('interestTags') }),
+	          _react2.default.createElement(
+	            'label',
+	            { 'for': 'Address Name' },
+	            'Address Name:'
+	          ),
+	          _react2.default.createElement('input', { type: 'text', placeholder: 'Address Name', valueLink: this.linkState('addressName') }),
+	          _react2.default.createElement(
+	            'label',
+	            { 'for': 'Start Time' },
+	            'Start Time:'
+	          ),
+	          _react2.default.createElement('input', { type: 'datetime-local', placeholder: 'Start Time', valueLink: this.linkState('startTime') }),
+	          _react2.default.createElement(
+	            'label',
+	            { 'for': 'Address' },
+	            'Street Address:'
+	          ),
+	          _react2.default.createElement('input', { type: 'text', placeholder: 'Address', valueLink: this.linkState('address') }),
+	          _react2.default.createElement(
+	            'label',
+	            { 'for': 'Image' },
+	            'Image:'
+	          ),
+	          _react2.default.createElement('input', { type: 'file', onChange: this.handleImageChange }),
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'submit', onClick: this.handleSubmit },
+	            'Submit Event!'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            $imagePreview
+	          )
 	        )
 	      ),
 	      _react2.default.createElement(
-	        'form',
-	        { className: 'eventForm', onSubmit: this.handleSubmit },
+	        'section',
+	        { className: 'eventPreview' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'eventIdDiv', style: hidden },
+	          { className: 'eventPicture', style: divStyle },
 	          _react2.default.createElement(
-	            'label',
-	            { 'for': 'eventID' },
-	            'Event ID:'
-	          ),
-	          _react2.default.createElement('input', { type: 'text', placeholder: 'eventID', valueLink: this.linkState('eventID') })
-	        ),
-	        _react2.default.createElement(
-	          'label',
-	          { 'for': 'title' },
-	          'Title:'
-	        ),
-	        _react2.default.createElement('input', { type: 'text', placeholder: 'Title', valueLink: this.linkState('title') }),
-	        _react2.default.createElement(
-	          'label',
-	          { 'for': 'description' },
-	          'Description:'
-	        ),
-	        _react2.default.createElement('textarea', { type: 'text', placeholder: 'Description', maxlength: '5', valueLink: this.linkState('description') }),
-	        _react2.default.createElement(
-	          'label',
-	          { 'for': 'Address' },
-	          'InterestsTag:'
-	        ),
-	        _react2.default.createElement('input', { type: 'text', placeholder: 'InterestTags', valueLink: this.linkState('interestTags') }),
-	        _react2.default.createElement(
-	          'label',
-	          { 'for': 'Address Name' },
-	          'Address Name:'
-	        ),
-	        _react2.default.createElement('input', { type: 'text', placeholder: 'Address Name', valueLink: this.linkState('addressName') }),
-	        _react2.default.createElement(
-	          'label',
-	          { 'for': 'Address' },
-	          'Address:'
-	        ),
-	        _react2.default.createElement('input', { type: 'text', placeholder: 'Address', valueLink: this.linkState('address') }),
-	        _react2.default.createElement(
-	          'label',
-	          { 'for': 'Image' },
-	          'Image:'
-	        ),
-	        _react2.default.createElement('input', { type: 'file', onChange: this.handleImageChange }),
-	        _react2.default.createElement(
-	          'button',
-	          { type: 'submit', onClick: this.handleSubmit },
-	          'Submit Event!'
+	            'div',
+	            { className: 'eventTitle' },
+	            _react2.default.createElement(
+	              'h3',
+	              { style: { marginTop: 0 } },
+	              this.state.title
+	            )
+	          )
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          null,
-	          $imagePreview
+	          { className: 'eventDetails' },
+	          _react2.default.createElement(
+	            'h4',
+	            null,
+	            _react2.default.createElement(
+	              'strong',
+	              null,
+	              '@'
+	            ),
+	            '  ',
+	            this.state.addressName
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            { className: 'time' },
+	            _react2.default.createElement(
+	              'strong',
+	              null,
+	              'Starts in:'
+	            ),
+	            '  ',
+	            (x % 24).toFixed(0),
+	            ' hours  @ ',
+	            hour
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            { className: 'interest' },
+	            _react2.default.createElement(
+	              'strong',
+	              null,
+	              'Tags:'
+	            ),
+	            '  #',
+	            this.state.interestTags
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            { className: 'hood' },
+	            _react2.default.createElement(
+	              'strong',
+	              null,
+	              'Neighborhood:'
+	            ),
+	            ' (this will compute based on Street Address)'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'eventAttCount' },
+	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              numberGoing
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              null,
+	              '  ',
+	              _react2.default.createElement(
+	                'i',
+	                null,
+	                'going'
+	              )
+	            )
+	          )
 	        )
 	      )
 	    );
@@ -26948,95 +27064,6 @@
 /* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-
-	var _reactRouter = __webpack_require__(168);
-
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(38);
-
-
-	var SingleEvent = __webpack_require__(238);
-	var port = process.env.PORT;
-
-	module.exports = React.createClass({
-	  displayName: 'exports',
-
-	  getInitialState: function getInitialState() {
-	    return { events: [],
-	      user: '' };
-	  },
-	  propTypes: function propTypes() {
-	    user: React.PropTypes.object.isRequired;
-	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    this.handleGetEvents(nextProps.user);
-	  },
-	  componentDidMount: function componentDidMount() {
-	    $.ajax({
-	      type: 'GET',
-	      url: '/api/events/' + this.props.user.id,
-	      dataType: 'json',
-	      cache: false,
-	      success: function (data) {
-	        console.log('Successfully retrieved DATA');
-	        console.log(data);
-	        this.setState({ events: data.events });
-	        this.handleEvents(this.state.events);
-	      }.bind(this),
-	      error: function (xhr, status, err) {
-	        console.error(this.props.url, status, err);
-	      }.bind(this)
-	    });
-	  },
-	  handleGetEvents: function handleGetEvents(user) {
-	    if (user._id) {
-	      $.ajax({
-	        type: 'GET',
-	        url: '/api/events/' + user._id,
-	        dataType: 'json',
-	        cache: false,
-	        success: function (data) {
-	          console.log('Successfully retrieved DATA');
-	          this.setState({ events: data.events, userID: user._id });
-	          this.handleEvents(this.state.events, user._id);
-	        }.bind(this),
-	        error: function (xhr, status, err) {
-	          console.error(this.props.url, status, err);
-	          this.props.user._id = null;
-	        }.bind(this)
-	      });
-	    }
-	  },
-	  handleEvents: function handleEvents(events, userID) {
-	    console.log('Handling Events from Event List');
-	    console.log(userID);
-	    var rows = [];
-	    if (events) {
-	      events.forEach(function (event, index) {
-	        rows.push(React.createElement(SingleEvent, { event: event, userID: userID, key: index }));
-	      });
-	      this.setState({ rowes: rows });
-	    }
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'eventList' },
-	      React.createElement(
-	        'ul',
-	        null,
-	        this.state.rowes
-	      )
-	    );
-	  }
-	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 238 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
 	var _reactRouter = __webpack_require__(168);
@@ -27074,17 +27101,17 @@
 	  displayName: 'exports',
 
 	  getInitialState: function getInitialState() {
-	    console.log('Getting Initial State of Single Event');
-	    console.log(this.props);
-	    return { event: this.props.event };
+	    return { event: '' };
 	  },
-	  componentDidMount: function componentDidMount() {
-	    this.setState({ timeTill: 'NOW' });
+	  componentWillMount: function componentWillMount() {
+	    this.setState({ event: this.props.event,
+	      image: this.props.image });
 	  },
 	  render: function render() {
-	    if (!this.props.event.picture) {
-	      // this.props.event.picture = "http://lorempixel.com/640/480/transport"
-	    }
+	    // if (this.props.image) {
+	    //   console.info('there is a Prop for image')
+	    //   this.props.event.picture = this.props.image
+	    // }
 	    var divStyle = { background: "url(" + this.props.event.picture + ") center center",
 	      minHeight: "25rem",
 	      margin: 0,
@@ -27092,10 +27119,15 @@
 
 	    // var startTime = Date.parse(this.props.event.startTime)
 	    var now = Date.now(); //- Date.parse(Date.now())
-	    var timeTill = Date.parse(this.props.event.startTime) - now;
-	    var x = timeTill / 1000;
+	    var x = (Date.parse(this.props.event.startTime) - now) / 1000;
+
 	    var hour = formatDate(this.props.event.startTime);
 	    var day = x;
+	    if (this.props.event._attendees) {
+	      var numberGoing = this.props.event._attendees.length;
+	    } else {
+	      var numberGoing = 1;
+	    }
 
 	    return React.createElement(
 	      'li',
@@ -27182,12 +27214,17 @@
 	            React.createElement(
 	              'h3',
 	              null,
-	              this.props.event._attendees.length
+	              numberGoing
 	            ),
 	            React.createElement(
 	              'p',
 	              null,
-	              '  attendees'
+	              '  ',
+	              React.createElement(
+	                'i',
+	                null,
+	                'going'
+	              )
 	            )
 	          )
 	        )
@@ -27195,6 +27232,93 @@
 	    );
 	  }
 	});
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var _reactRouter = __webpack_require__(168);
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(38);
+
+
+	var SingleEvent = __webpack_require__(237);
+	var port = process.env.PORT;
+
+	module.exports = React.createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    return { events: [],
+	      user: '' };
+	  },
+	  propTypes: function propTypes() {
+	    user: React.PropTypes.object.isRequired;
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    this.handleGetEvents(nextProps.user);
+	  },
+	  componentWillMount: function componentWillMount() {
+	    $.ajax({
+	      type: 'GET',
+	      url: '/api/events/' + this.props.user.id,
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved DATA');
+	        this.setState({ events: data.events });
+	        this.handleEvents(this.state.events);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(xhr, status, err);
+	      }.bind(this)
+	    });
+	  },
+	  handleGetEvents: function handleGetEvents(user) {
+	    if (user._id) {
+	      $.ajax({
+	        type: 'GET',
+	        url: '/api/events/' + user._id,
+	        dataType: 'json',
+	        cache: false,
+	        success: function (data) {
+	          console.log('Successfully retrieved DATA');
+	          this.setState({ events: data.events, userID: user._id });
+	          this.handleEvents(this.state.events, user._id);
+	        }.bind(this),
+	        error: function (xhr, status, err) {
+	          console.error(this.props.url, status, err);
+	        }.bind(this)
+	      });
+	    }
+	  },
+	  handleEvents: function handleEvents(events, userID) {
+	    console.log('Handling Events from Event List');
+	    console.log(userID);
+	    var rows = [];
+	    if (events) {
+	      events.forEach(function (event, index) {
+	        rows.push(React.createElement(SingleEvent, { event: event, userID: userID, key: index }));
+	      });
+	      this.setState({ rowes: rows });
+	    }
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'eventList' },
+	      React.createElement(
+	        'ul',
+	        null,
+	        this.state.rowes
+	      )
+	    );
+	  }
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
 /* 239 */
@@ -27540,7 +27664,7 @@
 	    if (this.props.params.eventID) {
 	      $.ajax({
 	        type: 'GET',
-	        url: 'http://localhost:2323/api/event/' + this.props.params.eventID,
+	        url: 'api/event/' + this.props.params.eventID,
 	        dataType: 'json',
 	        cache: false,
 	        success: function (data) {
@@ -27560,7 +27684,7 @@
 	    console.log(this.props.params.eventID);
 	    $.ajax({
 	      type: 'PUT',
-	      url: 'http://localhost:2323/api/event/' + this.props.params.eventID + '/join',
+	      url: '/api/event/' + this.props.params.eventID + '/join',
 	      dataType: 'json',
 	      data: {
 	        userID: this.props.params.userID
@@ -27582,7 +27706,7 @@
 
 	    $.ajax((_$$ajax = {
 	      type: 'PUT',
-	      url: 'http://localhost:2323/api/event/' + this.props.params.eventID + '/leave',
+	      url: '/api/event/' + this.props.params.eventID + '/leave',
 	      dataType: 'json',
 	      data: {
 	        userID: this.props.params.userID

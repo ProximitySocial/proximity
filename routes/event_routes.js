@@ -34,7 +34,7 @@ eventRouter.get('/events/:userId', (req, res) => {
 
   //create new event
 eventRouter.post('/event/new', (req, res) => {
-  console.log("Made a POST request for NEW user")
+  console.log("Made a POST request for NEW Event")
   //add _creator from User _id
   var eventData = req.body
   var address = req.body.address.split(' ').join('+')

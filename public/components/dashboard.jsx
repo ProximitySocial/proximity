@@ -39,7 +39,7 @@ module.exports = React.createClass({
             toggleUserModal: false})
   },
 
-  componentDidMount: function() {
+  componentWillMount: function() {
     if (!this.state.user || !sessionStorage.token){
       var token = getParameterByName('access_token')
       sessionStorage.setItem('token', token)
