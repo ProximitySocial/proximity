@@ -21,6 +21,29 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function resizeImage(maxW, maxH){
+  var MAX_WIDTH = maxW || 800;
+var MAX_HEIGHT = maxH || 600;
+var width = img.width;
+var height = img.height;
+
+if (width > height) {
+  if (width > MAX_WIDTH) {
+    height *= MAX_WIDTH / width;
+    width = MAX_WIDTH;
+  }
+} else {
+  if (height > MAX_HEIGHT) {
+    width *= MAX_HEIGHT / height;
+    height = MAX_HEIGHT;
+  }
+}
+canvas.width = width;
+canvas.height = height;
+var ctx = canvas.getContext("2d");
+ctx.drawImage(img, 0, 0, width, height);
+}
+
 module.exports = React.createClass({
   getInitialState: function(){
     if (sessionStorage.token){
@@ -73,13 +96,13 @@ module.exports = React.createClass({
   //   this.setState({hideForm: state})
   // },
   render: function(){
-    var hiddenBtn, shotBtn
+    var hiddenBtn, showBtn
     if (this.state.toggle){
       hiddenBtn = {display: "none"}
-      shotBtn = {}
+      showBtn = {}
     } else {
       hiddenBtn = {}
-      shotBtn = {display: "none"}
+      showBtn = {display: "none"}
     }
     console.log('Grabbing App Children');
     console.log(this.props.children);
@@ -101,7 +124,7 @@ module.exports = React.createClass({
                   <li><Link to='/profile'>Profile</Link></li>
                 </ul>
                 <div class='spacer'></div>
-                <div style={shotBtn}>
+                <div style={showBtn}>
                     <a className="btn fb-login"  id="fbLogin" href="/api/auth/facebook" role="button">Facebook Login &raquo;</a>
                 </div>
                 <div style={hiddenBtn}>
