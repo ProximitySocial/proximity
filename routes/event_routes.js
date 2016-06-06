@@ -38,8 +38,6 @@ eventRouter.post('/event/new', (req, res) => {
   var address = req.body.address.split(' ').join('+')
   callGoogle(address)
     .then((data) => {
-      console.log('Returned from google maps api: ');
-      console.log(data);
       eventData.neighborhood = data.results[0].address_components[2].long_name
       eventData.locationData = data
 
