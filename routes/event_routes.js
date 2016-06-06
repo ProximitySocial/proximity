@@ -47,6 +47,7 @@ eventRouter.post('/event/new', (req, res) => {
       eventData.neighborhood = data.results[0].address_components[2].long_name
       eventData.locationData = data
       eventData.picture = eventData.url
+      eventData._creator = req.body.userID
       new Event(eventData).save((err, result) => {
         if (err || result === null) return res.status(500).json({msg: 'Server Error'})
         res.status(200).json({msg: 'event created', signedRequest: eventData.awsData})
