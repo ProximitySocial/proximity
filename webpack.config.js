@@ -1,4 +1,4 @@
-const path = require('path');
+ const path = require('path');
 const merge = require('webpack-merge');
 const TARGET = process.argv[2] ? process.argv[2].toString() : process.env.npm_lifecycle_event;
 // console.log(TARGET)

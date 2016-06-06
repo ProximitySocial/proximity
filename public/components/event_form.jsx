@@ -127,6 +127,10 @@ module.exports = React.createClass({
         } else {
           var picture = this.state.url.trim()
         }
+        console.log('fileName')
+        console.log(fileName)
+        console.log('fileType')
+        console.log(fileType)
         // if (!title || !description || !address) return
         this.onFormSubmit({
            title: title,

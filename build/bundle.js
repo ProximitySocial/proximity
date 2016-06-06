@@ -25908,6 +25908,29 @@
 	  return decodeURIComponent(results[2].replace(/\+/g, " "));
 	}
 
+	function resizeImage(maxW, maxH) {
+	  var MAX_WIDTH = maxW || 800;
+	  var MAX_HEIGHT = maxH || 600;
+	  var width = img.width;
+	  var height = img.height;
+
+	  if (width > height) {
+	    if (width > MAX_WIDTH) {
+	      height *= MAX_WIDTH / width;
+	      width = MAX_WIDTH;
+	    }
+	  } else {
+	    if (height > MAX_HEIGHT) {
+	      width *= MAX_HEIGHT / height;
+	      height = MAX_HEIGHT;
+	    }
+	  }
+	  canvas.width = width;
+	  canvas.height = height;
+	  var ctx = canvas.getContext("2d");
+	  ctx.drawImage(img, 0, 0, width, height);
+	}
+
 	module.exports = _react2.default.createClass({
 	  displayName: 'exports',
 
@@ -25962,13 +25985,13 @@
 	  //   this.setState({hideForm: state})
 	  // },
 	  render: function render() {
-	    var hiddenBtn, shotBtn;
+	    var hiddenBtn, showBtn;
 	    if (this.state.toggle) {
 	      hiddenBtn = { display: "none" };
-	      shotBtn = {};
+	      showBtn = {};
 	    } else {
 	      hiddenBtn = {};
-	      shotBtn = { display: "none" };
+	      showBtn = { display: "none" };
 	    }
 	    console.log('Grabbing App Children');
 	    console.log(this.props.children);
@@ -26051,7 +26074,7 @@
 	              _react2.default.createElement('div', { 'class': 'spacer' }),
 	              _react2.default.createElement(
 	                'div',
-	                { style: shotBtn },
+	                { style: showBtn },
 	                _react2.default.createElement(
 	                  'a',
 	                  { className: 'btn fb-login', id: 'fbLogin', href: '/api/auth/facebook', role: 'button' },
@@ -26581,6 +26604,10 @@
 	    } else {
 	      var picture = this.state.url.trim();
 	    }
+	    console.log('fileName');
+	    console.log(fileName);
+	    console.log('fileType');
+	    console.log(fileType);
 	    // if (!title || !description || !address) return
 	    this.onFormSubmit({
 	      title: title,
