@@ -39,7 +39,7 @@ module.exports = React.createClass({
     if (this.props.params.eventID) {
       $.ajax({
         type: 'GET',
-        url: 'api/event/' + this.props.params.eventID,
+        url: '/api/event/' + this.props.params.eventID,
         dataType: 'json',
         cache: false,
         success: function(data){
