@@ -30,9 +30,10 @@ userRouter.post('/getUserID', (req, res) =>{
 
 userRouter.post('/user/new', (req, res) => {
   console.log('NEW POST for a user')
+  var cb = function() {}
   var userData = req.body
   if(userData.fileName && userData.fileType){
-    getS3SignedUrl(userData)
+    getS3SignedUrl(userData, cb)
       .then((data) => {
         createUser(data, res)
       }).catch((err) => {
