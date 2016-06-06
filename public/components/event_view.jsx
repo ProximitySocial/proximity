@@ -39,7 +39,7 @@ module.exports = React.createClass({
     if (this.props.params.eventID) {
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:2323/api/event/' + this.props.params.eventID,
+        url: '/api/event/' + this.props.params.eventID,
         dataType: 'json',
         cache: false,
         success: function(data){
@@ -60,7 +60,7 @@ module.exports = React.createClass({
     console.log(this.props.params.eventID);
     $.ajax({
       type: 'PUT',
-      url: 'http://localhost:2323/api/event/' + this.props.params.eventID + '/join',
+      url: '/api/event/' + this.props.params.eventID + '/join',
       dataType: 'json',
       data: {
         userID: this.props.params.userID
@@ -80,7 +80,7 @@ module.exports = React.createClass({
   handleEventLeave: function() {
     $.ajax({
       type: 'PUT',
-      url: 'http://localhost:2323/api/event/' + this.props.params.eventID + '/leave',
+      url: '/api/event/' + this.props.params.eventID + '/leave',
       dataType: 'json',
       data: {
         userID: this.props.params.userID
