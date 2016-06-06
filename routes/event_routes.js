@@ -22,14 +22,10 @@ eventRouter.get('/events', (req, res) => {
 })
 
 //Get events, sorted by time per user specified neighborhoods
-eventRouter.get('/events/:userId', (req, res) => {
-  if(req.headers.authorization){
-    cosole.log(req.headers.authorization)
-  }
-  console.log('Events per USER has been requested 2')
-  var userId = req.params.userId
-  console.log(userId);
-  getAndSendUserLocalEvents(userId, res)
+eventRouter.get('/events/:userID', (req, res) => {
+  console.log('Events per userID has been requested')
+  var userID = req.params.userID
+  getAndSendUserLocalEvents(userID, res)
 })
 
   //create new event
@@ -142,7 +138,7 @@ eventRouter.put('/event/:id', (req, res) => {
 })
 
 //add attendee
-//body must contain {"userId": "494934930300030303"}, so that Event $addToSet will add user to _attendees array
+//body must contain {"userID": "494934930300030303"}, so that Event $addToSet will add user to _attendees array
 // eventually need to check that :id matches auth req.user._id
 eventRouter.put('/event/:id/join', (req, res) => {
   var userID = req.body.userID
