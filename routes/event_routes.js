@@ -50,7 +50,7 @@ eventRouter.post('/event/new', (req, res) => {
       eventData._creator = req.body.userID
       new Event(eventData).save((err, result) => {
         if (err || result === null) return res.status(500).json({msg: 'Server Error'})
-        res.status(200).json({msg: 'event created', signedRequest: eventData.awsData})
+        res.status(200).json({msg: 'event created', eventID: result._id, signedRequest: eventData.awsData})
       })
     })
     .catch((err) => {
@@ -97,7 +97,7 @@ eventRouter.get('/event/attendees/:id', (req, res) => {
 //update event  AUTH creator
 eventRouter.put('/event/:id', (req, res) => {
   if(req.headers.authorization){
-    cosole.log(req.headers.authorization)
+    console.log(req.headers.authorization)
   }
   console.log('SERVER UPDATE EVENT called');
   var cb = function() {};
@@ -138,6 +138,7 @@ eventRouter.put('/event/:id', (req, res) => {
   }
   if (!newData.address && !newData.fileName && !newData.fileType){
     console.log('no address change and no picture change')
+    console.log(res);
     return updateEvent(newData, req.params.id, res)
   }
 })
