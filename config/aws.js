@@ -24,6 +24,8 @@ function getS3SignedUrl(dataObj, cb){
       dataObj.awsData = data
       // dataObj.url = data.slice(0, data.indexOf('?'))
       dataObj.url = "https://s3-us-west-2.amazonaws.com/vivacity1/" + dataObj.fileName
+      console.log('inside aws');
+      console.log(dataObj.url);
       resolve(dataObj)
       return cb(null, data)
     });

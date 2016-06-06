@@ -38,22 +38,37 @@ eventRouter.post('/event/new', (req, res) => {
   var address = req.body.address.split(' ').join('+')
   callGoogle(address)
     .then((data) => {
-      if(eventData.fileName && eventData.fileType){
-        getS3SignedUrl(eventData, cb)
-          .then((s3Data) => { eventData = s3Data }).catch((err) => {throw err;})
-      }
+
       eventData.neighborhood = data.results[0].address_components[2].long_name
       eventData.locationData = data
-      eventData.picture = eventData.url
-      eventData._creator = req.body.userID
-      console.log('Event data before mongoose:');
-      console.log(eventData);
-      new Event(eventData).save((err, result) => {
-        if (err || result === null) return res.status(500).json({msg: 'Server Error'})
-        console.log('after mongoose query');
-        console.log(result);
-        res.status(200).json({msg: 'event created', eventID: result._id, signedRequest: eventData.awsData})
-      })
+
+      if(eventData.fileName && eventData.fileType){
+        getS3SignedUrl(eventData, cb)
+          .then((s3Data) => {
+            eventData = s3Data
+
+            eventData.picture = eventData.url
+            eventData._creator = req.body.userID
+            console.log('Event data before mongoose:');
+            console.log(eventData);
+            new Event(eventData).save((err, result) => {
+              if (err || result === null) return res.status(500).json({msg: 'Server Error'})
+              console.log('***************')
+              console.log('picture found');
+              console.log(result);
+              res.status(200).json({msg: 'event created', eventID: result._id, signedRequest: eventData.awsData})
+            })
+          })
+          .catch((err) => {throw err;})
+      } else {
+        new Event(eventData).save((err, result) => {
+          if (err || result === null) return res.status(500).json({msg: 'Server Error'})
+          console.log('***************')
+          console.log('no picture found');
+          console.log(result);
+          res.status(200).json({msg: 'event created', eventID: result._id})
+        })
+      }
     })
     .catch((err) => {
       throw err;
