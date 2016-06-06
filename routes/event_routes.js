@@ -38,11 +38,14 @@ eventRouter.post('/event/new', (req, res) => {
   var address = req.body.address.split(' ').join('+')
   callGoogle(address)
     .then((data) => {
-
+      console.log('Returned from google maps api: ');
+      console.log(data);
       eventData.neighborhood = data.results[0].address_components[2].long_name
       eventData.locationData = data
 
       if(eventData.fileName && eventData.fileType){
+
+        console.log('has file name and filetype');
         getS3SignedUrl(eventData, cb)
           .then((s3Data) => {
             eventData = s3Data
@@ -61,6 +64,7 @@ eventRouter.post('/event/new', (req, res) => {
           })
           .catch((err) => {throw err;})
       } else {
+        console.log('no file name or filetype');
         new Event(eventData).save((err, result) => {
           if (err || result === null) return res.status(500).json({msg: 'Server Error'})
           console.log('***************')
