@@ -25748,34 +25748,32 @@
 	      toggle: toggleVar,
 	      hideForm: true };
 	  },
-	  componentDidMount: function componentDidMount() {
-	    var _this = this;
-
-	    if (!this.state.user) {
-	      var token = getParameterByName('access_token');
-	      sessionStorage.setItem('token', token);
-	    }
-	    $.ajax({
-	      type: 'GET',
-	      url: 'http://localhost:2323/api/user/' + sessionStorage.token,
-	      headers: { 'Access-Control-Allow-Origin': 'http://localhost:2323' },
-	      // beforeSend: function(xhr){
-	      //   xhr.withCredentials = true;
-	      //   xhr.setRequestHeader('Authorization', )
-	      // },
-	      success: function success(data, status) {
-	        _this.setState({
-	          user: data,
-	          toggle: false
-	        });
-	      },
-	      error: function error(xhr, status, _error) {
-	        console.log(xhr);
-	        console.log(status);
-	        console.log(_error);
-	      }
-	    });
-	  },
+	  // componentDidMount: function() {
+	  //   if (!this.state.user){
+	  //       var token = getParameterByName('access_token')
+	  //       sessionStorage.setItem('token', token)
+	  //   }
+	  //   $.ajax({
+	  //     type: 'GET',
+	  //     url: '/api/user/' + sessionStorage.token,
+	  //     // headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
+	  //     // beforeSend: function(xhr){
+	  //     //   xhr.withCredentials = true;
+	  //     //   xhr.setRequestHeader('Authorization', )
+	  //     // },
+	  //     success: (data, status) => {
+	  //       this.setState({
+	  //         user: data,
+	  //         toggle: false
+	  //       })
+	  //     },
+	  //     error: (xhr, status, error) => {
+	  //       console.log(xhr)
+	  //       console.log(status)
+	  //       console.log(error)
+	  //     }
+	  //   })
+	  // },
 	  logout: function logout() {
 	    sessionStorage.removeItem('token');
 	    this.setState({ user: '',
@@ -25924,11 +25922,6 @@
 	var UserForm = __webpack_require__(235);
 	var port = process.env.PORT || 8080;
 
-	// // for testing purposes
-	// var userId = "574390a51831bd0d9abfe74a"
-	// var userUrl = "/api/user/" + userId
-	// var eventUrl = "/api/events/" + userId
-	// var eventUrl = "http://localhost:2323/api/event/" + eventId
 	function getParameterByName(name, url) {
 	  if (!url) url = window.location.href;
 	  name = name.replace(/[\[\]]/g, "\\$&");
@@ -25959,10 +25952,11 @@
 	      addEvent: false,
 	      addUser: false };
 	  },
+
 	  componentDidMount: function componentDidMount() {
 	    var _this = this;
 
-	    if (!this.state.user) {
+	    if (!this.state.user || !sessionStorage.token) {
 	      var token = getParameterByName('access_token');
 	      sessionStorage.setItem('token', token);
 	    } else {
@@ -26564,6 +26558,23 @@
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 	    this.handleGetEvents(nextProps.user);
+	  },
+	  componentDidMount: function componentDidMount() {
+	    $.ajax({
+	      type: 'GET',
+	      url: '/api/events/' + this.props.user.id,
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved DATA');
+	        console.log(data);
+	        this.setState({ events: data.events });
+	        this.handleEvents(this.state.events);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(this.props.url, status, err);
+	      }.bind(this)
+	    });
 	  },
 	  handleGetEvents: function handleGetEvents(user) {
 	    if (user._id) {

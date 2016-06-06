@@ -10,11 +10,6 @@ const UserForm = require(__dirname + '/user_form.jsx')
 const port = process.env.PORT || 8080
 
 
-// // for testing purposes
-// var userId = "574390a51831bd0d9abfe74a"
-// var userUrl = "/api/user/" + userId
-// var eventUrl = "/api/events/" + userId
-// var eventUrl = "http://localhost:2323/api/event/" + eventId
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -43,8 +38,9 @@ module.exports = React.createClass({
             addEvent: false,
             addUser: false})
   },
+
   componentDidMount: function() {
-    if (!this.state.user){
+    if (!this.state.user || !sessionStorage.token){
       var token = getParameterByName('access_token')
       sessionStorage.setItem('token', token)
     } else {
