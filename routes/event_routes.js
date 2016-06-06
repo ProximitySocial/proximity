@@ -31,6 +31,7 @@ eventRouter.get('/events/:userID', (req, res) => {
   //create new event
 eventRouter.post('/event/new', (req, res) => {
   console.log("Made a POST request for NEW event")
+  console.log(req.body);
   //add _creator from User _id
   var cb = function() {};
   var eventData = req.body
@@ -45,8 +46,12 @@ eventRouter.post('/event/new', (req, res) => {
       eventData.locationData = data
       eventData.picture = eventData.url
       eventData._creator = req.body.userID
+      console.log('Event data before mongoose:');
+      console.log(eventData);
       new Event(eventData).save((err, result) => {
         if (err || result === null) return res.status(500).json({msg: 'Server Error'})
+        console.log('after mongoose query');
+        console.log(result);
         res.status(200).json({msg: 'event created', eventID: result._id, signedRequest: eventData.awsData})
       })
     })
