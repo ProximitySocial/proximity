@@ -11,12 +11,12 @@ const jwt            = require('express-jwt');
 var auth = jwt({secret: process.env.VC_SECRET_CRYPTO || 'secret', userProperty: 'payload'});
 console.log(auth);
 /* WILL ONLY NEED THIS ROUTE FOR ADMIN? */
-// userRouter.get('/users', (req, res) => {
-//   User.find({}, (err, result) => {
-//     if (err) return res.status(500).json({msg: 'Server Error'})
-//     res.status(200).json(result)
-//   })
-// })
+userRouter.get('/users', (req, res) => {
+  User.find({}, (err, result) => {
+    if (err) return res.status(500).json({msg: 'Server Error'})
+    res.status(200).json(result)
+  })
+})
 
 userRouter.post('/getUserID', (req, res) =>{
   console.log('new post to get a USER ID')
