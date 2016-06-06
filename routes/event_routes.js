@@ -33,7 +33,6 @@ eventRouter.post('/event/new', (req, res) => {
   console.log("Made a POST request for NEW event")
   console.log(req.body);
   //add _creator from User _id
-  var cb = function() {};
   var eventData = req.body
   var address = req.body.address.split(' ').join('+')
   callGoogle(address)
@@ -42,8 +41,10 @@ eventRouter.post('/event/new', (req, res) => {
       eventData.locationData = data
 
       if(eventData.fileName && eventData.fileType){
-
+        console.log('Before sending to S3');
+        console.log(eventData);
         console.log('has file name and filetype');
+        var cb = function() {};
         getS3SignedUrl(eventData, cb)
           .then((s3Data) => {
             eventData = s3Data

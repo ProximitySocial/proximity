@@ -6,6 +6,7 @@ const S3_BUCKET = process.env.VC_S3_BUCKET
 
 function getS3SignedUrl(dataObj, cb){
   console.log('Inside getS3SignedUrl');
+  console.log(dataObj);
   aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY})
   var s3 = new aws.S3()
   var options = {
