@@ -35,11 +35,11 @@ module.exports = React.createClass({
     return ({user: {},
             events: [],
             toggle: toggleVar,
-            addEvent: false,
-            addUser: false})
+            toggleEventModal: false,
+            toggleUserModal: false})
   },
 
-  componentDidMount: function() {
+  componentWillMount: function() {
     if (!this.state.user || !sessionStorage.token){
       var token = getParameterByName('access_token')
       sessionStorage.setItem('token', token)
@@ -71,12 +71,12 @@ module.exports = React.createClass({
     })
   },
   showUserModal: function(){
-    var answer = !this.state.addUser
-    this.setState({addUser: answer})
+    var answer = !this.state.toggleUserModal
+    this.setState({toggleUserModal: answer})
   },
   showEventModal: function(){
-    var answer = !this.state.addEvent
-    this.setState({addEvent: answer})
+    var answer = !this.state.toggleEventModal
+    this.setState({toggleEventModal: answer})
   },
   logout: function(){
     sessionStorage.removeItem('token')
@@ -104,7 +104,7 @@ module.exports = React.createClass({
     }
     //Event modal
     var hideModal, showModal
-    if (this.state.addEvent){
+    if (this.state.toggleEventModal){
       showModal = modalObj
       hideModal = hiddenVar
     } else {
@@ -113,7 +113,7 @@ module.exports = React.createClass({
     }
     //User modal
     var hideUserModal, showUserModal
-    if (this.state.addUser) {
+    if (this.state.toggleUserModal) {
       showUserModal = modalObj
       hideUserModal = hiddenVar
     } else {
@@ -133,7 +133,7 @@ module.exports = React.createClass({
               <DisplayUser className="row profile" user={this.state.user} />
             </div>
             <section className="fullModal" style={showUserModal}>
-              <UserForm className="row form" addUser={this.showUserModal} user={this.state.user}/>
+              <UserForm className="row form" toggleUserModal={this.showUserModal} user={this.state.user}/>
             </section>
             <div className="col-lg-4" id="eventList">
               <div className="eventsHeader">
@@ -146,7 +146,7 @@ module.exports = React.createClass({
               <EventList className="row events" user={this.state.user}/>
             </div>
              <section className="fullModal" style={showModal}>
-              <EventForm addEvent={this.showEventModal} className="row form" />
+              <EventForm toggleEventModal={this.showEventModal} className="row form" />
             </section>
           </div>
         </section>
