@@ -24,7 +24,7 @@ userRouter.post('/getUserID', (req, res) =>{
     User.findOne({"facebook.id": fbid}, (err, data) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     if (data === null) return res.status(400).json({msg: 'fbID not found, bad request'})
-    res.status(200).json({msg: 'user found with fbid', id: data.id} )
+    res.status(200).json({msg: 'user found with fbid', user: data} )
   })
 })
 
