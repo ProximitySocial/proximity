@@ -68,7 +68,7 @@ app.get('/', (req, res) => {
 
   // console.log(req.query.access_token)
   // res.render(__dirname + '/build/index.html')
-    res.sendFile(__dirname + '/build/index.html')
+    res.sendFile('./build/index.html')
 })
 
 // function ensureAuthenticated(req, res, next) {
