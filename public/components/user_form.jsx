@@ -8,14 +8,14 @@ module.exports = React.createClass({
       mixins: [LinkedStateMixin],
       getInitialState: function() {
         return({
-                userID: this.props.user._id,
-                firstName: this.props.user.firstName,
-                lastName: this.props.user.lastName,
-                email: this.props.user.email,
-                bio: this.props.user.bio,
-                interests: this.props.user.interests,
-                addressName: this.props.user.addressName,
-                address: this.props.user.address,
+                userID: '',
+                firstName: '',
+                lastName: '',
+                email: '',
+                bio: '',
+                interests: '',
+                addressName: '',
+                address: '',
                 file: '',
                 imagePreviewUrl: '',
                 url: '',
@@ -26,16 +26,19 @@ module.exports = React.createClass({
       },
       componentWillReceiveProps: function(){
         console.log('componentWillReceiveProps')
-        this.setState({
-                        userID: this.props.user.id,
-                        firstName: this.props.user.firstName,
-                        lastName: this.props.user.lastName,
-                        email: this.props.user.email,
-                        bio: this.props.user.bio,
-                        interests: this.props.user.interests,
-                        addressName: this.props.user.addressName,
-                        address: this.props.user.address
-                      })
+        if (this.props.user) {
+          this.setState({
+                          userID: this.props.user.id,
+                          firstName: this.props.user.firstName,
+                          lastName: this.props.user.lastName,
+                          email: this.props.user.email,
+                          bio: this.props.user.bio,
+                          interests: this.props.user.interests,
+                          addressName: this.props.user.addressName,
+                          address: this.props.user.address
+                        })
+        }
+
       },
       // handleIdChange: function(e) {
       //   this.setState({userID: e.target.value});
@@ -203,11 +206,11 @@ module.exports = React.createClass({
               <div className="adminForUser" style={hidden}>
                 <label for="userID">User ID:</label>
                 <input placeholder="userID" valueLink={this.linkState('userID')} />
+              </div>
                 <label for="firstName">First Name:</label>
                 <input type="text" placeholder="First" valueLink={this.linkState('firstName')}/>
                 <label for="lastName">Last Name:</label>
                 <input type="text" placeholder="Last" valueLink={this.linkState('lastName')} />
-              </div>
               <label for="email">Email:</label>
               <input type="text" placeholder="Email" valueLink={this.linkState('email')} />
               <label for="bio">Bio:</label>
@@ -217,7 +220,7 @@ module.exports = React.createClass({
               <label for="Address">Address:</label>
               <input type="text" placeholder="We ask for address to select your neighborhood" valueLink={this.linkState('address')} />
               <label for="Image">Image:</label>
-              <input type="file" onChange={this.handleImageChange} />
+              <input type="file" valueLink={this.handleImageChange} />
               <button type="submit">Submit User!</button>
             </form>
             {$imagePreview}

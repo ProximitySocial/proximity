@@ -233,7 +233,7 @@ module.exports = React.createClass({
                 <input type="text" placeholder="Address" valueLink={this.linkState('address')} />
                 <label for="Image">Image:</label>
                 <button onClick={this.srcImage}>Source an Image</button>
-                <input type="file" onChange={this.handleImageChange} />
+                <input type="file" valueLink={this.handleImageChange} />
                 <button type="submit" onClick={this.handleSubmit}>Submit Event!</button>
               </form>
             </section>
@@ -257,4 +257,3 @@ module.exports = React.createClass({
         )
       }
     });
-

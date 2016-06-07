@@ -69,7 +69,7 @@ h3 {
    display: flex;
    width: 100%;
    ul {
-    width: 300px;
+    width: 400px;
    }
    .spacer{
     -webkit-flex: 1;
@@ -173,6 +173,22 @@ h3 {
   }
 }
 
+#userList {
+  margin: 0;
+  ul {
+    margin: .7rem 0;
+    padding: 0;
+    width: 100%;
+    list-style-type: none;
+    li{
+      margin: 0;
+      border: 2px solid #CCC;
+      vertical-align: bottom;
+    }
+  }
+}
+
+
 .eventAttCount{
   display: inline-block;
   margin: 0;
@@ -187,7 +203,7 @@ h3 {
  height: 100px;
 }
 
-.eventList {
+.eventList, .userList {
   overflow-y: scroll;
   max-height:800px;
 }

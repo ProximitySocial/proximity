@@ -58,12 +58,13 @@
 
 	var App = __webpack_require__(229);
 	var Dashboard = __webpack_require__(230);
-	var EventForm = __webpack_require__(232);
-	var EventList = __webpack_require__(238);
+	// const EventForm   = require(__dirname + '/components/event_form.jsx')
+	// const EventList   = require(__dirname + '/components/event_list.jsx')
 	var EventView = __webpack_require__(240);
 	var Profile = __webpack_require__(231);
-	var SingleEvent = __webpack_require__(237);
-	var UserForm = __webpack_require__(239);
+	// const SingleEvent = require(__dirname + '/components/single_event.jsx')
+	// const UserForm    = require(__dirname + '/components/user_form.jsx')
+	var Admin = __webpack_require__(241);
 
 	var Test = _react2.default.createClass({
 	  displayName: 'Test',
@@ -90,7 +91,8 @@
 	    _react2.default.createElement(_reactRouter.IndexRoute, { component: Dashboard }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/event/:eventID/:userID', component: EventView }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: Profile }),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/test', component: Test })
+	    _react2.default.createElement(_reactRouter.Route, { path: '/test', component: Test }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '/admin', component: Admin })
 	  )
 	), document.getElementById('root'));
 
@@ -26069,6 +26071,15 @@
 	                    { to: '/profile' },
 	                    'Profile'
 	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'li',
+	                  null,
+	                  _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/admin' },
+	                    'Admin'
+	                  )
 	                )
 	              ),
 	              _react2.default.createElement('div', { 'class': 'spacer' }),
@@ -26156,7 +26167,7 @@
 	  componentWillMount: function componentWillMount() {
 	    var _this = this;
 
-	    if (!this.state.user && !sessionStorage.token) {
+	    if (!this.state.user || !sessionStorage.token) {
 	      var token = getParameterByName('access_token');
 	      sessionStorage.setItem('token', token);
 	    } else {
@@ -26771,7 +26782,7 @@
 	            { onClick: this.srcImage },
 	            'Source an Image'
 	          ),
-	          _react2.default.createElement('input', { type: 'file', onChange: this.handleImageChange }),
+	          _react2.default.createElement('input', { type: 'file', valueLink: this.handleImageChange }),
 	          _react2.default.createElement(
 	            'button',
 	            { type: 'submit', onClick: this.handleSubmit },
@@ -27376,14 +27387,14 @@
 	  mixins: [LinkedStateMixin],
 	  getInitialState: function getInitialState() {
 	    return {
-	      userID: this.props.user._id,
-	      firstName: this.props.user.firstName,
-	      lastName: this.props.user.lastName,
-	      email: this.props.user.email,
-	      bio: this.props.user.bio,
-	      interests: this.props.user.interests,
-	      addressName: this.props.user.addressName,
-	      address: this.props.user.address,
+	      userID: '',
+	      firstName: '',
+	      lastName: '',
+	      email: '',
+	      bio: '',
+	      interests: '',
+	      addressName: '',
+	      address: '',
 	      file: '',
 	      imagePreviewUrl: '',
 	      url: '',
@@ -27394,16 +27405,18 @@
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps() {
 	    console.log('componentWillReceiveProps');
-	    this.setState({
-	      userID: this.props.user.id,
-	      firstName: this.props.user.firstName,
-	      lastName: this.props.user.lastName,
-	      email: this.props.user.email,
-	      bio: this.props.user.bio,
-	      interests: this.props.user.interests,
-	      addressName: this.props.user.addressName,
-	      address: this.props.user.address
-	    });
+	    if (this.props.user) {
+	      this.setState({
+	        userID: this.props.user.id,
+	        firstName: this.props.user.firstName,
+	        lastName: this.props.user.lastName,
+	        email: this.props.user.email,
+	        bio: this.props.user.bio,
+	        interests: this.props.user.interests,
+	        addressName: this.props.user.addressName,
+	        address: this.props.user.address
+	      });
+	    }
 	  },
 	  // handleIdChange: function(e) {
 	  //   this.setState({userID: e.target.value});
@@ -27596,20 +27609,20 @@
 	            { 'for': 'userID' },
 	            'User ID:'
 	          ),
-	          React.createElement('input', { placeholder: 'userID', valueLink: this.linkState('userID') }),
-	          React.createElement(
-	            'label',
-	            { 'for': 'firstName' },
-	            'First Name:'
-	          ),
-	          React.createElement('input', { type: 'text', placeholder: 'First', valueLink: this.linkState('firstName') }),
-	          React.createElement(
-	            'label',
-	            { 'for': 'lastName' },
-	            'Last Name:'
-	          ),
-	          React.createElement('input', { type: 'text', placeholder: 'Last', valueLink: this.linkState('lastName') })
+	          React.createElement('input', { placeholder: 'userID', valueLink: this.linkState('userID') })
 	        ),
+	        React.createElement(
+	          'label',
+	          { 'for': 'firstName' },
+	          'First Name:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'First', valueLink: this.linkState('firstName') }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'lastName' },
+	          'Last Name:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Last', valueLink: this.linkState('lastName') }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'email' },
@@ -27639,7 +27652,7 @@
 	          { 'for': 'Image' },
 	          'Image:'
 	        ),
-	        React.createElement('input', { type: 'file', onChange: this.handleImageChange }),
+	        React.createElement('input', { type: 'file', valueLink: this.handleImageChange }),
 	        React.createElement(
 	          'button',
 	          { type: 'submit' },
@@ -27890,6 +27903,480 @@
 	          'a',
 	          { onClick: this.handleEventLeave },
 	          'Leave Event'
+	        )
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(38);
+
+	var _reactRouter = __webpack_require__(168);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var port = process.env.PORT || 8080;
+
+	// const DisplayUser = require(__dirname + '/display_user.jsx')
+	var EventForm = __webpack_require__(232);
+	var EventList = __webpack_require__(238);
+	var UserForm = __webpack_require__(239);
+	var UserList = __webpack_require__(242);
+
+	function getParameterByName(name, url) {
+	  if (!url) url = window.location.href;
+	  name = name.replace(/[\[\]]/g, "\\$&");
+	  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+	      results = regex.exec(url);
+	  if (!results) return null;
+	  if (!results[2]) return '';
+	  return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+
+	module.exports = _react2.default.createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    if (sessionStorage.token || sessionStorage.token != null) {
+	      console.log('Yes there is a sessionStorage token');
+	      console.log(sessionStorage.token);
+	      var userObj = sessionStorage.token;
+	      var toggleVar = false;
+	    } else {
+	      console.log('No token');
+	      var userObj = '';
+	      var toggleVar = true;
+	    }
+	    return { user: {},
+	      events: [],
+	      toggle: toggleVar,
+	      toggleEventModal: false,
+	      toggleUserModal: false };
+	  },
+
+	  componentWillMount: function componentWillMount() {
+	    var _this = this;
+
+	    if (!this.state.user || !sessionStorage.token) {
+	      var token = getParameterByName('access_token');
+	      sessionStorage.setItem('token', token);
+	    } else {
+	      var token = sessionStorage.token;
+	    }
+	    $.ajax({
+	      type: 'GET',
+	      url: '/api/user/' + sessionStorage.token,
+	      headers: { 'Authorization': 'Bearer ' + token },
+	      // beforeSend: function(xhr){
+	      //   xhr.withCredentials = true;
+	      //   xhr.setRequestHeader('Authorization', )
+	      // },
+	      success: function success(data, status) {
+	        console.log(data);
+	        console.log(status);
+	        _this.setState({
+	          user: data,
+	          toggle: false
+	        });
+	        console.log('this is toggle: ' + _this.state.toggle);
+	      },
+	      error: function error(xhr, status, _error) {
+	        console.log(xhr);
+	        console.log(status);
+	        console.log(_error);
+	      }
+	    });
+	  },
+	  showUserModal: function showUserModal() {
+	    var answer = !this.state.toggleUserModal;
+	    this.setState({ toggleUserModal: answer });
+	  },
+	  showEventModal: function showEventModal() {
+	    var answer = !this.state.toggleEventModal;
+	    this.setState({ toggleEventModal: answer });
+	  },
+	  logout: function logout() {
+	    sessionStorage.removeItem('token');
+	    this.setState({ user: '',
+	      events: '',
+	      toggle: true });
+	  },
+	  render: function render() {
+	    var hiddenVar = { display: 'none' };
+	    var showVar = {};
+	    var modalObj = { position: 'absolute',
+	      height: '100%',
+	      width: '100%',
+	      background: 'rgba(0, 0, 0, .7)',
+	      zIndex: 999,
+	      padding: 'auto',
+	      textAlign: 'center' };
+	    var hide, show;
+	    if (this.state.toggle) {
+	      hide = hiddenVar;
+	      show = showVar;
+	    } else {
+	      hide = showVar;
+	      show = hiddenVar;
+	    }
+	    //Event modal
+	    var hideModal, showModal;
+	    if (this.state.toggleEventModal) {
+	      showModal = modalObj;
+	      hideModal = hiddenVar;
+	    } else {
+	      showModal = hiddenVar;
+	      hideModal = showVar;
+	    }
+	    //User modal
+	    var hideUserModal, showUserModal;
+	    if (this.state.toggleUserModal) {
+	      showUserModal = modalObj;
+	      hideUserModal = hiddenVar;
+	    } else {
+	      showUserModal = hiddenVar;
+	      hideUserModal = showVar;
+	    }
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'section',
+	        { className: 'dashboard', style: hide },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'container row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-lg-6', id: 'userList' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'profileHeader' },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Users'
+	              ),
+	              _react2.default.createElement('div', { className: 'spacer' }),
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn editRound', onClick: this.showUserModal },
+	                'NEW'
+	              )
+	            ),
+	            _react2.default.createElement(UserList, { className: 'row users', user: this.state.user })
+	          ),
+	          _react2.default.createElement(
+	            'section',
+	            { className: 'fullModal', style: showUserModal },
+	            _react2.default.createElement(UserForm, { className: 'row form', toggleUserModal: this.showUserModal })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-lg-6', id: 'eventList' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'eventsHeader' },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Events'
+	              ),
+	              _react2.default.createElement('div', { className: 'spacer' }),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-4' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { className: 'btn btn-action', onClick: this.showEventModal },
+	                  'Make Event'
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(EventList, { className: 'row events', user: this.state.user })
+	          ),
+	          _react2.default.createElement(
+	            'section',
+	            { className: 'fullModal', style: showModal },
+	            _react2.default.createElement(EventForm, { toggleEventModal: this.showEventModal, className: 'row form' })
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var _reactRouter = __webpack_require__(168);
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(38);
+
+
+	var SingleUser = __webpack_require__(243);
+	var port = process.env.PORT;
+
+	module.exports = React.createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    return { users: [] };
+	  },
+	  // propTypes: function(){
+	  //   user: React.PropTypes.object.isRequired
+	  // },
+	  // componentWillReceiveProps: function(nextProps) {
+	  //   this.handleGetEvents(nextProps.user)
+	  // },
+	  componentWillMount: function componentWillMount() {
+	    $.ajax({
+	      type: 'GET',
+	      url: '/api/users/',
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved USERS');
+	        console.log(data);
+	        this.setState({ users: data });
+	        this.handleUsers(this.state.users);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(xhr, status, err);
+	      }.bind(this)
+	    });
+	  },
+	  // handleGetEvents: function(user){
+	  //   if (user._id) {
+	  //     $.ajax({
+	  //       type: 'GET',
+	  //       url: '/api/events/' + user._id,
+	  //       dataType: 'json',
+	  //       cache: false,
+	  //       success: function(data){
+	  //         console.log('Successfully retrieved DATA');
+	  //         this.setState({events: data.events, userID: user._id})
+	  //         this.handleUsers(this.state.events, user._id)
+	  //       }.bind(this),
+	  //       error: function(xhr, status, err){
+	  //         console.error(this.props.url, status, err)
+	  //       }.bind(this)
+	  //     })
+	  //   }
+	  // },
+	  handleUsers: function handleUsers(users) {
+	    console.log('Handling Users from User List');
+	    console.log(users.length);
+	    var rows = [];
+	    if (users) {
+	      users.forEach(function (user, index) {
+	        rows.push(React.createElement(SingleUser, { user: user, key: index }));
+	      });
+	      this.setState({ rowes: rows });
+	    }
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'userList' },
+	      React.createElement(
+	        'ul',
+	        null,
+	        this.state.rowes
+	      )
+	    );
+	  }
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactRouter = __webpack_require__(168);
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(38);
+
+	var UserForm = __webpack_require__(239);
+
+	module.exports = React.createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    return { user: '',
+	      toggle: false,
+	      toggleEventModal: false,
+	      toggleUserModal: false };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    this.setState({ user: this.props.user });
+	    this.handleInterests();
+	    this.handleNeighborhoods();
+	  },
+	  showUserModal: function showUserModal() {
+	    var answer = !this.state.toggleUserModal;
+	    this.setState({ toggleUserModal: answer });
+	  },
+	  showEventModal: function showEventModal() {
+	    var answer = !this.state.toggleEventModal;
+	    this.setState({ toggleEventModal: answer });
+	  },
+	  handleInterests: function handleInterests() {
+	    console.log(this.props.user.interests);
+	    var rows = [];
+	    this.props.user.interests.forEach(function (interest, index) {
+	      rows.push(React.createElement(
+	        'li',
+	        { key: index },
+	        React.createElement(
+	          'a',
+	          null,
+	          '#',
+	          interest
+	        )
+	      ));
+	    });
+	    this.setState({ interests: rows });
+	  },
+	  handleNeighborhoods: function handleNeighborhoods() {
+	    console.log(this.props.user.neighborhoods);
+	    var rows = [];
+	    this.props.user.neighborhoods.forEach(function (neighborhood, index) {
+	      rows.push(React.createElement(
+	        'li',
+	        { key: index },
+	        React.createElement(
+	          'a',
+	          null,
+	          '#',
+	          neighborhood
+	        )
+	      ));
+	    });
+	    this.setState({ neighborhoods: rows });
+	  },
+	  render: function render() {
+	    var hiddenVar = { display: 'none' };
+	    var showVar = {};
+	    var modalObj = { position: 'absolute',
+	      height: '100%',
+	      width: '100%',
+	      background: 'rgba(0, 0, 0, .7)',
+	      zIndex: 999,
+	      padding: 'auto',
+	      textAlign: 'center' };
+	    var hide, show;
+	    if (this.state.toggle) {
+	      hide = hiddenVar;
+	      show = showVar;
+	    } else {
+	      hide = showVar;
+	      show = hiddenVar;
+	    }
+	    //Event modal
+	    var hideModal, showModal;
+	    if (this.state.toggleEventModal) {
+	      showModal = modalObj;
+	      hideModal = hiddenVar;
+	    } else {
+	      showModal = hiddenVar;
+	      hideModal = showVar;
+	    }
+	    //User modal
+	    var hideUserModal, showUserModal;
+	    if (this.state.toggleUserModal) {
+	      showUserModal = modalObj;
+	      hideUserModal = hiddenVar;
+	    } else {
+	      showUserModal = hiddenVar;
+	      hideUserModal = showVar;
+	    }
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'h3',
+	          { className: 'userName' },
+	          this.props.user.firstName,
+	          ' ',
+	          this.props.user.lastName
+	        ),
+	        React.createElement('img', { className: 'userPic', src: this.props.user.pic }),
+	        React.createElement(
+	          'p',
+	          null,
+	          React.createElement(
+	            'strong',
+	            null,
+	            'Email: '
+	          ),
+	          this.props.user.email
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          React.createElement(
+	            'strong',
+	            null,
+	            'Member since: '
+	          ),
+	          this.props.user.created_at
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          this.props.user.bio
+	        ),
+	        React.createElement(
+	          'h3',
+	          null,
+	          'Interests:'
+	        ),
+	        React.createElement(
+	          'ul',
+	          { className: 'interests' },
+	          this.state.interests
+	        ),
+	        React.createElement(
+	          'h3',
+	          null,
+	          'Neighborhoods:'
+	        ),
+	        React.createElement(
+	          'ul',
+	          { className: 'neighborhoods' },
+	          this.state.neighborhoods
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'btn editRound', onClick: this.showUserModal },
+	          'Edit'
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'fullModal', style: showUserModal },
+	          React.createElement(UserForm, { className: 'row form', toggleUserModal: this.showUserModal, user: this.state.user })
 	        )
 	      )
 	    );
