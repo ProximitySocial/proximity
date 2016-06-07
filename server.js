@@ -55,16 +55,16 @@ app.use('/api', userRouter)
 app.use('/api', eventRouter)
 app.use('/helpers', helpersRouter)
 
-// app.get('/', (req, res) => {
-//   // if (req.query.access_token){
-//   //   console.log('Access TOKEN found')
-//   //   res.sendfile(__dirname + '/build').status(200)
-//   // }
-//   // console.log('no access TOKEN')
-//   console.log('REDIRECTED AND AUTHENTICATED');
-//   console.log(req.query.access_token);
-//   res.sendFile(__dirname + '/build/index.html');
-// })
+app.get('/', (req, res) => {
+  // if (req.query.access_token){
+  //   console.log('Access TOKEN found')
+  //   res.sendfile(__dirname + '/build').status(200)
+  // }
+  // console.log('no access TOKEN')
+  console.log('REDIRECTED AND AUTHENTICATED');
+  console.log(req.query.access_token);
+  res.render(__dirname + '/build/index.html');
+})
 
 // function ensureAuthenticated(req, res, next) {
 //   console.log('INSIDE ENSURE AUTHENTICATED');
