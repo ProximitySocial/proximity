@@ -26764,11 +26764,6 @@
 	            'button',
 	            { type: 'submit', onClick: this.handleSubmit },
 	            'Submit Event!'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            null,
-	            $imagePreview
 	          )
 	        )
 	      ),

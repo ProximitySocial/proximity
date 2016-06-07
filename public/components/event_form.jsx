@@ -226,7 +226,6 @@ module.exports = React.createClass({
                 <label for="Image">Image:</label>
                 <input type="file" onChange={this.handleImageChange} />
                 <button type="submit" onClick={this.handleSubmit}>Submit Event!</button>
-                <div>{$imagePreview }</div>
               </form>
             </section>
             <section className="eventPreview">
