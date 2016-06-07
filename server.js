@@ -53,7 +53,7 @@ app.use(passport.session())
 app.use('/api', authRouter)
 app.use('/api', userRouter)
 app.use('/api', eventRouter)
-app.use('/helpers', helpersRouter)
+app.use('/api', helpersRouter)
 
 app.get('/', (req, res) => {
   // if (req.query.access_token){

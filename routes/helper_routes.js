@@ -5,7 +5,7 @@ const helperRouter     = module.exports = exports = express.Router()
 const request = require('request');
 const htmlParser = require('jq-html-parser');
 
-helperRouter.get('/img/:keyword', (routeReq, routeRes) => {
+helperRouter.get('/helper/img/:keyword', (routeReq, routeRes) => {
   // TODO add caching
   let url = "http://www.bing.com/images/search?q=" + routeReq.params.keyword + "&qft=+filterui:imagesize-medium"
   request.get(url, function(err, res, body){
