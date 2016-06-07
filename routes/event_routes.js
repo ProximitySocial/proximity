@@ -40,22 +40,16 @@ eventRouter.post('/event/new', (req, res) => {
       eventData.locationData = data
 
       if(eventData.fileName && eventData.fileType){
-        console.log('Before sending to S3');
-        console.log(eventData);
-        console.log('has file name and filetype');
         var cb = function() {};
         getS3SignedUrl(eventData, cb)
           .then((s3Data) => {
             eventData = s3Data
-
             eventData.picture = eventData.url
             eventData._creator = req.body.userID
             console.log('Event data before mongoose:');
             console.log(eventData);
             new Event(eventData).save((err, result) => {
               if (err || result === null) return res.status(500).json({msg: 'Server Error'})
-              console.log('***************')
-              console.log('picture found');
               console.log(result);
               res.status(200).json({msg: 'event created', eventID: result._id, signedRequest: eventData.awsData})
             })
@@ -65,8 +59,6 @@ eventRouter.post('/event/new', (req, res) => {
         console.log('no file name or filetype');
         new Event(eventData).save((err, result) => {
           if (err || result === null) return res.status(500).json({msg: 'Server Error'})
-          console.log('***************')
-          console.log('no picture found');
           console.log(result);
           res.status(200).json({msg: 'event created', eventID: result._id})
         })
