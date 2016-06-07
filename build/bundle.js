@@ -26156,7 +26156,7 @@
 	  componentWillMount: function componentWillMount() {
 	    var _this = this;
 
-	    if (!this.state.user || !sessionStorage.token) {
+	    if (!this.state.user && !sessionStorage.token) {
 	      var token = getParameterByName('access_token');
 	      sessionStorage.setItem('token', token);
 	    } else {
@@ -26272,7 +26272,7 @@
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'col-lg-4', id: 'eventList' },
+	            { className: 'col-lg-5', id: 'eventList' },
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'eventsHeader' },
@@ -26543,6 +26543,8 @@
 	    reader.readAsDataURL(file);
 	  },
 	  loadToS3: function loadToS3(signedRequest) {
+	    console.log('this is the file object: ***');
+	    console.log(this.state.file);
 	    var xhr = new XMLHttpRequest();
 	    xhr.open("PUT", signedRequest);
 	    xhr.onload = function () {
@@ -26550,7 +26552,8 @@
 	        console.info('Success loading to S3');
 	      }
 	    };
-
+	    console.log('This state file below: ***************');
+	    console.log(this.state.file);
 	    xhr.send(this.state.file);
 
 	    this.setState({
@@ -26561,26 +26564,32 @@
 	      fileSize: ''
 	    });
 	  },
+	  setImagePreview: function setImagePreview(url) {
+	    this.setState({
+	      imagePreviewUrl: url
+	    });
+	  },
 	  srcImage: function srcImage(e) {
-	    console.log('trying to source image');
+	    var state = this.state;
+	    var setImagePreview = this.setImagePreview;
 	    var title = this.state.title.trim();
 	    var arr = title.split(' ');
 	    var length = arr.length;
 	    var query = arr.join('+');
 	    console.log(query);
+	    var route = '/helpers/img/' + query;
 	    $.ajax({
 	      type: 'GET',
-	      url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
-	      dataType: 'application/json',
+	      url: route,
+	      contentType: 'application/json',
 	      success: function success(data) {
-	        console.log(data);
+	        setImagePreview(data.url);
 	      },
-	      error: function error(data, status, xhr) {
+	      error: function error(data, status, jqXHR) {
 	        console.log(data);
 	        console.log(status);
-	        console.log(xhr);
+	        console.log(jqXHR);
 	      }
-
 	    });
 	  },
 	  navigateBack: function navigateBack() {
@@ -26594,7 +26603,15 @@
 	    e.preventDefault();
 	    var title = this.state.title.trim();
 	    var description = this.state.description.trim();
-	    var interestTags = this.state.interestTags.trim();
+	    var interestTags = this.state.interestTags.split(',').map(function (interest) {
+	      return interest.trim().toLowerCase();
+	    });
+	    console.log(interestTags);
+	    if (interestTags.length > 3) {
+	      //flash error Validation
+	      console.log('maximum of 3 interests Tags');
+	      return;
+	    }
 	    var address = this.state.address.trim();
 	    var addressName = this.state.addressName.trim();
 	    if (this.state.file) {
@@ -26604,11 +26621,7 @@
 	    } else {
 	      var picture = this.state.url.trim();
 	    }
-	    console.log('fileName');
-	    console.log(fileName);
-	    console.log('fileType');
-	    console.log(fileType);
-	    // if (!title || !description || !address) return
+	    if (!title || !description || !address || !interestTags) return;
 	    this.onFormSubmit({
 	      title: title,
 	      description: description,
@@ -26753,16 +26766,16 @@
 	            { 'for': 'Image' },
 	            'Image:'
 	          ),
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.srcImage },
+	            'Source an Image'
+	          ),
 	          _react2.default.createElement('input', { type: 'file', onChange: this.handleImageChange }),
 	          _react2.default.createElement(
 	            'button',
 	            { type: 'submit', onClick: this.handleSubmit },
 	            'Submit Event!'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            null,
-	            $imagePreview
 	          )
 	        )
 	      ),
@@ -27139,7 +27152,7 @@
 	    //   console.info('there is a Prop for image')
 	    //   this.props.event.picture = this.props.image
 	    // }
-	    var divStyle = { background: "url(" + this.props.event.picture + ") center center",
+	    var divStyle = { background: "url(" + this.props.event.picture + ") no-repeat center center",
 	      minHeight: "25rem",
 	      margin: 0,
 	      verticalAlign: "bottom" };

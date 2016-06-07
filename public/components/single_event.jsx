@@ -41,7 +41,7 @@ module.exports = React.createClass({
     //   console.info('there is a Prop for image')
     //   this.props.event.picture = this.props.image
     // }
-    var divStyle = {background: "url(" + this.props.event.picture + ") center center",
+    var divStyle = {background: "url(" + this.props.event.picture + ") no-repeat center center",
                     minHeight: "25rem",
                     margin: 0,
                     verticalAlign: "bottom"}

@@ -18,6 +18,8 @@ h3 {
 }
 
 .btn-action {
+  vertical-align: middle;
+  margin-top: 1.4em;
   background: @blue;
 }
 
@@ -206,6 +208,7 @@ h3 {
             flex: 1;
   }
   .editRound {
+    margin-top: 1.3em;
     width: 40px;
     border-radius: 100%;
     height: 40px;
@@ -264,7 +267,39 @@ h3 {
         width: 100px;
       }
     }
-    .eventForm, .userForm {
+    .eventForm {
+      text-align: left;
+      max-width: 300px;
+      margin: 0;
+      border-radius: @radius;
+      padding: 0;
+      label {
+        width: 100%;
+        margin-top: 1rem;
+      }
+      div img {
+        max-width: 375px;
+      }
+      input, textarea {
+        height: 34px;
+        width: 100%;
+        border-radius: @radius;
+        border: 1px solid transparent;
+        border-top: none;
+        border-bottom: 1px solid #DDD;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,.39), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+      }
+      textarea{
+        min-height: 7rem;
+      }
+      button{
+        background: @blue;
+        margin-top: 2rem;
+        margin-left: 23rem;
+        border-radius: @radius;
+      }
+    }
+    .userForm {
       text-align: left;
       max-width: 400px;
       margin: 0;
@@ -299,10 +334,13 @@ h3 {
   }
 }
 
+
 .eventTotalForm {
   display: inline-block;
-  .eventForm,
+  .eventForm{
+    display: inline-block;
+  }
   .eventPreview {
-    display: inline-block
+    display: inline-block;
   }
 }

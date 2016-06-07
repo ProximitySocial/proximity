@@ -66,6 +66,8 @@ module.exports = React.createClass({
         reader.readAsDataURL(file)
       },
       loadToS3: function(signedRequest){
+        console.log('this is the file object: ***')
+        console.log(this.state.file)
         var xhr = new XMLHttpRequest()
         xhr.open("PUT", signedRequest)
         xhr.onload = function() {
@@ -73,8 +75,9 @@ module.exports = React.createClass({
             console.info('Success loading to S3')
           }
         }
-
-        xhr.send(this.state.file)
+        console.log('This state file below: ***************')
+        console.log(this.state.file)
+				xhr.send(this.state.file)
 
         this.setState({
           file: '',
@@ -84,26 +87,33 @@ module.exports = React.createClass({
           fileSize: ''
         })
       },
+     setImagePreview: function(url) {
+       this.setState({
+         imagePreviewUrl: url,
+       })
+     },
       srcImage: function(e){
-        console.log('trying to source image')
+        let state = this.state
+        let setImagePreview = this.setImagePreview
         let title = this.state.title.trim()
         let arr = title.split(' ')
         let length = arr.length
         let query = arr.join('+')
         console.log(query)
+        let route = '/helpers/img/' + query
         $.ajax({
           type: 'GET',
-          url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
-          dataType: 'application/json',
-          success: (data) => {
-            console.log(data);
+          url: route,
+          contentType: 'application/json',
+          success: function(data){
+            setImagePreview(data.url)
+
           },
-          error: (data, status, xhr) => {
+          error: function(data, status, jqXHR){
             console.log(data)
             console.log(status)
-            console.log(xhr)
+            console.log(jqXHR)
           }
-
         })
       },
       navigateBack: function(){
@@ -117,7 +127,13 @@ module.exports = React.createClass({
         e.preventDefault()
         var title = this.state.title.trim()
         var description = this.state.description.trim()
-        var interestTags = this.state.interestTags.trim()
+        var interestTags = this.state.interestTags.split(',').map(function(interest){return interest.trim().toLowerCase()})
+        console.log(interestTags)
+        if (interestTags.length > 3) {
+          //flash error Validation
+          console.log('maximum of 3 interests Tags')
+          return
+        }
         var address = this.state.address.trim()
         var addressName = this.state.addressName.trim()
         if (this.state.file){
@@ -127,11 +143,7 @@ module.exports = React.createClass({
         } else {
           var picture = this.state.url.trim()
         }
-        console.log('fileName')
-        console.log(fileName)
-        console.log('fileType')
-        console.log(fileType)
-        // if (!title || !description || !address) return
+        if (!title || !description || !address || !interestTags) return
         this.onFormSubmit({
            title: title,
            description: description,
@@ -220,9 +232,9 @@ module.exports = React.createClass({
                 <label for="Address">Street Address:</label>
                 <input type="text" placeholder="Address" valueLink={this.linkState('address')} />
                 <label for="Image">Image:</label>
+                <button onClick={this.srcImage}>Source an Image</button>
                 <input type="file" onChange={this.handleImageChange} />
                 <button type="submit" onClick={this.handleSubmit}>Submit Event!</button>
-                <div>{$imagePreview }</div>
               </form>
             </section>
             <section className="eventPreview">
@@ -245,3 +257,4 @@ module.exports = React.createClass({
         )
       }
     });
+

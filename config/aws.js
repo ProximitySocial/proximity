@@ -12,7 +12,7 @@ function getS3SignedUrl(dataObj, cb){
   var options = {
     Bucket: S3_BUCKET,
     Key: dataObj.fileName,
-    Expires: 60,
+    Expires: 60000,
     ContentType: dataObj.fileType,
     ACL: 'public-read'
   }

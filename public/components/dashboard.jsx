@@ -40,7 +40,7 @@ module.exports = React.createClass({
   },
 
   componentWillMount: function() {
-    if (!this.state.user || !sessionStorage.token){
+    if (!this.state.user && !sessionStorage.token){
       var token = getParameterByName('access_token')
       sessionStorage.setItem('token', token)
     } else {
@@ -135,7 +135,7 @@ module.exports = React.createClass({
             <section className="fullModal" style={showUserModal}>
               <UserForm className="row form" toggleUserModal={this.showUserModal} user={this.state.user}/>
             </section>
-            <div className="col-lg-4" id="eventList">
+            <div className="col-lg-5" id="eventList">
               <div className="eventsHeader">
                 <h2>Events</h2>
                 <div className="spacer"></div>
