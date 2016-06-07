@@ -64,11 +64,11 @@ app.get('/', (req, res) => {
   console.log('REDIRECTED AND AUTHENTICATED')
   console.log('REDIRECTED AND AUTHENTICATED')
   console.log('REDIRECTED AND AUTHENTICATED to:')
-  console.log(__dirname + '/build')
+  console.log(__dirname + '/build/index.html')
 
   // console.log(req.query.access_token)
   // res.render(__dirname + '/build/index.html')
-    res.sendfile(__dirname + '/build')
+    res.sendFile(__dirname + '/build/index.html')
 })
 
 // function ensureAuthenticated(req, res, next) {
