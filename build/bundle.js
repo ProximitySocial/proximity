@@ -26156,7 +26156,7 @@
 	  componentWillMount: function componentWillMount() {
 	    var _this = this;
 
-	    if (!this.state.user || !sessionStorage.token) {
+	    if (!this.state.user && !sessionStorage.token) {
 	      var token = getParameterByName('access_token');
 	      sessionStorage.setItem('token', token);
 	    } else {
