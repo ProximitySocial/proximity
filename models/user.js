@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const SHA256   = require("crypto-js/sha256");
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const HOOD_MAX = 2
@@ -17,8 +16,8 @@ function interestsLimit(val) {
 var user = new mongoose.Schema({
     firstName:     {type: String, required: true},
     lastName:      {type: String, minlength: 1},
-    email:         {type: String, required: true},
-    bio:           {type: String},
+    email:         {type: String, default:'iGetTooMuchEmail@dontEmailMe.com'},
+    bio:           {type: String, default:'You will love me, enough said!'},
     pic:           {type: String},
     rating:        {type: Number},
     _favorites:    {type: Array},
@@ -40,9 +39,8 @@ user.methods.setHash = function(fbid){
 };
 
 //the Hash is a 'WANNA BE' valid hash.    So its wbHash//// IF YOUR STUCK.....get to the moment, its the place when all releases and the answer is right around the corner.. NOW.  GET THERE!!!
-user.methods.validHash = function(hash){
-  var wbHash = crypto.pbkdf2Sync(hash, this.salt, 1000, 64).toString('hex');
-  return wbHash === this.hash;
+user.methods.validToken = function(token){
+  return token === this.access_token;
 };
 
 user.methods.generateJWT = function() {
@@ -54,10 +52,9 @@ user.methods.generateJWT = function() {
 
   return jwt.sign({
     _id: this._id,
-    hash: this.hash,
+    token: this.access_token,
     exp: parseInt(exp.getTime() / 1000),
   }, process.env.VC_SECRET_CRYPTO || 'secret');
 };
 
 module.exports = exports = mongoose.model('User', user)
-

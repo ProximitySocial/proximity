@@ -1,15 +1,16 @@
-const updateUser     = require('../libs/userLib').createUser
+const createUser     = require('../libs/userLib').createUser
 const express        = require('express')
 const User           = require(__dirname + '/../models/user')
 const Event          = require(__dirname + '/../models/event')
 const userRouter     = module.exports = exports = express.Router()
 const getS3SignedUrl = require('../config/aws')
-const createUser     = require('../libs/userLib')
+const updateUser     = require('../libs/userLib').updateUser
 const passport       = require('../config/passport')
 const jwt            = require('express-jwt');
 
 var auth = jwt({secret: process.env.VC_SECRET_CRYPTO || 'secret', userProperty: 'payload'});
-
+console.log(auth);
+/* WILL ONLY NEED THIS ROUTE FOR ADMIN? */
 userRouter.get('/users', (req, res) => {
   User.find({}, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
@@ -17,35 +18,49 @@ userRouter.get('/users', (req, res) => {
   })
 })
 
+userRouter.post('/getUserID', (req, res) =>{
+  console.log('new post to get a USER ID')
+  var fbid = req.body.fbid
+    User.findOne({"facebook.id": fbid}, (err, data) => {
+    if (err) return res.status(500).json({msg: 'Server Error'})
+    if (data === null) return res.status(400).json({msg: 'fbID not found, bad request'})
+    res.status(200).json({msg: 'user found with fbid', user: data} )
+  })
+})
 
-userRouter.post('/user/new', auth, (req, res) => {
+userRouter.post('/user/new', (req, res) => {
   console.log('NEW POST for a user')
+  var cb = function() {}
   var userData = req.body
   if(userData.fileName && userData.fileType){
-    getS3SignedUrl(userData)
+    getS3SignedUrl(userData, cb)
       .then((data) => {
-        updateUser(data, res)
+        createUser(data, res)
       }).catch((err) => {
         throw err;
       })
   } else {
-    updateUser(userData, res)
+    createUser(userData, res)
   }
 })
 
-userRouter.get('/user', passport.authenticate('bearer', {session: false}),
-  (req, res) => {
-    console.log("GETTING REQUEST for a specific user")
-    res.status(200).json(req.user).header()
-  }
-)
+/* DELETE THIS ROUTE? */
+// userRouter.get('/user', passport.authenticate('bearer', {session: false}),
+//   (req, res) => {
+//     console.log("GETTING REQUEST for a specific user")
+//     res.status(200).json(req.user).header()
+//   }
+// )
 
 
 userRouter.get('/user/:id', (req, res) => {
   console.log("GETTING REQUEST for a specific user")
-  User.findOne({access_token: req.params.id}, (err, result) => {
+  var dbQuery = req.params.id.length > 30 ? {access_token: req.params.id} : {_id: req.params.id}
+  User.findOne(dbQuery, (err, result) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     if (result === null) return res.status(400).json({msg: "bad request, user doesn't exist"})
+    console.log('here is the result:::')
+    console.log(result)
     res.status(200).json(result)
   })
 })
@@ -55,12 +70,15 @@ userRouter.put('/user/:id', (req, res) => {
   console.log('SERVER UPDATE USER called');
   var cb = function() {};
   var newData = req.body
+  console.log(newData);
   Object.keys(newData).forEach( (prop) => {
     if (!newData[prop]){
       console.log('deleting prop obj: ' + newData[prop])
       delete newData[prop]
     }
   })
+  console.log('newData after processing');
+  console.log(newData);
   if (newData.address) {
     var address = req.body.address.split(' ').join('+')
     callGoogle(address)
@@ -110,6 +128,6 @@ userRouter.put('/user/:id', (req, res) => {
 userRouter.delete('/user/:id', (req, res) => {
   User.remove({_id: req.params.id}, (err) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
-    res.status(200).json({msg: 'Successfully destroyed User'})
+    res.status(200).json({msg: 'Successfully destroyed user'})
   })
 })

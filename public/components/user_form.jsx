@@ -1,19 +1,21 @@
 const React = require('react');
 const ReactDOM = require('react-dom')
+const LinkedStateMixin = require('react-addons-linked-state-mixin')
 var port = process.env.PORT
 
 module.exports = React.createClass({
-      displayName: 'CreateUserForm',
+      displayName: 'userForm',
+      mixins: [LinkedStateMixin],
       getInitialState: function() {
         return({
-                userId: '5740b2dfb7c4e79bf41af122',
-                firstName: '',
-                lastName: '',
-                email: '',
-                bio: '',
-                interests: '',
-                addressName: '',
-                address: '',
+                userID: this.props.user._id,
+                firstName: this.props.user.firstName,
+                lastName: this.props.user.lastName,
+                email: this.props.user.email,
+                bio: this.props.user.bio,
+                interests: this.props.user.interests,
+                addressName: this.props.user.addressName,
+                address: this.props.user.address,
                 file: '',
                 imagePreviewUrl: '',
                 url: '',
@@ -22,30 +24,43 @@ module.exports = React.createClass({
                 fileSize: ''
               });
       },
-      handleIdChange: function(e) {
-        this.setState({userId: e.target.value});
+      componentWillReceiveProps: function(){
+        console.log('componentWillReceiveProps')
+        this.setState({
+                        userID: this.props.user.id,
+                        firstName: this.props.user.firstName,
+                        lastName: this.props.user.lastName,
+                        email: this.props.user.email,
+                        bio: this.props.user.bio,
+                        interests: this.props.user.interests,
+                        addressName: this.props.user.addressName,
+                        address: this.props.user.address
+                      })
       },
-      handleFirstChange: function(e) {
-        this.setState({firstName: e.target.value});
-      },
-      handleLastChange: function(e) {
-        this.setState({lastName: e.target.value});
-      },
-      handleEmailChange: function(e) {
-        this.setState({email: e.target.value});
-      },
-      handleBioChange: function(e) {
-        this.setState({bio: e.target.value});
-      },
-      handleInterestsChange: function(e) {
-        this.setState({interests: e.target.value});
-      },
-      handleAddressNameChange: function(e) {
-        this.setState({addressName: e.target.value});
-      },
-      handleAddressChange: function(e) {
-        this.setState({address: e.target.value});
-      },
+      // handleIdChange: function(e) {
+      //   this.setState({userID: e.target.value});
+      // },
+      // handleFirstChange: function(e) {
+      //   this.setState({firstName: e.target.value});
+      // },
+      // handleLastChange: function(e) {
+      //   this.setState({lastName: e.target.value});
+      // },
+      // handleEmailChange: function(e) {
+      //   this.setState({email: e.target.value});
+      // },
+      // handleBioChange: function(e) {
+      //   this.setState({bio: e.target.value});
+      // },
+      // handleInterestsChange: function(e) {
+      //   this.setState({interests: e.target.value});
+      // },
+      // handleAddressNameChange: function(e) {
+      //   this.setState({addressName: e.target.value});
+      // },
+      // handleAddressChange: function(e) {
+      //   this.setState({address: e.target.value});
+      // },
       handleImageChange: function(e){
         e.preventDefault();
         let reader = new FileReader()
@@ -133,9 +148,9 @@ module.exports = React.createClass({
         this.setState({firstName: '', lastName: '', email: '', bio: '', interests: '', addressName: '', address: ''});
       },
       onFormSubmit: function(newUser, callback) {
-        if(this.state.userId){
+        if(this.state.userID){
           var crudType = 'PUT'
-          var route = '/api/user/' + this.state.userId
+          var route = '/api/user/' + this.state.userID
         } else {
           var crudType = 'POST'
           var route = '/api/user/new'
@@ -157,38 +172,56 @@ module.exports = React.createClass({
           }
         })
       },
+      navigateBack: function(){
+        this.goBack()
+      },
+      updateUser: function(){
+        var updated = !this.state.update
+        this.setState({update: updated})
+      },
       render: function() {
         let {imagePreviewUrl} = this.state
         let $imagePreview = null;
         if (imagePreviewUrl) {
-          $imagePreview = (<img src={imagePreviewUrl} />)
+          $imagePreview = (<img className="imgPreview" src={imagePreviewUrl} />)
+        }
+        var hidden = {display: 'none'}
+        var show = {}
+        if (this.state.update){
+          hidden = {}
+          show = {display: 'none'}
         }
         return (
-          <div>
-            <h2>Create User</h2>
-            <form className="createUserForm" onSubmit={this.handleSubmit} >
-              <label for="userID">User ID:</label>
-              <input type="text" placeholder="userID" value={this.state.userId}  onChange={this.handleIdChange} />
-              <label for="firstName">First Name:</label>
-              <input type="text" placeholder="First" value={this.state.firstName}  onChange={this.handleFirstChange} />
-              <label for="lastName">Last Name:</label>
-              <input type="text" placeholder="Last" value={this.state.lastName} onChange={this.handleLastChange} />
+          <section className="modalUser">
+            <div className='modalNav'>
+              <button className='btn back-btn' onClick={this.props.toggleUserModal} >Back</button>
+              <div className='spacer'></div>
+              <button className='btn btn-action' style={show} onClick={this.updateUser}>Update User</button>
+              <button className='btn btn-action' style={hidden} onClick={this.updateUser}>Create User</button>
+            </div>
+            <form className="userForm" onSubmit={this.handleSubmit} >
+              <div className="adminForUser" style={hidden}>
+                <label for="userID">User ID:</label>
+                <input placeholder="userID" valueLink={this.linkState('userID')} />
+                <label for="firstName">First Name:</label>
+                <input type="text" placeholder="First" valueLink={this.linkState('firstName')}/>
+                <label for="lastName">Last Name:</label>
+                <input type="text" placeholder="Last" valueLink={this.linkState('lastName')} />
+              </div>
               <label for="email">Email:</label>
-              <input type="text" placeholder="Email" value={this.state.email} onChange={this.handleEmailChange} />
+              <input type="text" placeholder="Email" valueLink={this.linkState('email')} />
               <label for="bio">Bio:</label>
-              <input type="text" placeholder="bio" value={this.state.bio} onChange={this.handleDescriptionChange} />
-              <label for="Address">Interests:</label>
-              <input type="text" placeholder="InterestTags" value={this.state.interests} onChange={this.handleInterestTagsChange} />
-              <label for="Address Name">Address Name:</label>
-              <input type="text" placeholder="Address Name" value={this.state.addressName} onChange={this.handleAddressNameChange} />
+              <textarea type="text" placeholder="bio" valueLink={this.linkState('bio')} />
+              <label for="Interests">Interests:</label>
+              <input type="text" placeholder="golf, running, dancing, (comma seperated / 5 max)" valueLink={this.linkState('interests')} />
               <label for="Address">Address:</label>
-              <input type="text" placeholder="Address" value={this.state.address} onChange={this.handleAddressChange} />
+              <input type="text" placeholder="We ask for address to select your neighborhood" valueLink={this.linkState('address')} />
               <label for="Image">Image:</label>
               <input type="file" onChange={this.handleImageChange} />
-              <button type="submit">Create User!</button>
+              <button type="submit">Submit User!</button>
             </form>
             {$imagePreview}
-          </div>
+          </section>
         );
       }
     });

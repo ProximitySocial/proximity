@@ -30,31 +30,36 @@ function formatDate(date) {
 
 module.exports = React.createClass({
   getInitialState: function(){
-    console.log('Getting Initial State of Single Event');
-    console.log(this.props.event);
-    return {event: this.props.event}
+    return ({event: ''})
   },
-  componentDidMount: function(){
-    this.setState({timeTill: 'NOW'})
+  componentWillMount: function(){
+    this.setState({event: this.props.event,
+                   image: this.props.image})
   },
   render: function() {
-    if (!this.props.event.picture) {
-      // this.props.event.picture = "http://lorempixel.com/640/480/transport"
-    }
-    var divStyle = {background: "url(" + this.props.event.picture + ") center center",
+    // if (this.props.image) {
+    //   console.info('there is a Prop for image')
+    //   this.props.event.picture = this.props.image
+    // }
+    var divStyle = {background: "url(" + this.props.event.picture + ") no-repeat center center",
                     minHeight: "25rem",
                     margin: 0,
                     verticalAlign: "bottom"}
 
     // var startTime = Date.parse(this.props.event.startTime)
     var now = Date.now() //- Date.parse(Date.now())
-    var timeTill = Date.parse(this.props.event.startTime) - now
-    var x = timeTill / 1000
+    var x = (Date.parse(this.props.event.startTime) - now)/ 1000
+
     var hour = formatDate(this.props.event.startTime)
     var day = x
+    if(this.props.event._attendees) {
+      var numberGoing = this.props.event._attendees.length
+    } else {
+      var numberGoing = 1
+    }
 
     return (
-      <li><Link to={'/event/' + this.props.event._id}>
+      <li><Link to={'/event/' + this.props.event._id + '/' + this.props.userID}>
         <div className="eventPicture" style={divStyle}>
           <div className="eventTitle">
             <h3 style={{marginTop:0}}>{this.props.event.title}</h3>
@@ -67,8 +72,7 @@ module.exports = React.createClass({
           <p className="hood"><strong>Neighborhood:</strong>  {this.props.event.neighborhood}</p>
           <p><strong>ID:</strong>   {this.props.event._id}</p>
           <div className="eventAttCount">
-            <h3>{this.props.event._attendees.length}</h3>
-            <p>&nbsp;&nbsp;attendees</p>
+            <h3>{numberGoing}</h3><p>&nbsp;&nbsp;<i>going</i></p>
           </div>
         </div></Link>
       </li>

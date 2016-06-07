@@ -1,6 +1,6 @@
 const chai = require('chai');
 const expect = chai.expect;
-const CryptoJS   = require("crypto-js");
+const CryptoJS   = require('crypto-js');
 
 chai.use(require('chai-http'));
 
@@ -69,11 +69,10 @@ describe('AUTH ROUTES', () => {
         this.testUser2 = result
         done()
       })
-
     });
 
     it('should receive a 200 and have FOUND the user'), (done) => {
-      var testUser2 = this.testUser
+      var testUser2 = testUser
       testUser2.facebook.id = '10987654321'
       var token = CryptoJS.AES.encrypt(JSON.stringify(testUser2.facebook.id), process.env.VC_SECRET_CRYPTO)
       console.log('User2 token: ' + token)
@@ -88,7 +87,6 @@ describe('AUTH ROUTES', () => {
         })
       done()
     }
-
 
   })
 })
