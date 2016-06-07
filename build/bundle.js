@@ -26272,7 +26272,7 @@
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'col-lg-4', id: 'eventList' },
+	            { className: 'col-lg-5', id: 'eventList' },
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'eventsHeader' },
@@ -26596,7 +26596,15 @@
 	    e.preventDefault();
 	    var title = this.state.title.trim();
 	    var description = this.state.description.trim();
-	    var interestTags = this.state.interestTags.trim();
+	    var interestTags = this.state.interestTags.split(',').map(function (interest) {
+	      return interest.trim().toLowerCase();
+	    });
+	    console.log(interestTags);
+	    if (interestTags.length > 3) {
+	      //flash error Validation
+	      console.log('maximum of 3 interests Tags');
+	      return;
+	    }
 	    var address = this.state.address.trim();
 	    var addressName = this.state.addressName.trim();
 	    if (this.state.file) {
@@ -26606,11 +26614,7 @@
 	    } else {
 	      var picture = this.state.url.trim();
 	    }
-	    console.log('fileName');
-	    console.log(fileName);
-	    console.log('fileType');
-	    console.log(fileType);
-	    // if (!title || !description || !address) return
+	    if (!title || !description || !address || !interestTags) return;
 	    this.onFormSubmit({
 	      title: title,
 	      description: description,
@@ -27141,7 +27145,7 @@
 	    //   console.info('there is a Prop for image')
 	    //   this.props.event.picture = this.props.image
 	    // }
-	    var divStyle = { background: "url(" + this.props.event.picture + ") center center",
+	    var divStyle = { background: "url(" + this.props.event.picture + ") no-repeat center center",
 	      minHeight: "25rem",
 	      margin: 0,
 	      verticalAlign: "bottom" };
