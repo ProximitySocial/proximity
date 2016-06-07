@@ -3,70 +3,70 @@ const ReactDOM = require('react-dom')
 import { Router, Route, Link, browserHistory } from 'react-router'
 
 module.exports = React.createClass({
-      displayName: 'eventForm',
-      mixins: [Router.Navigation],
-      getInitialState: function() {
-        return({
-                eventId: '',
-                title: '',
-                description: '',
-                interestTags: '',
-                addressName: '',
-                address: '',
-                file: '',
-                imagePreviewUrl: '',
-                url: '',
-                fileName: '',
-                fileType: '',
-                fileSize: '',
-                update: false});
-      },
-      componentWillReceiveProps: function(nextProps) {
-        this.setState({update: nextProps.update})
-      },
-      handleIdChange: function(e) {
-        this.setState({eventId: e.target.value});
-      },
-      handleTitleChange: function(e) {
-        this.setState({title: e.target.value});
-      },
-      handleDescriptionChange: function(e) {
-        this.setState({description: e.target.value});
-      },
-      handleAddressNameChange: function(e) {
-        this.setState({addressName: e.target.value});
-      },
-      handleAddressChange: function(e) {
-        this.setState({address: e.target.value});
-      },
-      handleInterestTagsChange: function(e) {
-        this.setState({interestTags: e.target.value});
-      },
-      handleImageChange: function(e){
-        e.preventDefault();
-        let reader = new FileReader()
-        let file = e.target.files[0]
+			displayName: 'eventForm',
+			mixins: [Router.Navigation],
+			getInitialState: function() {
+				return({
+								eventId: '',
+								title: '',
+								description: '',
+								interestTags: '',
+								addressName: '',
+								address: '',
+								file: '',
+								imagePreviewUrl: '',
+								url: '',
+								fileName: '',
+								fileType: '',
+								fileSize: '',
+								update: false});
+			},
+			componentWillReceiveProps: function(nextProps) {
+				this.setState({update: nextProps.update})
+			},
+			handleIdChange: function(e) {
+				this.setState({eventId: e.target.value});
+			},
+			handleTitleChange: function(e) {
+				this.setState({title: e.target.value});
+			},
+			handleDescriptionChange: function(e) {
+				this.setState({description: e.target.value});
+			},
+			handleAddressNameChange: function(e) {
+				this.setState({addressName: e.target.value});
+			},
+			handleAddressChange: function(e) {
+				this.setState({address: e.target.value});
+			},
+			handleInterestTagsChange: function(e) {
+				this.setState({interestTags: e.target.value});
+			},
+			handleImageChange: function(e){
+				e.preventDefault();
+				let reader = new FileReader()
+				let file = e.target.files[0]
 
-        reader.onloadend = () => {
-          this.setState({
-            file: file,
-            imagePreviewUrl: reader.result,
-          })
-        }
-        reader.readAsDataURL(file)
-      },
-      loadToS3: function(signedRequest, done){
-        console.log('send off to S3')
-        console.log(this.state.file);
-        var xhr = new XMLHttpRequest()
-        xhr.open("PUT", signedRequest)
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            done()
-          }
-        }
+				reader.onloadend = () => {
+					this.setState({
+						file: file,
+						imagePreviewUrl: reader.result,
+					})
+				}
+				reader.readAsDataURL(file)
+			},
+			loadToS3: function(signedRequest, done){
+				console.log('send off to S3')
+				console.log(this.state.file);
+				var xhr = new XMLHttpRequest()
+				xhr.open("PUT", signedRequest)
+				xhr.onload = function() {
+					if (xhr.status === 200) {
+						done()
+					}
+				}
 
-        xhr.send(this.state.file)
+				xhr.send(this.state.file)
 
         this.setState({
           file: ''
@@ -206,3 +206,4 @@ module.exports = React.createClass({
         )
       }
     });
+
