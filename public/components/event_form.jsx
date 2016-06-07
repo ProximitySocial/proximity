@@ -66,6 +66,8 @@ module.exports = React.createClass({
         reader.readAsDataURL(file)
       },
       loadToS3: function(signedRequest){
+        console.log('this is the file object: ***')
+        console.log(this.state.file)
         var xhr = new XMLHttpRequest()
         xhr.open("PUT", signedRequest)
         xhr.onload = function() {

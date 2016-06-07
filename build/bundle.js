@@ -26543,6 +26543,8 @@
 	    reader.readAsDataURL(file);
 	  },
 	  loadToS3: function loadToS3(signedRequest) {
+	    console.log('this is the file object: ***');
+	    console.log(this.state.file);
 	    var xhr = new XMLHttpRequest();
 	    xhr.open("PUT", signedRequest);
 	    xhr.onload = function () {
