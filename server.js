@@ -63,10 +63,12 @@ app.get('/', (req, res) => {
   // console.log('no access TOKEN')
   console.log('REDIRECTED AND AUTHENTICATED')
   console.log('REDIRECTED AND AUTHENTICATED')
-  console.log('REDIRECTED AND AUTHENTICATED')
+  console.log('REDIRECTED AND AUTHENTICATED to:')
+  console.log(__dirname + '/build')
+
   // console.log(req.query.access_token)
   // res.render(__dirname + '/build/index.html')
-    res.sendfile(__dirname + '/build').status(200)
+    res.sendfile(__dirname + '/build')
 })
 
 // function ensureAuthenticated(req, res, next) {
