@@ -26552,7 +26552,8 @@
 	        console.info('Success loading to S3');
 	      }
 	    };
-
+	    console.log('This state file below: ***************');
+	    console.log(this.state.file);
 	    xhr.send(this.state.file);
 
 	    this.setState({

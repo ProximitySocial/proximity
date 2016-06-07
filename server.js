@@ -1,4 +1,4 @@
-const mongoose       = require('mongoose')
+  const mongoose       = require('mongoose')
     , path           = require('path')
     , express        = require('express')
     , app            = express()
@@ -63,7 +63,7 @@ app.get('/', (req, res) => {
   // console.log('no access TOKEN')
   console.log('REDIRECTED AND AUTHENTICATED');
   console.log(req.query.access_token);
-  res.render(__dirname + '/build.index.html');
+  res.render(__dirname + '/build/index.html');
 })
 
 // function ensureAuthenticated(req, res, next) {
