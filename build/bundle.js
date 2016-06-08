@@ -26489,7 +26489,6 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var LinkedStateMixin = __webpack_require__(233);
-	var SingleEvent = __webpack_require__(238);
 
 	function formatDate(date) {
 	  var d = new Date(date);
@@ -26535,8 +26534,16 @@
 	      fileSize: '',
 	      update: false };
 	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    this.setState({ update: nextProps.update });
+	  componentWillReceiveProps: function componentWillReceiveProps() {
+	    console.log('event form component will receive props');
+	    console.log(this.props.event);
+	    this.setState({
+	      eventID: this.props.event._id,
+	      title: this.props.event.title,
+	      description: this.props.event.description,
+	      interestTags: this.props.event.interestTags,
+	      addressName: this.props.event.addressName,
+	      address: this.props.event.address });
 	  },
 	  handleImageChange: function handleImageChange(e) {
 	    var _this = this;
@@ -27209,6 +27216,7 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(38);
 
+	var EventForm = __webpack_require__(232);
 
 	function formatDate(date) {
 	  var d = new Date(date);
@@ -27245,6 +27253,10 @@
 	    this.setState({ event: this.props.event,
 	      image: this.props.image });
 	  },
+	  showEventModal: function showEventModal() {
+	    var answer = !this.state.toggleEventModal;
+	    this.setState({ toggleEventModal: answer });
+	  },
 	  render: function render() {
 	    // if (this.props.image) {
 	    //   console.info('there is a Prop for image')
@@ -27265,6 +27277,34 @@
 	      var numberGoing = this.props.event._attendees.length;
 	    } else {
 	      var numberGoing = 1;
+	    }
+
+	    var hiddenVar = { display: 'none' };
+	    var showVar = {};
+	    var modalObj = { position: 'absolute',
+	      height: '100%',
+	      width: '100%',
+	      background: 'rgba(0, 0, 0, .7)',
+	      zIndex: 999,
+	      padding: 'auto',
+	      textAlign: 'center' };
+	    var hide, show;
+	    if (this.state.toggle) {
+	      hide = hiddenVar;
+	      show = showVar;
+	    } else {
+	      hide = showVar;
+	      show = hiddenVar;
+	    }
+
+	    //Event modal
+	    var hideModal, showModal;
+	    if (this.state.toggleEventModal) {
+	      showModal = modalObj;
+	      hideModal = hiddenVar;
+	    } else {
+	      showModal = hiddenVar;
+	      hideModal = showVar;
 	    }
 
 	    return React.createElement(
@@ -27366,6 +27406,16 @@
 	            )
 	          )
 	        )
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'btn editRound', onClick: this.showEventModal },
+	        'Edit'
+	      ),
+	      React.createElement(
+	        'section',
+	        { className: 'fullModal', style: showModal },
+	        React.createElement(EventForm, { className: 'row form', toggleEventModal: this.showEventModal, event: this.state.event })
 	      )
 	    );
 	  }
@@ -27404,7 +27454,7 @@
 	    };
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps() {
-	    console.log('componentWillReceiveProps');
+	    console.log('user form componentWillReceiveProps');
 	    if (this.props.user) {
 	      this.setState({
 	        userID: this.props.user.id,
@@ -28235,10 +28285,6 @@
 	    var answer = !this.state.toggleUserModal;
 	    this.setState({ toggleUserModal: answer });
 	  },
-	  showEventModal: function showEventModal() {
-	    var answer = !this.state.toggleEventModal;
-	    this.setState({ toggleEventModal: answer });
-	  },
 	  handleInterests: function handleInterests() {
 	    console.log(this.props.user.interests);
 	    var rows = [];
@@ -28291,15 +28337,7 @@
 	      hide = showVar;
 	      show = hiddenVar;
 	    }
-	    //Event modal
-	    var hideModal, showModal;
-	    if (this.state.toggleEventModal) {
-	      showModal = modalObj;
-	      hideModal = hiddenVar;
-	    } else {
-	      showModal = hiddenVar;
-	      hideModal = showVar;
-	    }
+
 	    //User modal
 	    var hideUserModal, showUserModal;
 	    if (this.state.toggleUserModal) {

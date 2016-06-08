@@ -19,10 +19,6 @@ module.exports = React.createClass({
     var answer = !this.state.toggleUserModal
     this.setState({toggleUserModal: answer})
   },
-  showEventModal: function(){
-    var answer = !this.state.toggleEventModal
-    this.setState({toggleEventModal: answer})
-  },
   handleInterests: function() {
     console.log(this.props.user.interests);
     var rows = [];
@@ -57,15 +53,7 @@ module.exports = React.createClass({
         hide = showVar
         show = hiddenVar
       }
-      //Event modal
-      var hideModal, showModal
-      if (this.state.toggleEventModal){
-        showModal = modalObj
-        hideModal = hiddenVar
-      } else {
-        showModal = hiddenVar
-        hideModal = showVar
-      }
+
       //User modal
       var hideUserModal, showUserModal
       if (this.state.toggleUserModal) {

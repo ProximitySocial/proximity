@@ -25,7 +25,7 @@ module.exports = React.createClass({
               });
       },
       componentWillReceiveProps: function(){
-        console.log('componentWillReceiveProps')
+        console.log('user form componentWillReceiveProps')
         if (this.props.user) {
           this.setState({
                           userID: this.props.user.id,

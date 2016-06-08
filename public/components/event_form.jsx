@@ -2,7 +2,6 @@ import React from 'react'
 import { ReactDOM } from 'react-dom'
 import { Router, Route, Link, browserHistory } from 'react-router'
 const LinkedStateMixin = require('react-addons-linked-state-mixin')
-const SingleEvent = require(__dirname + '/single_event.jsx')
 
 
 function formatDate(date) {
@@ -49,8 +48,16 @@ module.exports = React.createClass({
                 fileSize: '',
                 update: false});
       },
-      componentWillReceiveProps: function(nextProps) {
-        this.setState({update: nextProps.update})
+      componentWillReceiveProps: function() {
+        console.log('event form component will receive props');
+        console.log(this.props.event);
+        this.setState({
+          eventID: this.props.event._id,
+          title: this.props.event.title,
+          description: this.props.event.description,
+          interestTags: this.props.event.interestTags,
+          addressName: this.props.event.addressName,
+          address: this.props.event.address})
       },
       handleImageChange: function(e){
         e.preventDefault();
