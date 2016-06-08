@@ -22,36 +22,55 @@ eventRouter.get('/events', (req, res) => {
 })
 
 //Get events, sorted by time per user specified neighborhoods
-eventRouter.get('/events/:userId', (req, res) => {
-  if(req.headers.authorization){
-    cosole.log(req.headers.authorization)
-  }
-  console.log('Events per USER has been requested 2')
-  var userId = req.params.userId
-  console.log(userId);
-  getAndSendUserLocalEvents(userId, res)
+eventRouter.get('/events/:userID', (req, res) => {
+  console.log('Events per userID has been requested')
+  var userID = req.params.userID
+  getAndSendUserLocalEvents(userID, res)
 })
 
   //create new event
 eventRouter.post('/event/new', (req, res) => {
-  console.log("Made a POST request for NEW user")
+  console.log("Made a POST request for NEW Event")
   //add _creator from User _id
   var eventData = req.body
   var address = req.body.address.split(' ').join('+')
   callGoogle(address)
     .then((data) => {
-      if(eventData.fileName && eventData.fileType){
-        getS3SignedUrl(eventData)
-          .then((s3Data) => { eventData = s3Data }).catch((err) => {throw err;})
-      }
       eventData.neighborhood = data.results[0].address_components[2].long_name
       eventData.locationData = data
-      eventData.picture = eventData.url
-      eventData._creator = req.body.userID
-      new Event(eventData).save((err, result) => {
-        if (err || result === null) return res.status(500).json({msg: 'Server Error'})
-        res.status(200).json({msg: 'event created', eventID: result._id, signedRequest: eventData.awsData})
-      })
+
+      if(eventData.fileName && eventData.fileType){
+        console.log('Before sending to S3');
+        console.log(eventData);
+        console.log('has file name and filetype');
+        var cb = function() {};
+        getS3SignedUrl(eventData, cb)
+          .then((s3Data) => {
+            eventData = s3Data
+
+            eventData.picture = eventData.url
+            eventData._creator = req.body.userID
+            console.log('Event data before mongoose:');
+            console.log(eventData);
+            new Event(eventData).save((err, result) => {
+              if (err || result === null) return res.status(500).json({msg: 'Server Error'})
+              console.log('***************')
+              console.log('picture found');
+              console.log(result);
+              res.status(200).json({msg: 'event created', eventID: result._id, signedRequest: eventData.awsData})
+            })
+          })
+          .catch((err) => {throw err;})
+      } else {
+        console.log('no file name or filetype');
+        new Event(eventData).save((err, result) => {
+          if (err || result === null) return res.status(500).json({msg: 'Server Error'})
+          console.log('***************')
+          console.log('no picture found');
+          console.log(result);
+          res.status(200).json({msg: 'event created', eventID: result._id})
+        })
+      }
     })
     .catch((err) => {
       throw err;
@@ -144,7 +163,7 @@ eventRouter.put('/event/:id', (req, res) => {
 })
 
 //add attendee
-//body must contain {"userId": "494934930300030303"}, so that Event $addToSet will add user to _attendees array
+//body must contain {"userID": "494934930300030303"}, so that Event $addToSet will add user to _attendees array
 // eventually need to check that :id matches auth req.user._id
 eventRouter.put('/event/:id/join', (req, res) => {
   var userID = req.body.userID

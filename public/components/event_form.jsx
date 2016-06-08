@@ -1,13 +1,41 @@
 import React from 'react'
 import { ReactDOM } from 'react-dom'
 import { Router, Route, Link, browserHistory } from 'react-router'
+const LinkedStateMixin = require('react-addons-linked-state-mixin')
+const SingleEvent = require(__dirname + '/single_event.jsx')
+
+
+function formatDate(date) {
+  var d = new Date(date);
+  var hh = d.getHours();
+  var m = d.getMinutes();
+  var s = d.getSeconds();
+  var dd = "AM";
+  var h = hh;
+  if (h >= 12) {
+        h = hh-12;
+        dd = "PM";
+    }
+  if (h == 0) {
+        h = 12;
+    }
+  m = m<10?"0"+m:m;
+  s = s<10?"0"+s:s;
+  var pattern = new RegExp("0?"+hh+":"+m+":"+s);
+  var replacement = h+":"+m;
+  /* if you want to add seconds
+  replacement += ":"+s;  */
+  replacement += " "+dd;
+
+  return replacement
+}
 
 module.exports = React.createClass({
       displayName: 'eventForm',
-      mixins: [Router.Navigation],
+      mixins: [LinkedStateMixin],
       getInitialState: function() {
         return({
-                eventId: '',
+                eventID: '',
                 title: '',
                 description: '',
                 interestTags: '',
@@ -24,24 +52,6 @@ module.exports = React.createClass({
       componentWillReceiveProps: function(nextProps) {
         this.setState({update: nextProps.update})
       },
-      handleIdChange: function(e) {
-        this.setState({eventId: e.target.value});
-      },
-      handleTitleChange: function(e) {
-        this.setState({title: e.target.value});
-      },
-      handleDescriptionChange: function(e) {
-        this.setState({description: e.target.value});
-      },
-      handleAddressNameChange: function(e) {
-        this.setState({addressName: e.target.value});
-      },
-      handleAddressChange: function(e) {
-        this.setState({address: e.target.value});
-      },
-      handleInterestTagsChange: function(e) {
-        this.setState({interestTags: e.target.value});
-      },
       handleImageChange: function(e){
         e.preventDefault();
         let reader = new FileReader()
@@ -55,21 +65,25 @@ module.exports = React.createClass({
         }
         reader.readAsDataURL(file)
       },
-      loadToS3: function(signedRequest, done){
-        console.log('send off to S3')
-        console.log(this.state.file);
+      loadToS3: function(signedRequest){
+        console.log('this is the file object: ***')
+        console.log(this.state.file)
         var xhr = new XMLHttpRequest()
         xhr.open("PUT", signedRequest)
         xhr.onload = function() {
           if (xhr.status === 200) {
-            done()
+            console.info('Success loading to S3')
           }
         }
 
         xhr.send(this.state.file)
 
         this.setState({
-          file: ''
+          file: '',
+          imagePreviewUrl: '',
+          fileName: '',
+          fileType: '',
+          fileSize: ''
         })
       },
       srcImage: function(e){
@@ -105,7 +119,13 @@ module.exports = React.createClass({
         e.preventDefault()
         var title = this.state.title.trim()
         var description = this.state.description.trim()
-        var interestTags = this.state.interestTags.trim()
+        var interestTags = this.state.interestTags.split(',').map(function(interest){return interest.trim().toLowerCase()})
+        console.log(interestTags)
+        if (interestTags.length > 3) {
+          //flash error Validation
+          console.log('maximum of 3 interests Tags')
+          return
+        }
         var address = this.state.address.trim()
         var addressName = this.state.addressName.trim()
         if (this.state.file){
@@ -115,7 +135,7 @@ module.exports = React.createClass({
         } else {
           var picture = this.state.url.trim()
         }
-        // if (!title || !description || !address) return
+        if (!title || !description || !address || !interestTags) return
         this.onFormSubmit({
            title: title,
            description: description,
@@ -126,13 +146,13 @@ module.exports = React.createClass({
            fileName: fileName,
            fileType: fileType,
            fileSize: fileSize
-        }, this.loadToS3);
-        this.setState({title: '', description: '', interestTags: '', addressName: '', address: ''});
+        });
       },
-      onFormSubmit: function(newEvent, callback) {
-        if(this.state.eventId){
+      onFormSubmit: function(newEvent) {
+        this.props.toggleEventModal()
+        if(this.state.eventID){
           var crudType = 'PUT'
-          var route = '/api/event/' + this.state.eventId
+          var route = '/api/event/' + this.state.eventID
         } else {
           var crudType = 'POST'
           var route = '/api/event/new'
@@ -144,14 +164,15 @@ module.exports = React.createClass({
           data: JSON.stringify(newEvent),
           contentType: 'application/json',
           success: function(data){
-            console.log(data)
-            callback(data.signedRequest)
-          },
+            if (data.signedRequest) { this.loadToS3(data.signedRequest) }
+            this.setState({title: '', description: '', interestTags: '', addressName: '', address: ''});
+          }.bind(this),
           error: function(data, status, jqXHR){
+            this.props.toggleEventModal()
             console.log(data)
             console.log(status)
             console.log(jqXHR)
-          }
+          }.bind(this)
         })
       },
       render: function() {
@@ -166,34 +187,64 @@ module.exports = React.createClass({
           hidden = {}
           show = {display: 'none'}
         }
+        var divStyle = {background: "url(" + imagePreviewUrl + ") center center",
+                        minHeight: "25rem",
+                        margin: 0,
+                        verticalAlign: "bottom"}
+
+        var now = Date.now() //- Date.parse(Date.now())
+        var x = (Date.parse(this.state.startTime) - now)/ 1000
+        var hour = formatDate(this.state.startTime)
+        var numberGoing = 1
+
         return (
           <section className='modalEvent'>
-            <div className='modalNav'>
-              <button className='btn back-btn' onClick={this.props.addEvent} >Back</button>
-              <div className='spacer'></div>
-              <button className='btn btn-action' style={show} onClick={this.updateUpdate}>Update Event</button>
-              <button className='btn btn-action' style={hidden} onClick={this.updateUpdate}>Create Event</button>
-            </div>
-            <form className="eventForm" onSubmit={this.handleSubmit} >
-              <div className="eventIdDiv" style={hidden}>
-                <label for="eventId">Event ID:</label>
-                <input type="text" placeholder="eventID" value={this.state.eventId}  onChange={this.handleIdChange} />
+            <section className='eventTotalForm'>
+              <div className='modalNav'>
+                <button className='btn back-btn' onClick={this.props.toggleEventModal} >Back</button>
+                <div className='spacer'></div>
+                <button className='btn btn-action' style={show} onClick={this.updateUpdate}>Update Event</button>
+                <button className='btn btn-action' style={hidden} onClick={this.updateUpdate}>Create Event</button>
               </div>
-              <label for="title">Title:</label>
-              <input type="text" placeholder="Title" value={this.state.title}  onChange={this.handleTitleChange} />
-              <label for="description">Description:</label>
-              <textarea type="text" placeholder="Description" maxlength='5' value={this.state.description} onChange={this.handleDescriptionChange} />
-              <label for="Address">InterestsTag:</label>
-              <input type="text" placeholder="InterestTags" value={this.state.interestTags} onChange={this.handleInterestTagsChange} />
-              <label for="Address Name">Address Name:</label>
-              <input type="text" placeholder="Address Name" value={this.state.addressName} onChange={this.handleAddressNameChange} />
-              <label for="Address">Address:</label>
-              <input type="text" placeholder="Address" value={this.state.address} onChange={this.handleAddressChange} />
-              <label for="Image">Image:</label>
-              <input type="file" onChange={this.handleImageChange} />
-              <button type="submit" onClick={this.handleSubmit}>Submit Event!</button>
-              <div>{$imagePreview }</div>
-            </form>
+              <form className="eventForm" onSubmit={this.handleSubmit} >
+                <div className="eventIdDiv" style={hidden}>
+                  <label for="eventID">Event ID:</label>
+                  <input type="text" placeholder="eventID" valueLink={this.linkState('eventID')}  />
+                </div>
+                <label for="title">Title:</label>
+                <input type="text" placeholder="Title" valueLink={this.linkState('title')}  />
+                <label for="description">Description:</label>
+                <textarea type="text" placeholder="Description" maxlength='5' valueLink={this.linkState('description')} />
+                <label for="Address">InterestsTag:</label>
+                <input type="text" placeholder="InterestTags" valueLink={this.linkState('interestTags')} />
+                <label for="Address Name">Address Name:</label>
+                <input type="text" placeholder="Address Name" valueLink={this.linkState('addressName')} />
+                <label for="Start Time">Start Time:</label>
+                <input type="datetime-local" placeholder="Start Time" valueLink={this.linkState('startTime')} />
+                <label for="Address">Street Address:</label>
+                <input type="text" placeholder="Address" valueLink={this.linkState('address')} />
+                <label for="Image">Image:</label>
+                <input type="file" onChange={this.handleImageChange} />
+                <button type="submit" onClick={this.handleSubmit}>Submit Event!</button>
+                <div>{$imagePreview }</div>
+              </form>
+            </section>
+            <section className="eventPreview">
+                <div className="eventPicture" style={divStyle}>
+                  <div className="eventTitle">
+                    <h3 style={{marginTop:0}}>{this.state.title}</h3>
+                  </div>
+                </div>
+                <div className="eventDetails">
+                  <h4><strong>@</strong>  {this.state.addressName}</h4>
+                  <p className="time"><strong>Starts in:</strong>  {(x % 24).toFixed(0)} hours  @ {hour}</p>
+                  <p className="interest"><strong>Tags:</strong>  #{this.state.interestTags}</p>
+                  <p className="hood"><strong>Neighborhood:</strong> (this will compute based on Street Address)</p>
+                  <div className="eventAttCount">
+                    <h3>{numberGoing}</h3><p>&nbsp;&nbsp;<i>going</i></p>
+                  </div>
+                </div>
+            </section>
           </section>
         )
       }

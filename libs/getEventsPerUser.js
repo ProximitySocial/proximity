@@ -5,6 +5,8 @@ const Event = require('../models/event')
 //get users neighborHood, then call perHoodGetEvents
 function getAndSendUserLocalEvents(userId, res) {
     var dbQuery = userId.length > 30 ? {access_token: userId} : {_id: userId}
+    console.log('user id is: ')
+    console.log(dbQuery);
     User.findOne(dbQuery, 'neighborhoods interests', (err, data) => {
       console.log('Here are the User neighborhoods and interests: ');
       console.log(data);

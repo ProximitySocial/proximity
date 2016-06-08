@@ -31,8 +31,8 @@ if (process.env.NODE_ENV === 'test'){
 mongoose.connect(db.url);
 
 app.use((req, res, next) => {
-  // res.header('Access-Control-Allow-Origin', 'https://proximitysocial.herokuapp.com');
-  res.header('Access-Control-Allow-Origin', 'http://localhost:2323');
+  res.header('Access-Control-Allow-Origin', 'https://proximitysocial.herokuapp.com');
+  // res.header('Access-Control-Allow-Origin', 'http://localhost:2323');
   res.header('Access-Control-Allow-Headers', 'Cache-Control, Pragma, Authorization, Origin, X-Requested-With, Content-Type, Accept');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();

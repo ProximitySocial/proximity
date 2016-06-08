@@ -38,5 +38,4 @@ function formatDate(date) {
   return replacement
 }
 
-
 module.exports = exports = {updateEvent, formatDate}
