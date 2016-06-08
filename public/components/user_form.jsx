@@ -4,7 +4,8 @@ const LinkedStateMixin = require('react-addons-linked-state-mixin')
 // const cleanArray = require('../../libs/cleanArray')
 var port = process.env.PORT
 
-Array.prototype.cleanArray = (actual) => {
+Array.prototype.cleanArray = () => {
+  var actual = this
   var newArray = new Array();
   for (var i = 0; i < actual.length; i++) {
     if (actual[i]) {

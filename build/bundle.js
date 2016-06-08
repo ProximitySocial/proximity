@@ -27294,7 +27294,8 @@
 	// const cleanArray = require('../../libs/cleanArray')
 	var port = process.env.PORT;
 
-	Array.prototype.cleanArray = function (actual) {
+	Array.prototype.cleanArray = function () {
+	  var actual = undefined;
 	  var newArray = new Array();
 	  for (var i = 0; i < actual.length; i++) {
 	    if (actual[i]) {
