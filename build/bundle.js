@@ -25893,11 +25893,11 @@
 
 	var Dashboard = __webpack_require__(230);
 	var EventForm = __webpack_require__(232);
-	var EventList = __webpack_require__(238);
+	var EventList = __webpack_require__(237);
 	var EventView = __webpack_require__(240);
 	var Profile = __webpack_require__(231);
 	var port = process.env.PORT || 8080;
-	var SingleEvent = __webpack_require__(237);
+	var SingleEvent = __webpack_require__(238);
 	var UserForm = __webpack_require__(239);
 
 	function getParameterByName(name, url) {
@@ -26129,7 +26129,7 @@
 
 	var DisplayUser = __webpack_require__(231);
 	var EventForm = __webpack_require__(232);
-	var EventList = __webpack_require__(238);
+	var EventList = __webpack_require__(237);
 	var UserForm = __webpack_require__(239);
 	var port = process.env.PORT || 8080;
 
@@ -26489,7 +26489,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var LinkedStateMixin = __webpack_require__(233);
-	var SingleEvent = __webpack_require__(237);
+	var SingleEvent = __webpack_require__(238);
 
 	function formatDate(date) {
 	  var d = new Date(date);
@@ -27115,6 +27115,93 @@
 /* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var _reactRouter = __webpack_require__(168);
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(38);
+
+
+	var SingleEvent = __webpack_require__(238);
+	var port = process.env.PORT;
+
+	module.exports = React.createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    return { events: [],
+	      user: '' };
+	  },
+	  propTypes: function propTypes() {
+	    user: React.PropTypes.object.isRequired;
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    this.handleGetEvents(nextProps.user);
+	  },
+	  componentWillMount: function componentWillMount() {
+	    $.ajax({
+	      type: 'GET',
+	      url: '/api/events/' + this.props.user.id,
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved DATA');
+	        this.setState({ events: data.events });
+	        this.handleEvents(this.state.events);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(xhr, status, err);
+	      }.bind(this)
+	    });
+	  },
+	  handleGetEvents: function handleGetEvents(user) {
+	    if (user._id) {
+	      $.ajax({
+	        type: 'GET',
+	        url: '/api/events/' + user._id,
+	        dataType: 'json',
+	        cache: false,
+	        success: function (data) {
+	          console.log('Successfully retrieved DATA');
+	          this.setState({ events: data.events, userID: user._id });
+	          this.handleEvents(this.state.events, user._id);
+	        }.bind(this),
+	        error: function (xhr, status, err) {
+	          console.error(this.props.url, status, err);
+	        }.bind(this)
+	      });
+	    }
+	  },
+	  handleEvents: function handleEvents(events, userID) {
+	    console.log('Handling Events from Event List');
+	    console.log(userID);
+	    var rows = [];
+	    if (events) {
+	      events.forEach(function (event, index) {
+	        rows.push(React.createElement(SingleEvent, { event: event, userID: userID, key: index }));
+	      });
+	      this.setState({ rowes: rows });
+	    }
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'eventList' },
+	      React.createElement(
+	        'ul',
+	        null,
+	        this.state.rowes
+	      )
+	    );
+	  }
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	var _reactRouter = __webpack_require__(168);
@@ -27283,93 +27370,6 @@
 	    );
 	  }
 	});
-
-/***/ },
-/* 238 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-
-	var _reactRouter = __webpack_require__(168);
-
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(38);
-
-
-	var SingleEvent = __webpack_require__(237);
-	var port = process.env.PORT;
-
-	module.exports = React.createClass({
-	  displayName: 'exports',
-
-	  getInitialState: function getInitialState() {
-	    return { events: [],
-	      user: '' };
-	  },
-	  propTypes: function propTypes() {
-	    user: React.PropTypes.object.isRequired;
-	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    this.handleGetEvents(nextProps.user);
-	  },
-	  componentWillMount: function componentWillMount() {
-	    $.ajax({
-	      type: 'GET',
-	      url: '/api/events/' + this.props.user.id,
-	      dataType: 'json',
-	      cache: false,
-	      success: function (data) {
-	        console.log('Successfully retrieved DATA');
-	        this.setState({ events: data.events });
-	        this.handleEvents(this.state.events);
-	      }.bind(this),
-	      error: function (xhr, status, err) {
-	        console.error(xhr, status, err);
-	      }.bind(this)
-	    });
-	  },
-	  handleGetEvents: function handleGetEvents(user) {
-	    if (user._id) {
-	      $.ajax({
-	        type: 'GET',
-	        url: '/api/events/' + user._id,
-	        dataType: 'json',
-	        cache: false,
-	        success: function (data) {
-	          console.log('Successfully retrieved DATA');
-	          this.setState({ events: data.events, userID: user._id });
-	          this.handleEvents(this.state.events, user._id);
-	        }.bind(this),
-	        error: function (xhr, status, err) {
-	          console.error(this.props.url, status, err);
-	        }.bind(this)
-	      });
-	    }
-	  },
-	  handleEvents: function handleEvents(events, userID) {
-	    console.log('Handling Events from Event List');
-	    console.log(userID);
-	    var rows = [];
-	    if (events) {
-	      events.forEach(function (event, index) {
-	        rows.push(React.createElement(SingleEvent, { event: event, userID: userID, key: index }));
-	      });
-	      this.setState({ rowes: rows });
-	    }
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'eventList' },
-	      React.createElement(
-	        'ul',
-	        null,
-	        this.state.rowes
-	      )
-	    );
-	  }
-	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
 /* 239 */
@@ -27929,7 +27929,7 @@
 
 	// const DisplayUser = require(__dirname + '/display_user.jsx')
 	var EventForm = __webpack_require__(232);
-	var EventList = __webpack_require__(238);
+	var EventList = __webpack_require__(237);
 	var UserForm = __webpack_require__(239);
 	var UserList = __webpack_require__(242);
 
