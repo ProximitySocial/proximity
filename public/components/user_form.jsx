@@ -1,7 +1,19 @@
 const React = require('react');
 const ReactDOM = require('react-dom')
 const LinkedStateMixin = require('react-addons-linked-state-mixin')
+// const cleanArray = require('../../libs/cleanArray')
 var port = process.env.PORT
+
+Array.prototype.cleanArray = () => {
+  var actual = this
+  var newArray = new Array();
+  for (var i = 0; i < actual.length; i++) {
+    if (actual[i]) {
+      newArray.push(actual[i]);
+    }
+  }
+  return newArray;
+}
 
 module.exports = React.createClass({
       displayName: 'userForm',
@@ -14,7 +26,6 @@ module.exports = React.createClass({
                 email: '',
                 bio: '',
                 interests: '',
-                addressName: '',
                 address: '',
                 file: '',
                 imagePreviewUrl: '',
@@ -32,7 +43,6 @@ module.exports = React.createClass({
                         email: this.props.user.email,
                         bio: this.props.user.bio,
                         interests: this.props.user.interests,
-                        addressName: this.props.user.addressName,
                         address: this.props.user.address
                       })
       },
@@ -66,37 +76,18 @@ module.exports = React.createClass({
           file: ''
         })
       },
-      srcImage: function(e){
-        console.log('trying to source image')
-        let title = this.state.title.trim()
-        let arr = title.split(' ')
-        let length = arr.length
-        let query = arr.join('+')
-        console.log(query)
-        $.ajax({
-          type: 'GET',
-          url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
-          dataType: 'application/json',
-          success: (data) => {
-            console.log(data);
-          },
-          error: (data, status, xhr) => {
-            console.log(data)
-            console.log(status)
-            console.log(xhr)
-          }
-
-        })
-      },
       handleSubmit: function(e) {
         e.preventDefault()
+        console.log(this.state)
         var firstName = this.state.firstName.trim()
         var lastName = this.state.lastName.trim()
-        var email = this.state.email.trim()
+        var email = (email) ? this.state.email.trim() : ''
         var bio = this.state.bio.trim()
-        var interests = this.state.interests.trim()
-        var address = this.state.address.trim()
-        var addressName = this.state.addressName.trim()
+        var interests = this.state.interests.split(',').map(function(interest){
+                                                         console.log(interest)
+                                                         return interest.trim().toLowerCase()
+                                                       }).cleanArray()
+        var address = (address) ? this.state.address.trim() : ''
 
         if (this.state.file){
           var fileName = this.state.file.name
@@ -112,13 +103,12 @@ module.exports = React.createClass({
            email: email,
            bio: bio,
            interests: interests,
-           addressName: addressName,
            address: address,
            picture: picture,
            fileName: fileName,
            fileType: fileType,
         }, this.loadToS3);
-        this.setState({firstName: '', lastName: '', email: '', bio: '', interests: '', addressName: '', address: ''});
+        this.setState({firstName: '', lastName: '', email: '', bio: '', interests: '', address: ''});
       },
       onFormSubmit: function(newUser, callback) {
         this.props.toggleUserModal()
