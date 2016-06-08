@@ -30,6 +30,5 @@ helperRouter.get('/helper/img/:keyword', (routeReq, routeRes) => {
 		result = parser.parse(body);
 		// TODO add returning different images
 		routeRes.status(200).json({url: result.images[0]});
-		return nil;
 	});
 });
