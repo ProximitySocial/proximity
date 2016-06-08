@@ -203,11 +203,11 @@ module.exports = React.createClass({
               <div className="adminForUser" style={hidden}>
                 <label for="userID">User ID:</label>
                 <input placeholder="userID" valueLink={this.linkState('userID')} />
+              </div>
                 <label for="firstName">First Name:</label>
                 <input type="text" placeholder="First" valueLink={this.linkState('firstName')}/>
                 <label for="lastName">Last Name:</label>
                 <input type="text" placeholder="Last" valueLink={this.linkState('lastName')} />
-              </div>
               <label for="email">Email:</label>
               <input type="text" placeholder="Email" valueLink={this.linkState('email')} />
               <label for="bio">Bio:</label>

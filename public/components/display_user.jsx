@@ -12,27 +12,6 @@ module.exports = React.createClass({
       this.handleNeighborhoods(nextProps.user)
       this.handleInterests(nextProps.user)
    },
-   // loadUserFromServer: function() {
-   //   $.ajax({
-   //     type: 'GET',
-   //     url: '',
-   //     dataType: 'json',
-   //     cache: false,
-   //     success: function(data) {
-   //       console.log(data.lastName)
-   //       this.setState({user:        data,
-   //                      lastInitial: data.lastName.charAt(0)});
-   //       this.handleInterests(data);
-   //       this.handleNeighborhoods(data);
-   //     }.bind(this),
-   //     error: function(xhr, status, err) {
-   //       console.error(this.props.url, status, err.toString());
-   //     }.bind(this)
-   //   });
-   // },
-   // componentWillMount: function() {
-      // this.loadUserFromServer()
-   // },
    handleUpdate: function(){
      console.log('make a request to handleUpdate')
    },
@@ -40,7 +19,7 @@ module.exports = React.createClass({
      console.log(user.interests);
      var rows = [];
      user.interests.forEach(function(interest, index) {
-       rows.push(<li key={index}><a>#{interest}</a></li>);
+       rows.push(<li key={index}>#{interest}</li>);
      });
      this.setState({interests: rows});
    },
@@ -48,34 +27,33 @@ module.exports = React.createClass({
      console.log(user.neighborhoods);
      var rows = [];
      user.neighborhoods.forEach(function(neighborhood, index) {
-       rows.push(<li key={index}><a>#{neighborhood}</a></li>);
+       rows.push(<li key={index}>{neighborhood}</li>);
      });
      this.setState({neighborhoods: rows});
    },
    render: function() {
      console.log('inside display user render');
-     console.log(this.props.user);
+     console.log(this.props.user)
      var interests = this.state.interests
      var neighborhoods = this.state.neighborhoods
-     // var hoods = this.handleNeighborhoods(this.props.user)
-    //  if (this.props.user._id) {
-    //    this.componentWillReceiveProps();
-    //    this.props.user._id = null;
-    //  }
+     var lastInitial = this.props.user.lastName ? this.props.user.lastName.charAt(0) : ''
      return (
-       <div>
-         <h3 className="userName">{this.props.user.firstName} {this.props.user.lastName}</h3>
-         <img className="userPic" src={this.props.user.pic}/>
-         <p><strong>Email: </strong>{this.props.user.email}</p>
-         <p><strong>Member since: </strong>{this.props.user.created_at}</p>
-         <p>{this.props.user.bio}</p>
-         <h3>Interests:</h3>
-         <ul className="interests">
+       <div className="userContainer">
+        <div className="userTop">
+           <img className="userPic" src={this.props.user.pic}/>
+           <div>
+             <h3 className="userName">{this.props.user.firstName} {lastInitial}.</h3>
+             <h3 className="userHeader">Neighborhoods:</h3>
+             <ul className="userNeighborhoods">
+               {neighborhoods}
+             </ul>
+           </div>
+        </div>
+         <div className="userHeader">Tagline:</div>
+         <div className="userBio"><i>{this.props.user.bio}</i></div>
+         <div className="userHeader">Interests:</div>
+         <ul className="userInterests">
            {interests}
-         </ul>
-         <h3>Neighborhoods:</h3>
-         <ul className="neighborhoods">
-           {neighborhoods}
          </ul>
        </div>
      )
