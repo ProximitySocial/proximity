@@ -8,26 +8,25 @@ module.exports = React.createClass({
       mixins: [LinkedStateMixin],
       getInitialState: function() {
         return({
-                userID: this.props.user._id,
-                firstName: this.props.user.firstName,
-                lastName: this.props.user.lastName,
-                email: this.props.user.email,
-                bio: this.props.user.bio,
-                interests: this.props.user.interests,
-                addressName: this.props.user.addressName,
-                address: this.props.user.address,
+                userID: '',
+                firstName: '',
+                lastName: '',
+                email: '',
+                bio: '',
+                interests: '',
+                addressName: '',
+                address: '',
                 file: '',
                 imagePreviewUrl: '',
                 url: '',
                 fileName: '',
                 fileType: '',
-                fileSize: ''
               });
       },
       componentWillReceiveProps: function(){
         console.log('componentWillReceiveProps')
         this.setState({
-                        userID: this.props.user.id,
+                        userID: this.props.user._id,
                         firstName: this.props.user.firstName,
                         lastName: this.props.user.lastName,
                         email: this.props.user.email,
@@ -37,30 +36,6 @@ module.exports = React.createClass({
                         address: this.props.user.address
                       })
       },
-      // handleIdChange: function(e) {
-      //   this.setState({userID: e.target.value});
-      // },
-      // handleFirstChange: function(e) {
-      //   this.setState({firstName: e.target.value});
-      // },
-      // handleLastChange: function(e) {
-      //   this.setState({lastName: e.target.value});
-      // },
-      // handleEmailChange: function(e) {
-      //   this.setState({email: e.target.value});
-      // },
-      // handleBioChange: function(e) {
-      //   this.setState({bio: e.target.value});
-      // },
-      // handleInterestsChange: function(e) {
-      //   this.setState({interests: e.target.value});
-      // },
-      // handleAddressNameChange: function(e) {
-      //   this.setState({addressName: e.target.value});
-      // },
-      // handleAddressChange: function(e) {
-      //   this.setState({address: e.target.value});
-      // },
       handleImageChange: function(e){
         e.preventDefault();
         let reader = new FileReader()
@@ -126,7 +101,6 @@ module.exports = React.createClass({
         if (this.state.file){
           var fileName = this.state.file.name
           var fileType = this.state.file.type
-          var fileSize = this.state.file.size
         } else {
           var picture = this.state.url.trim()
         }
@@ -143,11 +117,11 @@ module.exports = React.createClass({
            picture: picture,
            fileName: fileName,
            fileType: fileType,
-           fileSize: fileSize
         }, this.loadToS3);
         this.setState({firstName: '', lastName: '', email: '', bio: '', interests: '', addressName: '', address: ''});
       },
       onFormSubmit: function(newUser, callback) {
+        this.props.toggleUserModal()
         if(this.state.userID){
           var crudType = 'PUT'
           var route = '/api/user/' + this.state.userID
@@ -166,10 +140,11 @@ module.exports = React.createClass({
             callback(data.signedRequest)
           },
           error: function(data, status, jqXHR){
+            this.props.toggleUserModal()
             console.log(data)
             console.log(status)
             console.log(jqXHR)
-          }
+          }.bind(this)
         })
       },
       navigateBack: function(){
@@ -204,10 +179,10 @@ module.exports = React.createClass({
                 <label for="userID">User ID:</label>
                 <input placeholder="userID" valueLink={this.linkState('userID')} />
               </div>
-                <label for="firstName">First Name:</label>
-                <input type="text" placeholder="First" valueLink={this.linkState('firstName')}/>
-                <label for="lastName">Last Name:</label>
-                <input type="text" placeholder="Last" valueLink={this.linkState('lastName')} />
+              <label for="firstName">First Name:</label>
+              <input type="text" placeholder="First" valueLink={this.linkState('firstName')}/>
+              <label for="lastName">Last Name:</label>
+              <input type="text" placeholder="Last" valueLink={this.linkState('lastName')} />
               <label for="email">Email:</label>
               <input type="text" placeholder="Email" valueLink={this.linkState('email')} />
               <label for="bio">Bio:</label>
