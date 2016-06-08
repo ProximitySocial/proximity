@@ -28285,6 +28285,9 @@
 	    var answer = !this.state.toggleUserModal;
 	    this.setState({ toggleUserModal: answer });
 	  },
+	  handleClick: function handleClick() {
+	    this.showUserModal();
+	  },
 	  handleInterests: function handleInterests() {
 	    console.log(this.props.user.interests);
 	    var rows = [];
@@ -28408,13 +28411,8 @@
 	        ),
 	        React.createElement(
 	          'button',
-	          { className: 'btn editRound', onClick: this.showUserModal },
+	          { className: 'btn editRound', onClick: this.props.onClick },
 	          'Edit'
-	        ),
-	        React.createElement(
-	          'section',
-	          { className: 'fullModal', style: showUserModal },
-	          React.createElement(UserForm, { className: 'row form', toggleUserModal: this.showUserModal, user: this.state.user })
 	        )
 	      )
 	    );

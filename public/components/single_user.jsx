@@ -10,14 +10,18 @@ module.exports = React.createClass({
             toggleEventModal: false,
             toggleUserModal: false})
   },
-  componentWillMount: function(){
+  componentWillMount: function() {
     this.setState({user: this.props.user})
     this.handleInterests();
     this.handleNeighborhoods();
   },
-  showUserModal: function(){
+  showUserModal: function() {
     var answer = !this.state.toggleUserModal
     this.setState({toggleUserModal: answer})
+  },
+  handleClick: function() {
+    this.showUserModal();
+
   },
   handleInterests: function() {
     console.log(this.props.user.interests);
@@ -78,10 +82,7 @@ module.exports = React.createClass({
           <ul className="neighborhoods">
             {this.state.neighborhoods}
           </ul>
-          <button className='btn editRound' onClick={this.showUserModal}>Edit</button>
-          <section className="fullModal" style={showUserModal}>
-            <UserForm className="row form" toggleUserModal={this.showUserModal} user={this.state.user}/>
-          </section>
+          <button className='btn editRound' onClick={this.props.onClick}>Edit</button>
         </div></li>
     )
   }
