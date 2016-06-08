@@ -27407,6 +27407,7 @@
 	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
+	    console.log(this.state);
 	    var firstName = this.state.firstName.trim();
 	    var lastName = this.state.lastName.trim();
 	    var email = this.state.email.trim();
