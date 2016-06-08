@@ -27291,39 +27291,48 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(38);
 	var LinkedStateMixin = __webpack_require__(233);
+	// const cleanArray = require('../../libs/cleanArray')
 	var port = process.env.PORT;
+
+	Array.prototype.cleanArray = function () {
+	  var actual = undefined;
+	  var newArray = new Array();
+	  for (var i = 0; i < actual.length; i++) {
+	    if (actual[i]) {
+	      newArray.push(actual[i]);
+	    }
+	  }
+	  return newArray;
+	};
 
 	module.exports = React.createClass({
 	  displayName: 'userForm',
 	  mixins: [LinkedStateMixin],
 	  getInitialState: function getInitialState() {
 	    return {
+	      userID: '',
+	      firstName: '',
+	      lastName: '',
+	      email: '',
+	      bio: '',
+	      interests: '',
+	      address: '',
+	      file: '',
+	      imagePreviewUrl: '',
+	      url: '',
+	      fileName: '',
+	      fileType: ''
+	    };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps() {
+	    console.log('componentWillReceiveProps');
+	    this.setState({
 	      userID: this.props.user._id,
 	      firstName: this.props.user.firstName,
 	      lastName: this.props.user.lastName,
 	      email: this.props.user.email,
 	      bio: this.props.user.bio,
 	      interests: this.props.user.interests,
-	      addressName: this.props.user.addressName,
-	      address: this.props.user.address,
-	      file: '',
-	      imagePreviewUrl: '',
-	      url: '',
-	      fileName: '',
-	      fileType: '',
-	      fileSize: ''
-	    };
-	  },
-	  componentWillReceiveProps: function componentWillReceiveProps() {
-	    console.log('componentWillReceiveProps');
-	    this.setState({
-	      userID: this.props.user.id,
-	      firstName: this.props.user.firstName,
-	      lastName: this.props.user.lastName,
-	      email: this.props.user.email,
-	      bio: this.props.user.bio,
-	      interests: this.props.user.interests,
-	      addressName: this.props.user.addressName,
 	      address: this.props.user.address
 	    });
 	  },
@@ -27346,7 +27355,6 @@
 	  //   this.setState({interests: e.target.value});
 	  // },
 	  // handleAddressNameChange: function(e) {
-	  //   this.setState({addressName: e.target.value});
 	  // },
 	  // handleAddressChange: function(e) {
 	  //   this.setState({address: e.target.value});
@@ -27383,42 +27391,22 @@
 	      file: ''
 	    });
 	  },
-	  srcImage: function srcImage(e) {
-	    console.log('trying to source image');
-	    var title = this.state.title.trim();
-	    var arr = title.split(' ');
-	    var length = arr.length;
-	    var query = arr.join('+');
-	    console.log(query);
-	    $.ajax({
-	      type: 'GET',
-	      url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
-	      dataType: 'application/json',
-	      success: function success(data) {
-	        console.log(data);
-	      },
-	      error: function error(data, status, xhr) {
-	        console.log(data);
-	        console.log(status);
-	        console.log(xhr);
-	      }
-
-	    });
-	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
+	    console.log(this.state);
 	    var firstName = this.state.firstName.trim();
 	    var lastName = this.state.lastName.trim();
-	    var email = this.state.email.trim();
+	    var email = email ? this.state.email.trim() : '';
 	    var bio = this.state.bio.trim();
-	    var interests = this.state.interests.trim();
-	    var address = this.state.address.trim();
-	    var addressName = this.state.addressName.trim();
+	    var interests = this.state.interests.split(',').map(function (interest) {
+	      console.log(interest);
+	      return interest.trim().toLowerCase();
+	    }).cleanArray();
+	    var address = address ? this.state.address.trim() : '';
 
 	    if (this.state.file) {
 	      var fileName = this.state.file.name;
 	      var fileType = this.state.file.type;
-	      var fileSize = this.state.file.size;
 	    } else {
 	      var picture = this.state.url.trim();
 	    }
@@ -27430,16 +27418,18 @@
 	      email: email,
 	      bio: bio,
 	      interests: interests,
-	      addressName: addressName,
 	      address: address,
 	      picture: picture,
 	      fileName: fileName,
-	      fileType: fileType,
-	      fileSize: fileSize
+	      fileType: fileType
 	    }, this.loadToS3);
-	    this.setState({ firstName: '', lastName: '', email: '', bio: '', interests: '', addressName: '', address: '' });
+	    this.setState({ firstName: '', lastName: '', email: '', bio: '', interests: '', address: '' });
 	  },
 	  onFormSubmit: function onFormSubmit(newUser, callback) {
+	    console.log(this.props.user);
+	    console.log(this.state);
+	    console.log(this.state.userID);
+	    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
 	    if (this.state.userID) {
 	      var crudType = 'PUT';
 	      var route = '/api/user/' + this.state.userID;
