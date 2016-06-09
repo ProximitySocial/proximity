@@ -134,13 +134,13 @@ module.exports = React.createClass({
         e.preventDefault()
         var title = this.state.title.trim()
         var description = this.state.description.trim()
-        var interestTags = this.state.interestTags.split(',').map(function(interest){return interest.trim().toLowerCase()})
-        console.log(interestTags)
+        var interestTags = this.state.interestTags.toString().split(',').map(function(interest){return interest.trim().toLowerCase()})
         if (interestTags.length > 3) {
           //flash error Validation
           console.log('maximum of 3 interests Tags')
           return
         }
+
         var address = this.state.address.trim()
         var addressName = this.state.addressName.trim()
         if (this.state.file){

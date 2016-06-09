@@ -64,7 +64,8 @@
 	var Profile = __webpack_require__(231);
 	// const SingleEvent = require(__dirname + '/components/single_event.jsx')
 	// const UserForm    = require(__dirname + '/components/user_form.jsx')
-	var Admin = __webpack_require__(241);
+	var AdminDash = __webpack_require__(241);
+	var Admin = __webpack_require__(242);
 
 	var Test = _react2.default.createClass({
 	  displayName: 'Test',
@@ -26621,15 +26622,15 @@
 	    e.preventDefault();
 	    var title = this.state.title.trim();
 	    var description = this.state.description.trim();
-	    var interestTags = this.state.interestTags.split(',').map(function (interest) {
+	    var interestTags = this.state.interestTags.toString().split(',').map(function (interest) {
 	      return interest.trim().toLowerCase();
 	    });
-	    console.log(interestTags);
 	    if (interestTags.length > 3) {
 	      //flash error Validation
 	      console.log('maximum of 3 interests Tags');
 	      return;
 	    }
+
 	    var address = this.state.address.trim();
 	    var addressName = this.state.addressName.trim();
 	    if (this.state.file) {
@@ -27252,10 +27253,28 @@
 	  componentWillMount: function componentWillMount() {
 	    this.setState({ event: this.props.event,
 	      image: this.props.image });
+	    this.handleInterests();
 	  },
 	  showEventModal: function showEventModal() {
 	    var answer = !this.state.toggleEventModal;
 	    this.setState({ toggleEventModal: answer });
+	  },
+	  handleInterests: function handleInterests() {
+	    console.log(this.props.event.interestTags);
+	    var rows = [];
+	    this.props.event.interestTags.forEach(function (interest, index) {
+	      rows.push(React.createElement(
+	        'li',
+	        { key: index },
+	        React.createElement(
+	          'a',
+	          null,
+	          '#',
+	          interest
+	        )
+	      ));
+	    });
+	    this.setState({ interests: rows });
 	  },
 	  render: function render() {
 	    // if (this.props.image) {
@@ -27354,15 +27373,15 @@
 	            hour
 	          ),
 	          React.createElement(
-	            'p',
+	            'ul',
 	            { className: 'interest' },
 	            React.createElement(
 	              'strong',
 	              null,
 	              'Tags:'
 	            ),
-	            '  #',
-	            this.props.event.interestTags
+	            '  ',
+	            this.state.interests
 	          ),
 	          React.createElement(
 	            'p',
@@ -27445,6 +27464,7 @@
 	      interests: '',
 	      addressName: '',
 	      address: '',
+	      neighborhoods: '',
 	      file: '',
 	      imagePreviewUrl: '',
 	      url: '',
@@ -27457,14 +27477,15 @@
 	    console.log('user form componentWillReceiveProps');
 	    if (this.props.user) {
 	      this.setState({
-	        userID: this.props.user.id,
+	        userID: this.props.user._id,
 	        firstName: this.props.user.firstName,
 	        lastName: this.props.user.lastName,
 	        email: this.props.user.email,
 	        bio: this.props.user.bio,
 	        interests: this.props.user.interests,
 	        addressName: this.props.user.addressName,
-	        address: this.props.user.address
+	        address: this.props.user.address,
+	        neighborhoods: this.props.user.neighborhoods
 	      });
 	    }
 	  },
@@ -27552,9 +27573,33 @@
 	    var lastName = this.state.lastName.trim();
 	    var email = this.state.email.trim();
 	    var bio = this.state.bio.trim();
-	    var interests = this.state.interests.trim();
-	    var address = this.state.address.trim();
-	    var addressName = this.state.addressName.trim();
+
+	    var interests = this.state.interests.toString().split(',').map(function (interest) {
+	      return interest.trim().toLowerCase();
+	    });
+	    if (interests.length > 5) {
+	      //flash error Validation
+	      console.log('maximum of 5 interests');
+	      return;
+	    }
+
+	    var neighborhoods = this.state.neighborhoods.toString().split(',').map(function (neighborhood) {
+	      return neighborhood.trim().toLowerCase();
+	    });
+	    if (neighborhoods.length > 2) {
+	      //flash error Validation
+	      console.log('maximum of 2 neighborhoods');
+	      return;
+	    }
+
+	    var address = '';
+	    var addressName = '';
+	    if (this.state.address) {
+	      address = this.state.address.trim();
+	    }
+	    if (this.state.addressName) {
+	      addressName = this.state.addressName.trim();
+	    }
 
 	    if (this.state.file) {
 	      var fileName = this.state.file.name;
@@ -27573,6 +27618,7 @@
 	      interests: interests,
 	      addressName: addressName,
 	      address: address,
+	      neighborhoods: neighborhoods,
 	      picture: picture,
 	      fileName: fileName,
 	      fileType: fileType,
@@ -27697,6 +27743,12 @@
 	          'Address:'
 	        ),
 	        React.createElement('input', { type: 'text', placeholder: 'We ask for address to select your neighborhood', valueLink: this.linkState('address') }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'Neighborhoods' },
+	          'Neighborhoods:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Belltown, Queen Anne, Capitol Hill, (comma seperated / 2 max)', valueLink: this.linkState('neighborhoods') }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'Image' },
@@ -27977,11 +28029,321 @@
 
 	var port = process.env.PORT || 8080;
 
+	module.exports = _react2.default.createClass({
+	  displayName: 'exports',
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(UserTable, null),
+	      _react2.default.createElement(EventTable, null)
+	    );
+	  }
+	});
+
+	var UserTable = _react2.default.createClass({
+	  displayName: 'UserTable',
+
+	  getInitialState: function getInitialState() {
+	    return { users: [] };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    $.ajax({
+	      type: 'GET',
+	      url: '/api/users/',
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved USERS');
+	        console.log(data);
+	        this.setState({ users: data });
+	        this.handleUsers(this.state.users);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(xhr, status, err);
+	      }.bind(this)
+	    });
+	  },
+	  handleUsers: function handleUsers(users) {
+	    console.log('Creating User Rows for User Table');
+	    console.log(users);
+	    var uRows = [];
+	    if (users) {
+	      users.forEach(function (user, index) {
+	        uRows.push(_react2.default.createElement(UserRow, { user: user, key: index }));
+	      });
+	      this.setState({ userRows: uRows });
+	    }
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'table',
+	      { className: 'userTable' },
+	      _react2.default.createElement(
+	        'thead',
+	        null,
+	        _react2.default.createElement(
+	          'tr',
+	          null,
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'User ID'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'First Name'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Last Name'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Email'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Interests'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Neighborhoods'
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'tbody',
+	        null,
+	        this.state.userRows
+	      )
+	    );
+	  }
+	});
+
+	var UserRow = _react2.default.createClass({
+	  displayName: 'UserRow',
+
+	  getInitialState: function getInitialState() {
+	    return { user: this.props.user };
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'tr',
+	      { className: 'userRow' },
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user._id
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user.firstName
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user.lastName
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user.email
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user.interests
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user.neighborhoods
+	      )
+	    );
+	  }
+	});
+
+	var EventTable = _react2.default.createClass({
+	  displayName: 'EventTable',
+
+	  getInitialState: function getInitialState() {
+	    return { events: [] };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    $.ajax({
+	      type: 'GET',
+	      url: '/api/events/',
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved EVENTS');
+	        console.log(data);
+	        this.setState({ events: data });
+	        this.handleEvents(this.state.events);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(xhr, status, err);
+	      }.bind(this)
+	    });
+	  },
+	  handleEvents: function handleEvents(events) {
+	    console.log('Creating Event Rows for Event Table');
+	    console.log(events);
+	    var eRows = [];
+	    if (events) {
+	      events.forEach(function (event, index) {
+	        eRows.push(_react2.default.createElement(EventRow, { event: event, key: index }));
+	      });
+	      this.setState({ eventRows: eRows });
+	    }
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'table',
+	      { className: 'eventTable' },
+	      _react2.default.createElement(
+	        'thead',
+	        null,
+	        _react2.default.createElement(
+	          'tr',
+	          null,
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Event ID'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Title'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Description'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Neighborhood'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Start Time'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Tags'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Attendees'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Creator'
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'tbody',
+	        null,
+	        this.state.eventRows
+	      )
+	    );
+	  }
+	});
+
+	var EventRow = _react2.default.createClass({
+	  displayName: 'EventRow',
+
+	  getInitialState: function getInitialState() {
+	    return { event: this.props.event };
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'tr',
+	      { className: 'eventRow' },
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event._id
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event.title
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event.description
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event.neighborhood
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event.startTime
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event.interestTags
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event._attendees
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event._creator
+	      )
+	    );
+	  }
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(38);
+
+	var _reactRouter = __webpack_require__(168);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var port = process.env.PORT || 8080;
+
 	// const DisplayUser = require(__dirname + '/display_user.jsx')
 	var EventForm = __webpack_require__(232);
 	var EventList = __webpack_require__(237);
 	var UserForm = __webpack_require__(239);
-	var UserList = __webpack_require__(242);
+	var UserList = __webpack_require__(243);
 
 	function getParameterByName(name, url) {
 	  if (!url) url = window.location.href;
@@ -28168,7 +28530,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 242 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28179,7 +28541,7 @@
 	var ReactDOM = __webpack_require__(38);
 
 
-	var SingleUser = __webpack_require__(243);
+	var SingleUser = __webpack_require__(244);
 	var port = process.env.PORT;
 
 	module.exports = React.createClass({
@@ -28255,7 +28617,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 243 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28411,8 +28773,13 @@
 	        ),
 	        React.createElement(
 	          'button',
-	          { className: 'btn editRound', onClick: this.props.onClick },
+	          { className: 'btn editRound', onClick: this.showUserModal },
 	          'Edit'
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'fullModal', style: showUserModal },
+	          React.createElement(UserForm, { className: 'row form', toggleUserModal: this.showUserModal, user: this.state.user })
 	        )
 	      )
 	    );

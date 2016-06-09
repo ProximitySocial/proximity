@@ -82,7 +82,10 @@ module.exports = React.createClass({
           <ul className="neighborhoods">
             {this.state.neighborhoods}
           </ul>
-          <button className='btn editRound' onClick={this.props.onClick}>Edit</button>
+          <button className='btn editRound' onClick={this.showUserModal}>Edit</button>
+          <section className="fullModal" style={showUserModal}>
+            <UserForm className="row form" toggleUserModal={this.showUserModal} user={this.state.user}/>
+          </section>
         </div></li>
     )
   }

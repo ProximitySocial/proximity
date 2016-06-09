@@ -9,7 +9,9 @@ const EventView   = require(__dirname + '/components/event_view.jsx')
 const Profile     = require(__dirname + '/components/display_user.jsx')
 // const SingleEvent = require(__dirname + '/components/single_event.jsx')
 // const UserForm    = require(__dirname + '/components/user_form.jsx')
-const Admin       = require(__dirname + '/components/admin.jsx')
+const AdminDash       = require(__dirname + '/components/admin_dash.jsx')
+const Admin           = require(__dirname + '/components/admin.jsx')
+
 
 
 const Test = React.createClass({
