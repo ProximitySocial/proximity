@@ -43,12 +43,27 @@ module.exports = React.createClass({
     this.setState({toggleEventModal: answer})
   },
   handleInterests: function() {
-    console.log(this.props.event.interestTags);
     var rows = [];
     this.props.event.interestTags.forEach(function(interest, index) {
       rows.push(<li key={index}><a>#{interest}</a></li>);
     });
     this.setState({interests: rows});
+  },
+  deleteEvent: function() {
+    console.log('Initiating delete of event: ' + this.props.event._id);
+    $.ajax({
+      type: 'DELETE',
+      url: '/api/event/' + this.props.event._id,
+      dataType: 'json',
+      cache: false,
+      success: function(data){
+        console.log('Successfully deleted EVENT');
+        this.setState({event: ''})
+      }.bind(this),
+      error: function(xhr, status, err){
+        console.error(xhr, status, err)
+      }.bind(this)
+    })
   },
   render: function() {
     // if (this.props.image) {
@@ -119,6 +134,7 @@ module.exports = React.createClass({
           </div>
         </div></Link>
         <button className='btn editRound' onClick={this.showEventModal}>Edit</button>
+        <button className='btn editRound' onClick={this.deleteEvent}>Delete</button>
         <section className="fullModal" style={showModal}>
           <EventForm className="row form" toggleEventModal={this.showEventModal} event={this.state.event}/>
         </section>

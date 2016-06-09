@@ -26460,13 +26460,15 @@
 	  componentWillReceiveProps: function componentWillReceiveProps() {
 	    console.log('event form component will receive props');
 	    console.log(this.props.event);
-	    this.setState({
-	      eventID: this.props.event._id,
-	      title: this.props.event.title,
-	      description: this.props.event.description,
-	      interestTags: this.props.event.interestTags,
-	      addressName: this.props.event.addressName,
-	      address: this.props.event.address });
+	    if (this.props.event) {
+	      this.setState({
+	        eventID: this.props.event._id,
+	        title: this.props.event.title,
+	        description: this.props.event.description,
+	        interestTags: this.props.event.interestTags,
+	        addressName: this.props.event.addressName,
+	        address: this.props.event.address });
+	    }
 	  },
 	  handleImageChange: function handleImageChange(e) {
 	    var _this = this;
@@ -27070,20 +27072,22 @@
 	    this.handleGetEvents(nextProps.user);
 	  },
 	  componentWillMount: function componentWillMount() {
-	    $.ajax({
-	      type: 'GET',
-	      url: '/api/events/' + this.props.user.id,
-	      dataType: 'json',
-	      cache: false,
-	      success: function (data) {
-	        console.log('Successfully retrieved DATA');
-	        this.setState({ events: data.events });
-	        this.handleEvents(this.state.events);
-	      }.bind(this),
-	      error: function (xhr, status, err) {
-	        console.error(xhr, status, err);
-	      }.bind(this)
-	    });
+	    if (this.props.user._id) {
+	      $.ajax({
+	        type: 'GET',
+	        url: '/api/events/' + this.props.user._id,
+	        dataType: 'json',
+	        cache: false,
+	        success: function (data) {
+	          console.log('Successfully retrieved DATA');
+	          this.setState({ events: data.events });
+	          this.handleEvents(this.state.events);
+	        }.bind(this),
+	        error: function (xhr, status, err) {
+	          console.error(xhr, status, err);
+	        }.bind(this)
+	      });
+	    }
 	  },
 	  handleGetEvents: function handleGetEvents(user) {
 	    if (user._id) {
@@ -27182,7 +27186,6 @@
 	    this.setState({ toggleEventModal: answer });
 	  },
 	  handleInterests: function handleInterests() {
-	    console.log(this.props.event.interestTags);
 	    var rows = [];
 	    this.props.event.interestTags.forEach(function (interest, index) {
 	      rows.push(React.createElement(
@@ -27197,6 +27200,22 @@
 	      ));
 	    });
 	    this.setState({ interests: rows });
+	  },
+	  deleteEvent: function deleteEvent() {
+	    console.log('Initiating delete of event: ' + this.props.event._id);
+	    $.ajax({
+	      type: 'DELETE',
+	      url: '/api/event/' + this.props.event._id,
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully deleted EVENT');
+	        this.setState({ event: '' });
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(xhr, status, err);
+	      }.bind(this)
+	    });
 	  },
 	  render: function render() {
 	    // if (this.props.image) {
@@ -27354,6 +27373,11 @@
 	        'Edit'
 	      ),
 	      React.createElement(
+	        'button',
+	        { className: 'btn editRound', onClick: this.deleteEvent },
+	        'Delete'
+	      ),
+	      React.createElement(
 	        'section',
 	        { className: 'fullModal', style: showModal },
 	        React.createElement(EventForm, { className: 'row form', toggleEventModal: this.showEventModal, event: this.state.event })
@@ -27459,7 +27483,7 @@
 	    console.log(this.state);
 	    var firstName = this.state.firstName.trim();
 	    var lastName = this.state.lastName.trim();
-	    var email = email ? this.state.email.trim() : '';
+	    var email = this.state.email ? this.state.email.trim() : '';
 	    var bio = this.state.bio.trim();
 
 	    var interests = this.state.interests.toString().split(',').map(function (interest) {
@@ -28538,7 +28562,6 @@
 	    this.showUserModal();
 	  },
 	  handleInterests: function handleInterests() {
-	    console.log(this.props.user.interests);
 	    var rows = [];
 	    this.props.user.interests.forEach(function (interest, index) {
 	      rows.push(React.createElement(
@@ -28555,7 +28578,6 @@
 	    this.setState({ interests: rows });
 	  },
 	  handleNeighborhoods: function handleNeighborhoods() {
-	    console.log(this.props.user.neighborhoods);
 	    var rows = [];
 	    this.props.user.neighborhoods.forEach(function (neighborhood, index) {
 	      rows.push(React.createElement(
@@ -28570,6 +28592,22 @@
 	      ));
 	    });
 	    this.setState({ neighborhoods: rows });
+	  },
+	  deleteUser: function deleteUser() {
+	    console.log('Initiating delete of user: ' + this.props.user._id);
+	    $.ajax({
+	      type: 'DELETE',
+	      url: '/api/user/' + this.props.user._id,
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully deleted USER');
+	        this.setState({ user: '' });
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(xhr, status, err);
+	      }.bind(this)
+	    });
 	  },
 	  render: function render() {
 	    var hiddenVar = { display: 'none' };
@@ -28662,6 +28700,11 @@
 	          'button',
 	          { className: 'btn editRound', onClick: this.showUserModal },
 	          'Edit'
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'btn editRound', onClick: this.deleteUser },
+	          'Delete'
 	        ),
 	        React.createElement(
 	          'section',
