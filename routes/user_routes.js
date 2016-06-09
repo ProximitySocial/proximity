@@ -21,7 +21,7 @@ userRouter.get('/users', (req, res) => {
 userRouter.post('/getUserID', (req, res) =>{
   console.log('new post to get a USER ID')
   var fbid = req.body.fbid
-    User.findOne({"facebook.id": fbid}, (err, data) => {
+  User.findOne({"facebook.id": fbid}, (err, data) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     if (data === null) return res.status(400).json({msg: 'fbID not found, bad request'})
     res.status(200).json({msg: 'user found with fbid', user: data} )
@@ -90,6 +90,7 @@ userRouter.put('/user/:id', (req, res) => {
             getS3SignedUrl(newData, cb)
               .then((data) => {
                 newData = data
+                newData.pic = newData.url
                 return updateUser(newData, req.params.id, res)
               }).catch((err) => { console.log('inside call google error'); throw err; })
           } else {
@@ -104,6 +105,7 @@ userRouter.put('/user/:id', (req, res) => {
     getS3SignedUrl(newData, cb)
       .then((data) => {
         newData = data
+        newData.pic = newData.url
         console.log(newData);
         return updateUser(newData, req.params.id, res)
       }).catch((err) => { console.log('inside call S3 error'); throw err; })

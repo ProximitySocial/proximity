@@ -1,66 +1,57 @@
 const React = require('react');
 const ReactDOM = require('react-dom')
 const LinkedStateMixin = require('react-addons-linked-state-mixin')
+// const cleanArray = require('../../libs/cleanArray')
 var port = process.env.PORT
+
+Array.prototype.cleanArray = () => {
+  var actual = this
+  var newArray = new Array();
+  for (var i = 0; i < actual.length; i++) {
+    if (actual[i]) {
+      newArray.push(actual[i]);
+    }
+  }
+  return newArray;
+}
 
 module.exports = React.createClass({
       displayName: 'userForm',
       mixins: [LinkedStateMixin],
       getInitialState: function() {
         return({
-                userID: this.props.user._id,
-                firstName: this.props.user.firstName,
-                lastName: this.props.user.lastName,
-                email: this.props.user.email,
-                bio: this.props.user.bio,
-                interests: this.props.user.interests,
-                addressName: this.props.user.addressName,
-                address: this.props.user.address,
+                userID: '',
+                firstName: '',
+                lastName: '',
+                email: '',
+                bio: '',
+                interests: '',
+                addressName: '',
+                address: '',
+                neighborhoods: '',
                 file: '',
                 imagePreviewUrl: '',
                 url: '',
                 fileName: '',
                 fileType: '',
-                fileSize: ''
               });
       },
       componentWillReceiveProps: function(){
-        console.log('componentWillReceiveProps')
-        this.setState({
-                        userID: this.props.user.id,
-                        firstName: this.props.user.firstName,
-                        lastName: this.props.user.lastName,
-                        email: this.props.user.email,
-                        bio: this.props.user.bio,
-                        interests: this.props.user.interests,
-                        addressName: this.props.user.addressName,
-                        address: this.props.user.address
-                      })
+        console.log('user form componentWillReceiveProps')
+        if (this.props.user) {
+          this.setState({
+                          userID: this.props.user._id,
+                          firstName: this.props.user.firstName,
+                          lastName: this.props.user.lastName,
+                          email: this.props.user.email,
+                          bio: this.props.user.bio,
+                          interests: this.props.user.interests,
+                          addressName: this.props.user.addressName,
+                          address: this.props.user.address,
+                          neighborhoods: this.props.user.neighborhoods
+                        })
+        }
       },
-      // handleIdChange: function(e) {
-      //   this.setState({userID: e.target.value});
-      // },
-      // handleFirstChange: function(e) {
-      //   this.setState({firstName: e.target.value});
-      // },
-      // handleLastChange: function(e) {
-      //   this.setState({lastName: e.target.value});
-      // },
-      // handleEmailChange: function(e) {
-      //   this.setState({email: e.target.value});
-      // },
-      // handleBioChange: function(e) {
-      //   this.setState({bio: e.target.value});
-      // },
-      // handleInterestsChange: function(e) {
-      //   this.setState({interests: e.target.value});
-      // },
-      // handleAddressNameChange: function(e) {
-      //   this.setState({addressName: e.target.value});
-      // },
-      // handleAddressChange: function(e) {
-      //   this.setState({address: e.target.value});
-      // },
       handleImageChange: function(e){
         e.preventDefault();
         let reader = new FileReader()
@@ -91,42 +82,40 @@ module.exports = React.createClass({
           file: ''
         })
       },
-      srcImage: function(e){
-        console.log('trying to source image')
-        let title = this.state.title.trim()
-        let arr = title.split(' ')
-        let length = arr.length
-        let query = arr.join('+')
-        console.log(query)
-        $.ajax({
-          type: 'GET',
-          url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
-          dataType: 'application/json',
-          success: (data) => {
-            console.log(data);
-          },
-          error: (data, status, xhr) => {
-            console.log(data)
-            console.log(status)
-            console.log(xhr)
-          }
-
-        })
-      },
       handleSubmit: function(e) {
         e.preventDefault()
+        console.log(this.state)
         var firstName = this.state.firstName.trim()
         var lastName = this.state.lastName.trim()
-        var email = this.state.email.trim()
+        var email = (email) ? this.state.email.trim() : ''
         var bio = this.state.bio.trim()
-        var interests = this.state.interests.trim()
-        var address = this.state.address.trim()
-        var addressName = this.state.addressName.trim()
+
+        var interests = this.state.interests.toString().split(',').map(function(interest){return interest.trim().toLowerCase()})
+        if (interests.length > 5) {
+          //flash error Validation
+          console.log('maximum of 5 interests')
+          return
+        }
+
+        var neighborhoods = this.state.neighborhoods.toString().split(',').map(function(neighborhood){return neighborhood.trim().toLowerCase()})
+        if (neighborhoods.length > 2) {
+          //flash error Validation
+          console.log('maximum of 2 neighborhoods')
+          return
+        }
+
+        var address = '';
+        var addressName = '';
+        if (this.state.address) {
+          address = this.state.address.trim()
+        }
+        if (this.state.addressName) {
+          addressName = this.state.addressName.trim()
+        }
 
         if (this.state.file){
           var fileName = this.state.file.name
           var fileType = this.state.file.type
-          var fileSize = this.state.file.size
         } else {
           var picture = this.state.url.trim()
         }
@@ -138,16 +127,16 @@ module.exports = React.createClass({
            email: email,
            bio: bio,
            interests: interests,
-           addressName: addressName,
            address: address,
+           neighborhoods: neighborhoods,
            picture: picture,
            fileName: fileName,
            fileType: fileType,
-           fileSize: fileSize
         }, this.loadToS3);
-        this.setState({firstName: '', lastName: '', email: '', bio: '', interests: '', addressName: '', address: ''});
+        this.setState({firstName: '', lastName: '', email: '', bio: '', interests: '', address: ''});
       },
       onFormSubmit: function(newUser, callback) {
+        this.props.toggleUserModal()
         if(this.state.userID){
           var crudType = 'PUT'
           var route = '/api/user/' + this.state.userID
@@ -166,10 +155,11 @@ module.exports = React.createClass({
             callback(data.signedRequest)
           },
           error: function(data, status, jqXHR){
+            this.props.toggleUserModal()
             console.log(data)
             console.log(status)
             console.log(jqXHR)
-          }
+          }.bind(this)
         })
       },
       navigateBack: function(){
@@ -203,11 +193,11 @@ module.exports = React.createClass({
               <div className="adminForUser" style={hidden}>
                 <label for="userID">User ID:</label>
                 <input placeholder="userID" valueLink={this.linkState('userID')} />
-                <label for="firstName">First Name:</label>
-                <input type="text" placeholder="First" valueLink={this.linkState('firstName')}/>
-                <label for="lastName">Last Name:</label>
-                <input type="text" placeholder="Last" valueLink={this.linkState('lastName')} />
               </div>
+              <label for="firstName">First Name:</label>
+              <input type="text" placeholder="First" valueLink={this.linkState('firstName')}/>
+              <label for="lastName">Last Name:</label>
+              <input type="text" placeholder="Last" valueLink={this.linkState('lastName')} />
               <label for="email">Email:</label>
               <input type="text" placeholder="Email" valueLink={this.linkState('email')} />
               <label for="bio">Bio:</label>
@@ -216,8 +206,10 @@ module.exports = React.createClass({
               <input type="text" placeholder="golf, running, dancing, (comma seperated / 5 max)" valueLink={this.linkState('interests')} />
               <label for="Address">Address:</label>
               <input type="text" placeholder="We ask for address to select your neighborhood" valueLink={this.linkState('address')} />
+              <label for="Neighborhoods">Neighborhoods:</label>
+              <input type="text" placeholder="Belltown, Queen Anne, Capitol Hill, (comma seperated / 2 max)" valueLink={this.linkState('neighborhoods')} />
               <label for="Image">Image:</label>
-              <input type="file" onChange={this.handleImageChange} />
+              <input type="file" valueLink={this.handleImageChange} />
               <button type="submit">Submit User!</button>
             </form>
             {$imagePreview}

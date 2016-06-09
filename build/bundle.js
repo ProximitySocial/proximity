@@ -58,12 +58,14 @@
 
 	var App = __webpack_require__(229);
 	var Dashboard = __webpack_require__(230);
-	var EventForm = __webpack_require__(232);
-	var EventList = __webpack_require__(238);
+	// const EventForm   = require(__dirname + '/components/event_form.jsx')
+	// const EventList   = require(__dirname + '/components/event_list.jsx')
 	var EventView = __webpack_require__(240);
 	var Profile = __webpack_require__(231);
-	var SingleEvent = __webpack_require__(237);
-	var UserForm = __webpack_require__(239);
+	// const SingleEvent = require(__dirname + '/components/single_event.jsx')
+	// const UserForm    = require(__dirname + '/components/user_form.jsx')
+	var AdminDash = __webpack_require__(241);
+	var Admin = __webpack_require__(242);
 
 	var Test = _react2.default.createClass({
 	  displayName: 'Test',
@@ -90,7 +92,8 @@
 	    _react2.default.createElement(_reactRouter.IndexRoute, { component: Dashboard }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/event/:eventID/:userID', component: EventView }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: Profile }),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/test', component: Test })
+	    _react2.default.createElement(_reactRouter.Route, { path: '/test', component: Test }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '/admin', component: Admin })
 	  )
 	), document.getElementById('root'));
 
@@ -25891,11 +25894,11 @@
 
 	var Dashboard = __webpack_require__(230);
 	var EventForm = __webpack_require__(232);
-	var EventList = __webpack_require__(238);
+	var EventList = __webpack_require__(237);
 	var EventView = __webpack_require__(240);
 	var Profile = __webpack_require__(231);
 	var port = process.env.PORT || 8080;
-	var SingleEvent = __webpack_require__(237);
+	var SingleEvent = __webpack_require__(238);
 	var UserForm = __webpack_require__(239);
 
 	function getParameterByName(name, url) {
@@ -25948,42 +25951,12 @@
 	      toggle: toggleVar,
 	      hideForm: true };
 	  },
-	  // componentDidMount: function() {
-	  //   if (!this.state.user){
-	  //       var token = getParameterByName('access_token')
-	  //       sessionStorage.setItem('token', token)
-	  //   }
-	  //   $.ajax({
-	  //     type: 'GET',
-	  //     url: '/api/user/' + sessionStorage.token,
-	  //     // headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
-	  //     // beforeSend: function(xhr){
-	  //     //   xhr.withCredentials = true;
-	  //     //   xhr.setRequestHeader('Authorization', )
-	  //     // },
-	  //     success: (data, status) => {
-	  //       this.setState({
-	  //         user: data,
-	  //         toggle: false
-	  //       })
-	  //     },
-	  //     error: (xhr, status, error) => {
-	  //       console.log(xhr)
-	  //       console.log(status)
-	  //       console.log(error)
-	  //     }
-	  //   })
-	  // },
 	  logout: function logout() {
 	    sessionStorage.removeItem('token');
 	    this.setState({ user: '',
 	      events: '',
 	      toggle: true });
 	  },
-	  // showForm: function(){
-	  //   var state = !this.state.hideForm
-	  //   this.setState({hideForm: state})
-	  // },
 	  render: function render() {
 	    var hiddenBtn, showBtn;
 	    if (this.state.toggle) {
@@ -25993,14 +25966,6 @@
 	      hiddenBtn = {};
 	      showBtn = { display: "none" };
 	    }
-	    console.log('Grabbing App Children');
-	    console.log(this.props.children);
-	    // var hidden
-	    // if (this.state.hideForm){
-	    //   hidden = {display: "none"}
-	    // } else {
-	    //   hidden = {}
-	    // }
 	    return _react2.default.createElement(
 	      'div',
 	      null,
@@ -26069,6 +26034,15 @@
 	                    { to: '/profile' },
 	                    'Profile'
 	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'li',
+	                  null,
+	                  _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/admin' },
+	                    'Admin'
+	                  )
 	                )
 	              ),
 	              _react2.default.createElement('div', { 'class': 'spacer' }),
@@ -26118,7 +26092,7 @@
 
 	var DisplayUser = __webpack_require__(231);
 	var EventForm = __webpack_require__(232);
-	var EventList = __webpack_require__(238);
+	var EventList = __webpack_require__(237);
 	var UserForm = __webpack_require__(239);
 	var port = process.env.PORT || 8080;
 
@@ -26283,13 +26257,9 @@
 	              ),
 	              _react2.default.createElement('div', { className: 'spacer' }),
 	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-4' },
-	                _react2.default.createElement(
-	                  'button',
-	                  { className: 'btn btn-action', onClick: this.showEventModal },
-	                  'Make Event'
-	                )
+	                'button',
+	                { className: 'btn btn-action', onClick: this.showEventModal },
+	                'Make Event'
 	              )
 	            ),
 	            _react2.default.createElement(EventList, { className: 'row events', user: this.state.user })
@@ -26333,27 +26303,6 @@
 	    this.handleNeighborhoods(nextProps.user);
 	    this.handleInterests(nextProps.user);
 	  },
-	  // loadUserFromServer: function() {
-	  //   $.ajax({
-	  //     type: 'GET',
-	  //     url: '',
-	  //     dataType: 'json',
-	  //     cache: false,
-	  //     success: function(data) {
-	  //       console.log(data.lastName)
-	  //       this.setState({user:        data,
-	  //                      lastInitial: data.lastName.charAt(0)});
-	  //       this.handleInterests(data);
-	  //       this.handleNeighborhoods(data);
-	  //     }.bind(this),
-	  //     error: function(xhr, status, err) {
-	  //       console.error(this.props.url, status, err.toString());
-	  //     }.bind(this)
-	  //   });
-	  // },
-	  // componentWillMount: function() {
-	  // this.loadUserFromServer()
-	  // },
 	  handleUpdate: function handleUpdate() {
 	    console.log('make a request to handleUpdate');
 	  },
@@ -26364,12 +26313,8 @@
 	      rows.push(_react2.default.createElement(
 	        'li',
 	        { key: index },
-	        _react2.default.createElement(
-	          'a',
-	          null,
-	          '#',
-	          interest
-	        )
+	        '#',
+	        interest
 	      ));
 	    });
 	    this.setState({ interests: rows });
@@ -26381,12 +26326,7 @@
 	      rows.push(_react2.default.createElement(
 	        'li',
 	        { key: index },
-	        _react2.default.createElement(
-	          'a',
-	          null,
-	          '#',
-	          neighborhood
-	        )
+	        neighborhood
 	      ));
 	    });
 	    this.setState({ neighborhoods: rows });
@@ -26396,66 +26336,60 @@
 	    console.log(this.props.user);
 	    var interests = this.state.interests;
 	    var neighborhoods = this.state.neighborhoods;
-	    // var hoods = this.handleNeighborhoods(this.props.user)
-	    //  if (this.props.user._id) {
-	    //    this.componentWillReceiveProps();
-	    //    this.props.user._id = null;
-	    //  }
+	    var lastInitial = this.props.user.lastName ? this.props.user.lastName.charAt(0) : '';
 	    return _react2.default.createElement(
 	      'div',
-	      null,
+	      { className: 'userContainer' },
 	      _react2.default.createElement(
-	        'h3',
-	        { className: 'userName' },
-	        this.props.user.firstName,
-	        ' ',
-	        this.props.user.lastName
-	      ),
-	      _react2.default.createElement('img', { className: 'userPic', src: this.props.user.pic }),
-	      _react2.default.createElement(
-	        'p',
-	        null,
+	        'div',
+	        { className: 'userTop' },
+	        _react2.default.createElement('img', { className: 'userPic', src: this.props.user.pic }),
 	        _react2.default.createElement(
-	          'strong',
+	          'div',
 	          null,
-	          'Email: '
-	        ),
-	        this.props.user.email
+	          _react2.default.createElement(
+	            'h3',
+	            { className: 'userName' },
+	            this.props.user.firstName,
+	            ' ',
+	            lastInitial,
+	            '.'
+	          ),
+	          _react2.default.createElement(
+	            'h3',
+	            { className: 'userHeader' },
+	            'Neighborhoods:'
+	          ),
+	          _react2.default.createElement(
+	            'ul',
+	            { className: 'userNeighborhoods' },
+	            neighborhoods
+	          )
+	        )
 	      ),
 	      _react2.default.createElement(
-	        'p',
-	        null,
+	        'div',
+	        { className: 'userHeader' },
+	        'Tagline:'
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'userBio' },
 	        _react2.default.createElement(
-	          'strong',
+	          'i',
 	          null,
-	          'Member since: '
-	        ),
-	        this.props.user.created_at
+	          this.props.user.bio
+	        )
 	      ),
 	      _react2.default.createElement(
-	        'p',
-	        null,
-	        this.props.user.bio
-	      ),
-	      _react2.default.createElement(
-	        'h3',
-	        null,
+	        'div',
+	        { className: 'userHeader' },
 	        'Interests:'
 	      ),
 	      _react2.default.createElement(
 	        'ul',
-	        { className: 'interests' },
+	        { className: 'userInterests' },
 	        interests
-	      ),
-	      _react2.default.createElement(
-	        'h3',
-	        null,
-	        'Neighborhoods:'
-	      ),
-	      _react2.default.createElement(
-	        'ul',
-	        { className: 'neighborhoods' },
-	        neighborhoods
 	      )
 	    );
 	  }
@@ -26478,7 +26412,6 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var LinkedStateMixin = __webpack_require__(233);
-	var SingleEvent = __webpack_require__(237);
 
 	function formatDate(date) {
 	  var d = new Date(date);
@@ -26524,8 +26457,16 @@
 	      fileSize: '',
 	      update: false };
 	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    this.setState({ update: nextProps.update });
+	  componentWillReceiveProps: function componentWillReceiveProps() {
+	    console.log('event form component will receive props');
+	    console.log(this.props.event);
+	    this.setState({
+	      eventID: this.props.event._id,
+	      title: this.props.event.title,
+	      description: this.props.event.description,
+	      interestTags: this.props.event.interestTags,
+	      addressName: this.props.event.addressName,
+	      address: this.props.event.address });
 	  },
 	  handleImageChange: function handleImageChange(e) {
 	    var _this = this;
@@ -26552,7 +26493,8 @@
 	        console.info('Success loading to S3');
 	      }
 	    };
-
+	    console.log('This state file below: ***************');
+	    console.log(this.state.file);
 	    xhr.send(this.state.file);
 
 	    this.setState({
@@ -26563,26 +26505,32 @@
 	      fileSize: ''
 	    });
 	  },
+	  setImagePreview: function setImagePreview(url) {
+	    this.setState({
+	      imagePreviewUrl: url
+	    });
+	  },
 	  srcImage: function srcImage(e) {
-	    console.log('trying to source image');
+	    var state = this.state;
+	    var setImagePreview = this.setImagePreview;
 	    var title = this.state.title.trim();
 	    var arr = title.split(' ');
 	    var length = arr.length;
 	    var query = arr.join('+');
 	    console.log(query);
+	    var route = '/helpers/img/' + query;
 	    $.ajax({
 	      type: 'GET',
-	      url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
-	      dataType: 'application/json',
+	      url: route,
+	      contentType: 'application/json',
 	      success: function success(data) {
-	        console.log(data);
+	        setImagePreview(data.url);
 	      },
-	      error: function error(data, status, xhr) {
+	      error: function error(data, status, jqXHR) {
 	        console.log(data);
 	        console.log(status);
-	        console.log(xhr);
+	        console.log(jqXHR);
 	      }
-
 	    });
 	  },
 	  navigateBack: function navigateBack() {
@@ -26596,15 +26544,15 @@
 	    e.preventDefault();
 	    var title = this.state.title.trim();
 	    var description = this.state.description.trim();
-	    var interestTags = this.state.interestTags.split(',').map(function (interest) {
+	    var interestTags = this.state.interestTags.toString().split(',').map(function (interest) {
 	      return interest.trim().toLowerCase();
 	    });
-	    console.log(interestTags);
 	    if (interestTags.length > 3) {
 	      //flash error Validation
 	      console.log('maximum of 3 interests Tags');
 	      return;
 	    }
+
 	    var address = this.state.address.trim();
 	    var addressName = this.state.addressName.trim();
 	    if (this.state.file) {
@@ -26759,16 +26707,16 @@
 	            { 'for': 'Image' },
 	            'Image:'
 	          ),
-	          _react2.default.createElement('input', { type: 'file', onChange: this.handleImageChange }),
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.srcImage },
+	            'Source an Image'
+	          ),
+	          _react2.default.createElement('input', { type: 'file', valueLink: this.handleImageChange }),
 	          _react2.default.createElement(
 	            'button',
 	            { type: 'submit', onClick: this.handleSubmit },
 	            'Submit Event!'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            null,
-	            $imagePreview
 	          )
 	        )
 	      ),
@@ -27097,179 +27045,6 @@
 /* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	var _reactRouter = __webpack_require__(168);
-
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(38);
-
-
-	function formatDate(date) {
-	  var d = new Date(date);
-	  var hh = d.getHours();
-	  var m = d.getMinutes();
-	  var s = d.getSeconds();
-	  var dd = "AM";
-	  var h = hh;
-	  if (h >= 12) {
-	    h = hh - 12;
-	    dd = "PM";
-	  }
-	  if (h == 0) {
-	    h = 12;
-	  }
-	  m = m < 10 ? "0" + m : m;
-	  s = s < 10 ? "0" + s : s;
-	  var pattern = new RegExp("0?" + hh + ":" + m + ":" + s);
-	  var replacement = h + ":" + m;
-	  /* if you want to add seconds
-	  replacement += ":"+s;  */
-	  replacement += " " + dd;
-
-	  return replacement;
-	}
-
-	module.exports = React.createClass({
-	  displayName: 'exports',
-
-	  getInitialState: function getInitialState() {
-	    return { event: '' };
-	  },
-	  componentWillMount: function componentWillMount() {
-	    this.setState({ event: this.props.event,
-	      image: this.props.image });
-	  },
-	  render: function render() {
-	    // if (this.props.image) {
-	    //   console.info('there is a Prop for image')
-	    //   this.props.event.picture = this.props.image
-	    // }
-	    var divStyle = { background: "url(" + this.props.event.picture + ") no-repeat center center",
-	      minHeight: "25rem",
-	      margin: 0,
-	      verticalAlign: "bottom" };
-
-	    // var startTime = Date.parse(this.props.event.startTime)
-	    var now = Date.now(); //- Date.parse(Date.now())
-	    var x = (Date.parse(this.props.event.startTime) - now) / 1000;
-
-	    var hour = formatDate(this.props.event.startTime);
-	    var day = x;
-	    if (this.props.event._attendees) {
-	      var numberGoing = this.props.event._attendees.length;
-	    } else {
-	      var numberGoing = 1;
-	    }
-
-	    return React.createElement(
-	      'li',
-	      null,
-	      React.createElement(
-	        _reactRouter.Link,
-	        { to: '/event/' + this.props.event._id + '/' + this.props.userID },
-	        React.createElement(
-	          'div',
-	          { className: 'eventPicture', style: divStyle },
-	          React.createElement(
-	            'div',
-	            { className: 'eventTitle' },
-	            React.createElement(
-	              'h3',
-	              { style: { marginTop: 0 } },
-	              this.props.event.title
-	            )
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'eventDetails' },
-	          React.createElement(
-	            'h4',
-	            null,
-	            React.createElement(
-	              'strong',
-	              null,
-	              '@'
-	            ),
-	            '  ',
-	            this.props.event.addressName
-	          ),
-	          React.createElement(
-	            'p',
-	            { className: 'time' },
-	            React.createElement(
-	              'strong',
-	              null,
-	              'Starts in:'
-	            ),
-	            '  ',
-	            (x % 24).toFixed(0),
-	            ' hours  @ ',
-	            hour
-	          ),
-	          React.createElement(
-	            'p',
-	            { className: 'interest' },
-	            React.createElement(
-	              'strong',
-	              null,
-	              'Tags:'
-	            ),
-	            '  #',
-	            this.props.event.interestTags
-	          ),
-	          React.createElement(
-	            'p',
-	            { className: 'hood' },
-	            React.createElement(
-	              'strong',
-	              null,
-	              'Neighborhood:'
-	            ),
-	            '  ',
-	            this.props.event.neighborhood
-	          ),
-	          React.createElement(
-	            'p',
-	            null,
-	            React.createElement(
-	              'strong',
-	              null,
-	              'ID:'
-	            ),
-	            '   ',
-	            this.props.event._id
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'eventAttCount' },
-	            React.createElement(
-	              'h3',
-	              null,
-	              numberGoing
-	            ),
-	            React.createElement(
-	              'p',
-	              null,
-	              '  ',
-	              React.createElement(
-	                'i',
-	                null,
-	                'going'
-	              )
-	            )
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-
-/***/ },
-/* 238 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 	var _reactRouter = __webpack_require__(168);
@@ -27278,7 +27053,7 @@
 	var ReactDOM = __webpack_require__(38);
 
 
-	var SingleEvent = __webpack_require__(237);
+	var SingleEvent = __webpack_require__(238);
 	var port = process.env.PORT;
 
 	module.exports = React.createClass({
@@ -27354,6 +27129,240 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactRouter = __webpack_require__(168);
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(38);
+
+	var EventForm = __webpack_require__(232);
+
+	function formatDate(date) {
+	  var d = new Date(date);
+	  var hh = d.getHours();
+	  var m = d.getMinutes();
+	  var s = d.getSeconds();
+	  var dd = "AM";
+	  var h = hh;
+	  if (h >= 12) {
+	    h = hh - 12;
+	    dd = "PM";
+	  }
+	  if (h == 0) {
+	    h = 12;
+	  }
+	  m = m < 10 ? "0" + m : m;
+	  s = s < 10 ? "0" + s : s;
+	  var pattern = new RegExp("0?" + hh + ":" + m + ":" + s);
+	  var replacement = h + ":" + m;
+	  /* if you want to add seconds
+	  replacement += ":"+s;  */
+	  replacement += " " + dd;
+
+	  return replacement;
+	}
+
+	module.exports = React.createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    return { event: '' };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    this.setState({ event: this.props.event,
+	      image: this.props.image });
+	    this.handleInterests();
+	  },
+	  showEventModal: function showEventModal() {
+	    var answer = !this.state.toggleEventModal;
+	    this.setState({ toggleEventModal: answer });
+	  },
+	  handleInterests: function handleInterests() {
+	    console.log(this.props.event.interestTags);
+	    var rows = [];
+	    this.props.event.interestTags.forEach(function (interest, index) {
+	      rows.push(React.createElement(
+	        'li',
+	        { key: index },
+	        React.createElement(
+	          'a',
+	          null,
+	          '#',
+	          interest
+	        )
+	      ));
+	    });
+	    this.setState({ interests: rows });
+	  },
+	  render: function render() {
+	    // if (this.props.image) {
+	    //   console.info('there is a Prop for image')
+	    //   this.props.event.picture = this.props.image
+	    // }
+	    var divStyle = { background: "url(" + this.props.event.picture + ") no-repeat center center",
+	      minHeight: "25rem",
+	      margin: 0,
+	      verticalAlign: "bottom" };
+
+	    // var startTime = Date.parse(this.props.event.startTime)
+	    var now = Date.now(); //- Date.parse(Date.now())
+	    var x = (Date.parse(this.props.event.startTime) - now) / 1000;
+
+	    var hour = formatDate(this.props.event.startTime);
+	    var day = x;
+	    if (this.props.event._attendees) {
+	      var numberGoing = this.props.event._attendees.length;
+	    } else {
+	      var numberGoing = 1;
+	    }
+
+	    var hiddenVar = { display: 'none' };
+	    var showVar = {};
+	    var modalObj = { position: 'absolute',
+	      height: '100%',
+	      width: '100%',
+	      background: 'rgba(0, 0, 0, .7)',
+	      zIndex: 999,
+	      padding: 'auto',
+	      textAlign: 'center' };
+	    var hide, show;
+	    if (this.state.toggle) {
+	      hide = hiddenVar;
+	      show = showVar;
+	    } else {
+	      hide = showVar;
+	      show = hiddenVar;
+	    }
+
+	    //Event modal
+	    var hideModal, showModal;
+	    if (this.state.toggleEventModal) {
+	      showModal = modalObj;
+	      hideModal = hiddenVar;
+	    } else {
+	      showModal = hiddenVar;
+	      hideModal = showVar;
+	    }
+
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        _reactRouter.Link,
+	        { to: '/event/' + this.props.event._id + '/' + this.props.userID },
+	        React.createElement(
+	          'div',
+	          { className: 'eventPicture', style: divStyle },
+	          React.createElement(
+	            'div',
+	            { className: 'eventTitle' },
+	            React.createElement(
+	              'h3',
+	              { style: { marginTop: 0 } },
+	              this.props.event.title
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'eventDetails' },
+	          React.createElement(
+	            'h4',
+	            null,
+	            React.createElement(
+	              'strong',
+	              null,
+	              '@'
+	            ),
+	            '  ',
+	            this.props.event.addressName
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'time' },
+	            React.createElement(
+	              'strong',
+	              null,
+	              'Starts in:'
+	            ),
+	            '  ',
+	            (x % 24).toFixed(0),
+	            ' hours  @ ',
+	            hour
+	          ),
+	          React.createElement(
+	            'ul',
+	            { className: 'interest' },
+	            React.createElement(
+	              'strong',
+	              null,
+	              'Tags:'
+	            ),
+	            '  ',
+	            this.state.interests
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'hood' },
+	            React.createElement(
+	              'strong',
+	              null,
+	              'Neighborhood:'
+	            ),
+	            '  ',
+	            this.props.event.neighborhood
+	          ),
+	          React.createElement(
+	            'p',
+	            null,
+	            React.createElement(
+	              'strong',
+	              null,
+	              'ID:'
+	            ),
+	            '   ',
+	            this.props.event._id
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'eventAttCount' },
+	            React.createElement(
+	              'h3',
+	              null,
+	              numberGoing
+	            ),
+	            React.createElement(
+	              'p',
+	              null,
+	              '  ',
+	              React.createElement(
+	                'i',
+	                null,
+	                'going'
+	              )
+	            )
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'btn editRound', onClick: this.showEventModal },
+	        'Edit'
+	      ),
+	      React.createElement(
+	        'section',
+	        { className: 'fullModal', style: showModal },
+	        React.createElement(EventForm, { className: 'row form', toggleEventModal: this.showEventModal, event: this.state.event })
+	      )
+	    );
+	  }
+	});
+
+/***/ },
 /* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -27362,66 +27371,57 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(38);
 	var LinkedStateMixin = __webpack_require__(233);
+	// const cleanArray = require('../../libs/cleanArray')
 	var port = process.env.PORT;
+
+	Array.prototype.cleanArray = function () {
+	  var actual = undefined;
+	  var newArray = new Array();
+	  for (var i = 0; i < actual.length; i++) {
+	    if (actual[i]) {
+	      newArray.push(actual[i]);
+	    }
+	  }
+	  return newArray;
+	};
 
 	module.exports = React.createClass({
 	  displayName: 'userForm',
 	  mixins: [LinkedStateMixin],
 	  getInitialState: function getInitialState() {
 	    return {
-	      userID: this.props.user._id,
-	      firstName: this.props.user.firstName,
-	      lastName: this.props.user.lastName,
-	      email: this.props.user.email,
-	      bio: this.props.user.bio,
-	      interests: this.props.user.interests,
-	      addressName: this.props.user.addressName,
-	      address: this.props.user.address,
+	      userID: '',
+	      firstName: '',
+	      lastName: '',
+	      email: '',
+	      bio: '',
+	      interests: '',
+	      addressName: '',
+	      address: '',
+	      neighborhoods: '',
 	      file: '',
 	      imagePreviewUrl: '',
 	      url: '',
 	      fileName: '',
-	      fileType: '',
-	      fileSize: ''
+	      fileType: ''
 	    };
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps() {
-	    console.log('componentWillReceiveProps');
-	    this.setState({
-	      userID: this.props.user.id,
-	      firstName: this.props.user.firstName,
-	      lastName: this.props.user.lastName,
-	      email: this.props.user.email,
-	      bio: this.props.user.bio,
-	      interests: this.props.user.interests,
-	      addressName: this.props.user.addressName,
-	      address: this.props.user.address
-	    });
+	    console.log('user form componentWillReceiveProps');
+	    if (this.props.user) {
+	      this.setState({
+	        userID: this.props.user._id,
+	        firstName: this.props.user.firstName,
+	        lastName: this.props.user.lastName,
+	        email: this.props.user.email,
+	        bio: this.props.user.bio,
+	        interests: this.props.user.interests,
+	        addressName: this.props.user.addressName,
+	        address: this.props.user.address,
+	        neighborhoods: this.props.user.neighborhoods
+	      });
+	    }
 	  },
-	  // handleIdChange: function(e) {
-	  //   this.setState({userID: e.target.value});
-	  // },
-	  // handleFirstChange: function(e) {
-	  //   this.setState({firstName: e.target.value});
-	  // },
-	  // handleLastChange: function(e) {
-	  //   this.setState({lastName: e.target.value});
-	  // },
-	  // handleEmailChange: function(e) {
-	  //   this.setState({email: e.target.value});
-	  // },
-	  // handleBioChange: function(e) {
-	  //   this.setState({bio: e.target.value});
-	  // },
-	  // handleInterestsChange: function(e) {
-	  //   this.setState({interests: e.target.value});
-	  // },
-	  // handleAddressNameChange: function(e) {
-	  //   this.setState({addressName: e.target.value});
-	  // },
-	  // handleAddressChange: function(e) {
-	  //   this.setState({address: e.target.value});
-	  // },
 	  handleImageChange: function handleImageChange(e) {
 	    var _this = this;
 
@@ -27454,42 +27454,44 @@
 	      file: ''
 	    });
 	  },
-	  srcImage: function srcImage(e) {
-	    console.log('trying to source image');
-	    var title = this.state.title.trim();
-	    var arr = title.split(' ');
-	    var length = arr.length;
-	    var query = arr.join('+');
-	    console.log(query);
-	    $.ajax({
-	      type: 'GET',
-	      url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
-	      dataType: 'application/json',
-	      success: function success(data) {
-	        console.log(data);
-	      },
-	      error: function error(data, status, xhr) {
-	        console.log(data);
-	        console.log(status);
-	        console.log(xhr);
-	      }
-
-	    });
-	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
+	    console.log(this.state);
 	    var firstName = this.state.firstName.trim();
 	    var lastName = this.state.lastName.trim();
-	    var email = this.state.email.trim();
+	    var email = email ? this.state.email.trim() : '';
 	    var bio = this.state.bio.trim();
-	    var interests = this.state.interests.trim();
-	    var address = this.state.address.trim();
-	    var addressName = this.state.addressName.trim();
+
+	    var interests = this.state.interests.toString().split(',').map(function (interest) {
+	      return interest.trim().toLowerCase();
+	    });
+	    if (interests.length > 5) {
+	      //flash error Validation
+	      console.log('maximum of 5 interests');
+	      return;
+	    }
+
+	    var neighborhoods = this.state.neighborhoods.toString().split(',').map(function (neighborhood) {
+	      return neighborhood.trim().toLowerCase();
+	    });
+	    if (neighborhoods.length > 2) {
+	      //flash error Validation
+	      console.log('maximum of 2 neighborhoods');
+	      return;
+	    }
+
+	    var address = '';
+	    var addressName = '';
+	    if (this.state.address) {
+	      address = this.state.address.trim();
+	    }
+	    if (this.state.addressName) {
+	      addressName = this.state.addressName.trim();
+	    }
 
 	    if (this.state.file) {
 	      var fileName = this.state.file.name;
 	      var fileType = this.state.file.type;
-	      var fileSize = this.state.file.size;
 	    } else {
 	      var picture = this.state.url.trim();
 	    }
@@ -27501,16 +27503,16 @@
 	      email: email,
 	      bio: bio,
 	      interests: interests,
-	      addressName: addressName,
 	      address: address,
+	      neighborhoods: neighborhoods,
 	      picture: picture,
 	      fileName: fileName,
-	      fileType: fileType,
-	      fileSize: fileSize
+	      fileType: fileType
 	    }, this.loadToS3);
-	    this.setState({ firstName: '', lastName: '', email: '', bio: '', interests: '', addressName: '', address: '' });
+	    this.setState({ firstName: '', lastName: '', email: '', bio: '', interests: '', address: '' });
 	  },
 	  onFormSubmit: function onFormSubmit(newUser, callback) {
+	    this.props.toggleUserModal();
 	    if (this.state.userID) {
 	      var crudType = 'PUT';
 	      var route = '/api/user/' + this.state.userID;
@@ -27528,11 +27530,12 @@
 	        console.log(data);
 	        callback(data.signedRequest);
 	      },
-	      error: function error(data, status, jqXHR) {
+	      error: function (data, status, jqXHR) {
+	        this.props.toggleUserModal();
 	        console.log(data);
 	        console.log(status);
 	        console.log(jqXHR);
-	      }
+	      }.bind(this)
 	    });
 	  },
 	  navigateBack: function navigateBack() {
@@ -27589,20 +27592,20 @@
 	            { 'for': 'userID' },
 	            'User ID:'
 	          ),
-	          React.createElement('input', { placeholder: 'userID', valueLink: this.linkState('userID') }),
-	          React.createElement(
-	            'label',
-	            { 'for': 'firstName' },
-	            'First Name:'
-	          ),
-	          React.createElement('input', { type: 'text', placeholder: 'First', valueLink: this.linkState('firstName') }),
-	          React.createElement(
-	            'label',
-	            { 'for': 'lastName' },
-	            'Last Name:'
-	          ),
-	          React.createElement('input', { type: 'text', placeholder: 'Last', valueLink: this.linkState('lastName') })
+	          React.createElement('input', { placeholder: 'userID', valueLink: this.linkState('userID') })
 	        ),
+	        React.createElement(
+	          'label',
+	          { 'for': 'firstName' },
+	          'First Name:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'First', valueLink: this.linkState('firstName') }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'lastName' },
+	          'Last Name:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Last', valueLink: this.linkState('lastName') }),
 	        React.createElement(
 	          'label',
 	          { 'for': 'email' },
@@ -27629,10 +27632,16 @@
 	        React.createElement('input', { type: 'text', placeholder: 'We ask for address to select your neighborhood', valueLink: this.linkState('address') }),
 	        React.createElement(
 	          'label',
+	          { 'for': 'Neighborhoods' },
+	          'Neighborhoods:'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Belltown, Queen Anne, Capitol Hill, (comma seperated / 2 max)', valueLink: this.linkState('neighborhoods') }),
+	        React.createElement(
+	          'label',
 	          { 'for': 'Image' },
 	          'Image:'
 	        ),
-	        React.createElement('input', { type: 'file', onChange: this.handleImageChange }),
+	        React.createElement('input', { type: 'file', valueLink: this.handleImageChange }),
 	        React.createElement(
 	          'button',
 	          { type: 'submit' },
@@ -27883,6 +27892,781 @@
 	          'a',
 	          { onClick: this.handleEventLeave },
 	          'Leave Event'
+	        )
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(38);
+
+	var _reactRouter = __webpack_require__(168);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var port = process.env.PORT || 8080;
+
+	module.exports = _react2.default.createClass({
+	  displayName: 'exports',
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(UserTable, null),
+	      _react2.default.createElement(EventTable, null)
+	    );
+	  }
+	});
+
+	var UserTable = _react2.default.createClass({
+	  displayName: 'UserTable',
+
+	  getInitialState: function getInitialState() {
+	    return { users: [] };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    $.ajax({
+	      type: 'GET',
+	      url: '/api/users/',
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved USERS');
+	        console.log(data);
+	        this.setState({ users: data });
+	        this.handleUsers(this.state.users);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(xhr, status, err);
+	      }.bind(this)
+	    });
+	  },
+	  handleUsers: function handleUsers(users) {
+	    console.log('Creating User Rows for User Table');
+	    console.log(users);
+	    var uRows = [];
+	    if (users) {
+	      users.forEach(function (user, index) {
+	        uRows.push(_react2.default.createElement(UserRow, { user: user, key: index }));
+	      });
+	      this.setState({ userRows: uRows });
+	    }
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'table',
+	      { className: 'userTable' },
+	      _react2.default.createElement(
+	        'thead',
+	        null,
+	        _react2.default.createElement(
+	          'tr',
+	          null,
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'User ID'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'First Name'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Last Name'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Email'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Interests'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Neighborhoods'
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'tbody',
+	        null,
+	        this.state.userRows
+	      )
+	    );
+	  }
+	});
+
+	var UserRow = _react2.default.createClass({
+	  displayName: 'UserRow',
+
+	  getInitialState: function getInitialState() {
+	    return { user: this.props.user };
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'tr',
+	      { className: 'userRow' },
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user._id
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user.firstName
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user.lastName
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user.email
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user.interests
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.user.neighborhoods
+	      )
+	    );
+	  }
+	});
+
+	var EventTable = _react2.default.createClass({
+	  displayName: 'EventTable',
+
+	  getInitialState: function getInitialState() {
+	    return { events: [] };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    $.ajax({
+	      type: 'GET',
+	      url: '/api/events/',
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved EVENTS');
+	        console.log(data);
+	        this.setState({ events: data });
+	        this.handleEvents(this.state.events);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(xhr, status, err);
+	      }.bind(this)
+	    });
+	  },
+	  handleEvents: function handleEvents(events) {
+	    console.log('Creating Event Rows for Event Table');
+	    console.log(events);
+	    var eRows = [];
+	    if (events) {
+	      events.forEach(function (event, index) {
+	        eRows.push(_react2.default.createElement(EventRow, { event: event, key: index }));
+	      });
+	      this.setState({ eventRows: eRows });
+	    }
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'table',
+	      { className: 'eventTable' },
+	      _react2.default.createElement(
+	        'thead',
+	        null,
+	        _react2.default.createElement(
+	          'tr',
+	          null,
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Event ID'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Title'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Description'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Neighborhood'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Start Time'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Tags'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Attendees'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Creator'
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'tbody',
+	        null,
+	        this.state.eventRows
+	      )
+	    );
+	  }
+	});
+
+	var EventRow = _react2.default.createClass({
+	  displayName: 'EventRow',
+
+	  getInitialState: function getInitialState() {
+	    return { event: this.props.event };
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'tr',
+	      { className: 'eventRow' },
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event._id
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event.title
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event.description
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event.neighborhood
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event.startTime
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event.interestTags
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event._attendees
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        this.state.event._creator
+	      )
+	    );
+	  }
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(38);
+
+	var _reactRouter = __webpack_require__(168);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var port = process.env.PORT || 8080;
+
+	// const DisplayUser = require(__dirname + '/display_user.jsx')
+	var EventForm = __webpack_require__(232);
+	var EventList = __webpack_require__(237);
+	var UserForm = __webpack_require__(239);
+	var UserList = __webpack_require__(243);
+
+	function getParameterByName(name, url) {
+	  if (!url) url = window.location.href;
+	  name = name.replace(/[\[\]]/g, "\\$&");
+	  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+	      results = regex.exec(url);
+	  if (!results) return null;
+	  if (!results[2]) return '';
+	  return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+
+	module.exports = _react2.default.createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    if (sessionStorage.token || sessionStorage.token != null) {
+	      console.log('Yes there is a sessionStorage token');
+	      console.log(sessionStorage.token);
+	      var userObj = sessionStorage.token;
+	      var toggleVar = false;
+	    } else {
+	      console.log('No token');
+	      var userObj = '';
+	      var toggleVar = true;
+	    }
+	    return { user: {},
+	      events: [],
+	      toggle: toggleVar,
+	      toggleEventModal: false,
+	      toggleUserModal: false };
+	  },
+
+	  componentWillMount: function componentWillMount() {
+	    var _this = this;
+
+	    if (!this.state.user || !sessionStorage.token) {
+	      var token = getParameterByName('access_token');
+	      sessionStorage.setItem('token', token);
+	    } else {
+	      var token = sessionStorage.token;
+	    }
+	    $.ajax({
+	      type: 'GET',
+	      url: '/api/user/' + sessionStorage.token,
+	      headers: { 'Authorization': 'Bearer ' + token },
+	      // beforeSend: function(xhr){
+	      //   xhr.withCredentials = true;
+	      //   xhr.setRequestHeader('Authorization', )
+	      // },
+	      success: function success(data, status) {
+	        console.log(data);
+	        console.log(status);
+	        _this.setState({
+	          user: data,
+	          toggle: false
+	        });
+	        console.log('this is toggle: ' + _this.state.toggle);
+	      },
+	      error: function error(xhr, status, _error) {
+	        console.log(xhr);
+	        console.log(status);
+	        console.log(_error);
+	      }
+	    });
+	  },
+	  showUserModal: function showUserModal() {
+	    var answer = !this.state.toggleUserModal;
+	    this.setState({ toggleUserModal: answer });
+	  },
+	  showEventModal: function showEventModal() {
+	    var answer = !this.state.toggleEventModal;
+	    this.setState({ toggleEventModal: answer });
+	  },
+	  logout: function logout() {
+	    sessionStorage.removeItem('token');
+	    this.setState({ user: '',
+	      events: '',
+	      toggle: true });
+	  },
+	  render: function render() {
+	    var hiddenVar = { display: 'none' };
+	    var showVar = {};
+	    var modalObj = { position: 'absolute',
+	      height: '100%',
+	      width: '100%',
+	      background: 'rgba(0, 0, 0, .7)',
+	      zIndex: 999,
+	      padding: 'auto',
+	      textAlign: 'center' };
+	    var hide, show;
+	    if (this.state.toggle) {
+	      hide = hiddenVar;
+	      show = showVar;
+	    } else {
+	      hide = showVar;
+	      show = hiddenVar;
+	    }
+	    //Event modal
+	    var hideModal, showModal;
+	    if (this.state.toggleEventModal) {
+	      showModal = modalObj;
+	      hideModal = hiddenVar;
+	    } else {
+	      showModal = hiddenVar;
+	      hideModal = showVar;
+	    }
+	    //User modal
+	    var hideUserModal, showUserModal;
+	    if (this.state.toggleUserModal) {
+	      showUserModal = modalObj;
+	      hideUserModal = hiddenVar;
+	    } else {
+	      showUserModal = hiddenVar;
+	      hideUserModal = showVar;
+	    }
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'section',
+	        { className: 'dashboard', style: hide },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'container row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-lg-6', id: 'userList' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'profileHeader' },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Users'
+	              ),
+	              _react2.default.createElement('div', { className: 'spacer' }),
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn editRound', onClick: this.showUserModal },
+	                'NEW'
+	              )
+	            ),
+	            _react2.default.createElement(UserList, { className: 'row users', user: this.state.user })
+	          ),
+	          _react2.default.createElement(
+	            'section',
+	            { className: 'fullModal', style: showUserModal },
+	            _react2.default.createElement(UserForm, { className: 'row form', toggleUserModal: this.showUserModal })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-lg-6', id: 'eventList' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'eventsHeader' },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Events'
+	              ),
+	              _react2.default.createElement('div', { className: 'spacer' }),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-4' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { className: 'btn btn-action', onClick: this.showEventModal },
+	                  'Make Event'
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(EventList, { className: 'row events', user: this.state.user })
+	          ),
+	          _react2.default.createElement(
+	            'section',
+	            { className: 'fullModal', style: showModal },
+	            _react2.default.createElement(EventForm, { toggleEventModal: this.showEventModal, className: 'row form' })
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var _reactRouter = __webpack_require__(168);
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(38);
+
+
+	var SingleUser = __webpack_require__(244);
+	var port = process.env.PORT;
+
+	module.exports = React.createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    return { users: [] };
+	  },
+	  // propTypes: function(){
+	  //   user: React.PropTypes.object.isRequired
+	  // },
+	  // componentWillReceiveProps: function(nextProps) {
+	  //   this.handleGetEvents(nextProps.user)
+	  // },
+	  componentWillMount: function componentWillMount() {
+	    $.ajax({
+	      type: 'GET',
+	      url: '/api/users/',
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        console.log('Successfully retrieved USERS');
+	        console.log(data);
+	        this.setState({ users: data });
+	        this.handleUsers(this.state.users);
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error(xhr, status, err);
+	      }.bind(this)
+	    });
+	  },
+	  // handleGetEvents: function(user){
+	  //   if (user._id) {
+	  //     $.ajax({
+	  //       type: 'GET',
+	  //       url: '/api/events/' + user._id,
+	  //       dataType: 'json',
+	  //       cache: false,
+	  //       success: function(data){
+	  //         console.log('Successfully retrieved DATA');
+	  //         this.setState({events: data.events, userID: user._id})
+	  //         this.handleUsers(this.state.events, user._id)
+	  //       }.bind(this),
+	  //       error: function(xhr, status, err){
+	  //         console.error(this.props.url, status, err)
+	  //       }.bind(this)
+	  //     })
+	  //   }
+	  // },
+	  handleUsers: function handleUsers(users) {
+	    console.log('Handling Users from User List');
+	    console.log(users.length);
+	    var rows = [];
+	    if (users) {
+	      users.forEach(function (user, index) {
+	        rows.push(React.createElement(SingleUser, { user: user, key: index }));
+	      });
+	      this.setState({ rowes: rows });
+	    }
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'userList' },
+	      React.createElement(
+	        'ul',
+	        null,
+	        this.state.rowes
+	      )
+	    );
+	  }
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactRouter = __webpack_require__(168);
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(38);
+
+	var UserForm = __webpack_require__(239);
+
+	module.exports = React.createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    return { user: '',
+	      toggle: false,
+	      toggleEventModal: false,
+	      toggleUserModal: false };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    this.setState({ user: this.props.user });
+	    this.handleInterests();
+	    this.handleNeighborhoods();
+	  },
+	  showUserModal: function showUserModal() {
+	    var answer = !this.state.toggleUserModal;
+	    this.setState({ toggleUserModal: answer });
+	  },
+	  handleClick: function handleClick() {
+	    this.showUserModal();
+	  },
+	  handleInterests: function handleInterests() {
+	    console.log(this.props.user.interests);
+	    var rows = [];
+	    this.props.user.interests.forEach(function (interest, index) {
+	      rows.push(React.createElement(
+	        'li',
+	        { key: index },
+	        React.createElement(
+	          'a',
+	          null,
+	          '#',
+	          interest
+	        )
+	      ));
+	    });
+	    this.setState({ interests: rows });
+	  },
+	  handleNeighborhoods: function handleNeighborhoods() {
+	    console.log(this.props.user.neighborhoods);
+	    var rows = [];
+	    this.props.user.neighborhoods.forEach(function (neighborhood, index) {
+	      rows.push(React.createElement(
+	        'li',
+	        { key: index },
+	        React.createElement(
+	          'a',
+	          null,
+	          '#',
+	          neighborhood
+	        )
+	      ));
+	    });
+	    this.setState({ neighborhoods: rows });
+	  },
+	  render: function render() {
+	    var hiddenVar = { display: 'none' };
+	    var showVar = {};
+	    var modalObj = { position: 'absolute',
+	      height: '100%',
+	      width: '100%',
+	      background: 'rgba(0, 0, 0, .7)',
+	      zIndex: 999,
+	      padding: 'auto',
+	      textAlign: 'center' };
+	    var hide, show;
+	    if (this.state.toggle) {
+	      hide = hiddenVar;
+	      show = showVar;
+	    } else {
+	      hide = showVar;
+	      show = hiddenVar;
+	    }
+
+	    //User modal
+	    var hideUserModal, showUserModal;
+	    if (this.state.toggleUserModal) {
+	      showUserModal = modalObj;
+	      hideUserModal = hiddenVar;
+	    } else {
+	      showUserModal = hiddenVar;
+	      hideUserModal = showVar;
+	    }
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'h3',
+	          { className: 'userName' },
+	          this.props.user.firstName,
+	          ' ',
+	          this.props.user.lastName
+	        ),
+	        React.createElement('img', { className: 'userPic', src: this.props.user.pic }),
+	        React.createElement(
+	          'p',
+	          null,
+	          React.createElement(
+	            'strong',
+	            null,
+	            'Email: '
+	          ),
+	          this.props.user.email
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          React.createElement(
+	            'strong',
+	            null,
+	            'Member since: '
+	          ),
+	          this.props.user.created_at
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          this.props.user.bio
+	        ),
+	        React.createElement(
+	          'h3',
+	          null,
+	          'Interests:'
+	        ),
+	        React.createElement(
+	          'ul',
+	          { className: 'interests' },
+	          this.state.interests
+	        ),
+	        React.createElement(
+	          'h3',
+	          null,
+	          'Neighborhoods:'
+	        ),
+	        React.createElement(
+	          'ul',
+	          { className: 'neighborhoods' },
+	          this.state.neighborhoods
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'btn editRound', onClick: this.showUserModal },
+	          'Edit'
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'fullModal', style: showUserModal },
+	          React.createElement(UserForm, { className: 'row form', toggleUserModal: this.showUserModal, user: this.state.user })
 	        )
 	      )
 	    );

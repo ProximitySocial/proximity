@@ -69,7 +69,7 @@ h3 {
    display: flex;
    width: 100%;
    ul {
-    width: 300px;
+    width: 400px;
    }
    .spacer{
     -webkit-flex: 1;
@@ -173,6 +173,22 @@ h3 {
   }
 }
 
+#userList {
+  margin: 0;
+  ul {
+    margin: .7rem 0;
+    padding: 0;
+    width: 100%;
+    list-style-type: none;
+    li{
+      margin: 0;
+      border: 2px solid #CCC;
+      vertical-align: bottom;
+    }
+  }
+}
+
+
 .eventAttCount{
   display: inline-block;
   margin: 0;
@@ -181,13 +197,8 @@ h3 {
     display: inline-block
   }
 }
-.userPic {
- border-radius: 100%;
- width: 100px;
- height: 100px;
-}
 
-.eventList {
+.eventList, .userList {
   overflow-y: scroll;
   max-height:800px;
 }
@@ -197,25 +208,7 @@ h3 {
   border-radius: @radius;
 }
 
-.profileHeader{
-  display: -webkit-flex;
-  display: flex;
-  // display: inline-block;
-  margin: 0;
-  width: 100%;
-  .spacer {
-    -webkit-flex: 1;
-            flex: 1;
-  }
-  .editRound {
-    margin-top: 1.3em;
-    width: 40px;
-    border-radius: 100%;
-    height: 40px;
-    padding: 0;
-    background: @blue;
-  }
-}
+
 
 .eventsHeader{
   display: -webkit-flex;
@@ -228,6 +221,10 @@ h3 {
             flex: 1;
   }
 }
+
+//***********************************
+//            MODALS
+//***********************************
 
 .fullModal{
   .imgPreview{
@@ -267,7 +264,39 @@ h3 {
         width: 100px;
       }
     }
-    .eventForm, .userForm {
+    .eventForm {
+      text-align: left;
+      max-width: 300px;
+      margin: 0;
+      border-radius: @radius;
+      padding: 0;
+      label {
+        width: 100%;
+        margin-top: 1rem;
+      }
+      div img {
+        max-width: 375px;
+      }
+      input, textarea {
+        height: 34px;
+        width: 100%;
+        border-radius: @radius;
+        border: 1px solid transparent;
+        border-top: none;
+        border-bottom: 1px solid #DDD;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,.39), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+      }
+      textarea{
+        min-height: 7rem;
+      }
+      button{
+        background: @blue;
+        margin-top: 2rem;
+        margin-left: 23rem;
+        border-radius: @radius;
+      }
+    }
+    .userForm {
       text-align: left;
       max-width: 400px;
       margin: 0;
@@ -302,10 +331,110 @@ h3 {
   }
 }
 
+
+//***********************************
+//          USER PROFILE
+//***********************************
+
+.profileHeader{
+  display: -webkit-flex;
+  display: flex;
+  // display: inline-block;
+  margin: 0;
+  width: 100%;
+  .spacer {
+    -webkit-flex: 1;
+            flex: 1;
+  }
+  .editRound {
+    margin-top: 1.3em;
+    width: 40px;
+    border-radius: 100%;
+    height: 40px;
+    padding: 0;
+    background: @blue;
+  }
+}
+
+.userContainer{
+  text-align: center;
+  .userTop{
+    display: inline-block;
+    img.userPic{
+      margin-right: 2rem;
+      vertical-align: top;
+      display: inline-block;
+      border-radius: 15px;
+      max-width: 120px;
+      height: 120px;
+    }
+    div {
+      display: inline-block;
+      .userName{
+      }
+      .userHeader{
+        font-weight: 300;
+        font-size: 1.2rem;
+        text-decoration: underline;
+        padding: 0 !important;
+        margin: 0;
+        margin-top: 0 !important;
+
+      }
+      ul.userNeighborhoods{
+        list-style-type: none;
+        padding: 0;
+        margin-top: 0;
+        li {
+          font-size: medium;
+          font-weight: 600;
+          color: @purple;
+          list-style-type: none;
+        }
+      }
+    }
+  }
+  .userBio{
+    margin: auto;
+  }
+  .userHeader{
+    text-align: left;
+    padding-left: 6rem;
+    font-weight: 300;
+    font-size: 1.2rem;
+    text-decoration: underline;
+    margin: 0;
+    margin-bottom: .8rem;
+  }
+  .userInterests{
+     width: 100%;
+     padding: 1rem;
+     display: inline-block;
+     padding-top: .1rem;
+     li {
+       font-size: 1.5rem;
+       list-style-type: none;
+       display: inline-block;
+       margin: 1rem;
+       margin-top: 0;
+       border: 1px solid black;
+       padding: .2em;
+       // padding-left: 0.8em;
+       border-top-left-radius: .5em;
+       border-top-right-radius: .1em;
+       border-bottom-left-radius: .1em;
+       border-bottom-right-radius: .5em;
+       background-color: @green;
+     }
+  }
+}
+
 .eventTotalForm {
   display: inline-block;
-  .eventForm,
+  .eventForm{
+    display: inline-block;
+  }
   .eventPreview {
-    display: inline-block
+    display: inline-block;
   }
 }

@@ -1,4 +1,4 @@
-const mongoose       = require('mongoose')
+  const mongoose       = require('mongoose')
     , path           = require('path')
     , express        = require('express')
     , app            = express()
@@ -6,7 +6,8 @@ const mongoose       = require('mongoose')
     , methodOverride = require('method-override')
     , userRouter     = require(__dirname + '/routes/user_routes')
     , eventRouter    = require(__dirname + '/routes/event_routes')
-    , authRouter    = require(__dirname + '/routes/auth_routes')
+    , authRouter     = require(__dirname + '/routes/auth_routes')
+    , helpersRouter  = require(__dirname + '/routes/helper_routes')
 
 const User           = require(__dirname + '/models/user')
 const passport       = require('passport')
@@ -31,8 +32,8 @@ if (process.env.NODE_ENV === 'test'){
 mongoose.connect(db.url);
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://proximitysocial.herokuapp.com');
-  // res.header('Access-Control-Allow-Origin', 'http://localhost:2323');
+  // res.header('Access-Control-Allow-Origin', 'https://proximitysocial.herokuapp.com');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:2323');
   res.header('Access-Control-Allow-Headers', 'Cache-Control, Pragma, Authorization, Origin, X-Requested-With, Content-Type, Accept');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
@@ -52,16 +53,22 @@ app.use(passport.session())
 app.use('/api', authRouter)
 app.use('/api', userRouter)
 app.use('/api', eventRouter)
+app.use('/api', helpersRouter)
 
 app.get('/', (req, res) => {
   // if (req.query.access_token){
   //   console.log('Access TOKEN found')
-  //   res.sendfile(__dirname + '/build').status(200)
+    // res.sendfile(__dirname + '/build').status(200)
   // }
   // console.log('no access TOKEN')
-  console.log('REDIRECTED AND AUTHENTICATED');
-  console.log(req.query.access_token);
-  res.render(__dirname + '/build.index.html');
+  console.log('REDIRECTED AND AUTHENTICATED')
+  console.log('REDIRECTED AND AUTHENTICATED')
+  console.log('REDIRECTED AND AUTHENTICATED to:')
+  console.log(__dirname + '/build/index.html')
+
+  // console.log(req.query.access_token)
+  // res.render(__dirname + '/build/index.html')
+    res.sendFile(__dirname + '/build/index.html')
 })
 
 // function ensureAuthenticated(req, res, next) {

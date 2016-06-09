@@ -11,7 +11,7 @@ function callGoogle(address, callback){
 
   var geocodeParams = { address: address}
 
-  var cb = callback || () => {}
+  var cb = callback || function() {}
   return new Promise((resolve, reject) => {
     gmAPI.geocode(geocodeParams, (err, data) => {
       if (err) {

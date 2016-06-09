@@ -1,13 +1,13 @@
 import React from 'react'
 import { ReactDOM } from 'react-dom'
 import { Router, Route, Link, hashHistory } from 'react-router'
+const port = process.env.PORT || 8080
 
-
-const DisplayUser = require(__dirname + '/display_user.jsx')
+// const DisplayUser = require(__dirname + '/display_user.jsx')
 const EventForm = require(__dirname + '/event_form.jsx')
 const EventList = require(__dirname + '/event_list.jsx')
 const UserForm = require(__dirname + '/user_form.jsx')
-const port = process.env.PORT || 8080
+const UserList = require(__dirname + '/user_list.jsx')
 
 
 function getParameterByName(name, url) {
@@ -124,22 +124,24 @@ module.exports = React.createClass({
       <div>
         <section className="dashboard" style={hide}>
           <div className="container row">
-            <div className="col-lg-4" id="profile">
+            <div className="col-lg-6" id="userList">
               <div className="profileHeader">
-                <h2>Profile</h2>
+                <h2>Users</h2>
                 <div className='spacer'></div>
-                <button className='btn editRound' onClick={this.showUserModal}>Edit</button>
+                <button className='btn editRound' onClick={this.showUserModal}>NEW</button>
               </div>
-              <DisplayUser className="row profile" user={this.state.user} />
+              <UserList className="row users" user={this.state.user} />
             </div>
             <section className="fullModal" style={showUserModal}>
-              <UserForm className="row form" toggleUserModal={this.showUserModal} user={this.state.user}/>
+              <UserForm className="row form" toggleUserModal={this.showUserModal}/>
             </section>
-            <div className="col-lg-5" id="eventList">
+            <div className="col-lg-6" id="eventList">
               <div className="eventsHeader">
                 <h2>Events</h2>
                 <div className="spacer"></div>
-                <button className="btn btn-action" onClick={this.showEventModal}>Make Event</button>
+                <div className="col-lg-4">
+                  <button className="btn btn-action" onClick={this.showEventModal}>Make Event</button>
+                </div>
               </div>
               <EventList className="row events" user={this.state.user}/>
             </div>
