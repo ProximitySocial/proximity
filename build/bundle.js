@@ -25951,42 +25951,12 @@
 	      toggle: toggleVar,
 	      hideForm: true };
 	  },
-	  // componentDidMount: function() {
-	  //   if (!this.state.user){
-	  //       var token = getParameterByName('access_token')
-	  //       sessionStorage.setItem('token', token)
-	  //   }
-	  //   $.ajax({
-	  //     type: 'GET',
-	  //     url: '/api/user/' + sessionStorage.token,
-	  //     // headers: {'Access-Control-Allow-Origin': 'http://localhost:2323'},
-	  //     // beforeSend: function(xhr){
-	  //     //   xhr.withCredentials = true;
-	  //     //   xhr.setRequestHeader('Authorization', )
-	  //     // },
-	  //     success: (data, status) => {
-	  //       this.setState({
-	  //         user: data,
-	  //         toggle: false
-	  //       })
-	  //     },
-	  //     error: (xhr, status, error) => {
-	  //       console.log(xhr)
-	  //       console.log(status)
-	  //       console.log(error)
-	  //     }
-	  //   })
-	  // },
 	  logout: function logout() {
 	    sessionStorage.removeItem('token');
 	    this.setState({ user: '',
 	      events: '',
 	      toggle: true });
 	  },
-	  // showForm: function(){
-	  //   var state = !this.state.hideForm
-	  //   this.setState({hideForm: state})
-	  // },
 	  render: function render() {
 	    var hiddenBtn, showBtn;
 	    if (this.state.toggle) {
@@ -25996,14 +25966,6 @@
 	      hiddenBtn = {};
 	      showBtn = { display: "none" };
 	    }
-	    console.log('Grabbing App Children');
-	    console.log(this.props.children);
-	    // var hidden
-	    // if (this.state.hideForm){
-	    //   hidden = {display: "none"}
-	    // } else {
-	    //   hidden = {}
-	    // }
 	    return _react2.default.createElement(
 	      'div',
 	      null,
@@ -26295,13 +26257,9 @@
 	              ),
 	              _react2.default.createElement('div', { className: 'spacer' }),
 	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-4' },
-	                _react2.default.createElement(
-	                  'button',
-	                  { className: 'btn btn-action', onClick: this.showEventModal },
-	                  'Make Event'
-	                )
+	                'button',
+	                { className: 'btn btn-action', onClick: this.showEventModal },
+	                'Make Event'
 	              )
 	            ),
 	            _react2.default.createElement(EventList, { className: 'row events', user: this.state.user })
@@ -26345,27 +26303,6 @@
 	    this.handleNeighborhoods(nextProps.user);
 	    this.handleInterests(nextProps.user);
 	  },
-	  // loadUserFromServer: function() {
-	  //   $.ajax({
-	  //     type: 'GET',
-	  //     url: '',
-	  //     dataType: 'json',
-	  //     cache: false,
-	  //     success: function(data) {
-	  //       console.log(data.lastName)
-	  //       this.setState({user:        data,
-	  //                      lastInitial: data.lastName.charAt(0)});
-	  //       this.handleInterests(data);
-	  //       this.handleNeighborhoods(data);
-	  //     }.bind(this),
-	  //     error: function(xhr, status, err) {
-	  //       console.error(this.props.url, status, err.toString());
-	  //     }.bind(this)
-	  //   });
-	  // },
-	  // componentWillMount: function() {
-	  // this.loadUserFromServer()
-	  // },
 	  handleUpdate: function handleUpdate() {
 	    console.log('make a request to handleUpdate');
 	  },
@@ -26376,12 +26313,8 @@
 	      rows.push(_react2.default.createElement(
 	        'li',
 	        { key: index },
-	        _react2.default.createElement(
-	          'a',
-	          null,
-	          '#',
-	          interest
-	        )
+	        '#',
+	        interest
 	      ));
 	    });
 	    this.setState({ interests: rows });
@@ -26393,12 +26326,7 @@
 	      rows.push(_react2.default.createElement(
 	        'li',
 	        { key: index },
-	        _react2.default.createElement(
-	          'a',
-	          null,
-	          '#',
-	          neighborhood
-	        )
+	        neighborhood
 	      ));
 	    });
 	    this.setState({ neighborhoods: rows });
@@ -26408,66 +26336,60 @@
 	    console.log(this.props.user);
 	    var interests = this.state.interests;
 	    var neighborhoods = this.state.neighborhoods;
-	    // var hoods = this.handleNeighborhoods(this.props.user)
-	    //  if (this.props.user._id) {
-	    //    this.componentWillReceiveProps();
-	    //    this.props.user._id = null;
-	    //  }
+	    var lastInitial = this.props.user.lastName ? this.props.user.lastName.charAt(0) : '';
 	    return _react2.default.createElement(
 	      'div',
-	      null,
+	      { className: 'userContainer' },
 	      _react2.default.createElement(
-	        'h3',
-	        { className: 'userName' },
-	        this.props.user.firstName,
-	        ' ',
-	        this.props.user.lastName
-	      ),
-	      _react2.default.createElement('img', { className: 'userPic', src: this.props.user.pic }),
-	      _react2.default.createElement(
-	        'p',
-	        null,
+	        'div',
+	        { className: 'userTop' },
+	        _react2.default.createElement('img', { className: 'userPic', src: this.props.user.pic }),
 	        _react2.default.createElement(
-	          'strong',
+	          'div',
 	          null,
-	          'Email: '
-	        ),
-	        this.props.user.email
+	          _react2.default.createElement(
+	            'h3',
+	            { className: 'userName' },
+	            this.props.user.firstName,
+	            ' ',
+	            lastInitial,
+	            '.'
+	          ),
+	          _react2.default.createElement(
+	            'h3',
+	            { className: 'userHeader' },
+	            'Neighborhoods:'
+	          ),
+	          _react2.default.createElement(
+	            'ul',
+	            { className: 'userNeighborhoods' },
+	            neighborhoods
+	          )
+	        )
 	      ),
 	      _react2.default.createElement(
-	        'p',
-	        null,
+	        'div',
+	        { className: 'userHeader' },
+	        'Tagline:'
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'userBio' },
 	        _react2.default.createElement(
-	          'strong',
+	          'i',
 	          null,
-	          'Member since: '
-	        ),
-	        this.props.user.created_at
+	          this.props.user.bio
+	        )
 	      ),
 	      _react2.default.createElement(
-	        'p',
-	        null,
-	        this.props.user.bio
-	      ),
-	      _react2.default.createElement(
-	        'h3',
-	        null,
+	        'div',
+	        { className: 'userHeader' },
 	        'Interests:'
 	      ),
 	      _react2.default.createElement(
 	        'ul',
-	        { className: 'interests' },
+	        { className: 'userInterests' },
 	        interests
-	      ),
-	      _react2.default.createElement(
-	        'h3',
-	        null,
-	        'Neighborhoods:'
-	      ),
-	      _react2.default.createElement(
-	        'ul',
-	        { className: 'neighborhoods' },
-	        neighborhoods
 	      )
 	    );
 	  }
@@ -27449,7 +27371,19 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(38);
 	var LinkedStateMixin = __webpack_require__(233);
+	// const cleanArray = require('../../libs/cleanArray')
 	var port = process.env.PORT;
+
+	Array.prototype.cleanArray = function () {
+	  var actual = undefined;
+	  var newArray = new Array();
+	  for (var i = 0; i < actual.length; i++) {
+	    if (actual[i]) {
+	      newArray.push(actual[i]);
+	    }
+	  }
+	  return newArray;
+	};
 
 	module.exports = React.createClass({
 	  displayName: 'userForm',
@@ -27469,8 +27403,7 @@
 	      imagePreviewUrl: '',
 	      url: '',
 	      fileName: '',
-	      fileType: '',
-	      fileSize: ''
+	      fileType: ''
 	    };
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps() {
@@ -27489,30 +27422,6 @@
 	      });
 	    }
 	  },
-	  // handleIdChange: function(e) {
-	  //   this.setState({userID: e.target.value});
-	  // },
-	  // handleFirstChange: function(e) {
-	  //   this.setState({firstName: e.target.value});
-	  // },
-	  // handleLastChange: function(e) {
-	  //   this.setState({lastName: e.target.value});
-	  // },
-	  // handleEmailChange: function(e) {
-	  //   this.setState({email: e.target.value});
-	  // },
-	  // handleBioChange: function(e) {
-	  //   this.setState({bio: e.target.value});
-	  // },
-	  // handleInterestsChange: function(e) {
-	  //   this.setState({interests: e.target.value});
-	  // },
-	  // handleAddressNameChange: function(e) {
-	  //   this.setState({addressName: e.target.value});
-	  // },
-	  // handleAddressChange: function(e) {
-	  //   this.setState({address: e.target.value});
-	  // },
 	  handleImageChange: function handleImageChange(e) {
 	    var _this = this;
 
@@ -27545,33 +27454,12 @@
 	      file: ''
 	    });
 	  },
-	  srcImage: function srcImage(e) {
-	    console.log('trying to source image');
-	    var title = this.state.title.trim();
-	    var arr = title.split(' ');
-	    var length = arr.length;
-	    var query = arr.join('+');
-	    console.log(query);
-	    $.ajax({
-	      type: 'GET',
-	      url: "https//www.google.com/search?source=lnms&tbm=isch&q=" + query,
-	      dataType: 'application/json',
-	      success: function success(data) {
-	        console.log(data);
-	      },
-	      error: function error(data, status, xhr) {
-	        console.log(data);
-	        console.log(status);
-	        console.log(xhr);
-	      }
-
-	    });
-	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
+	    console.log(this.state);
 	    var firstName = this.state.firstName.trim();
 	    var lastName = this.state.lastName.trim();
-	    var email = this.state.email.trim();
+	    var email = email ? this.state.email.trim() : '';
 	    var bio = this.state.bio.trim();
 
 	    var interests = this.state.interests.toString().split(',').map(function (interest) {
@@ -27604,7 +27492,6 @@
 	    if (this.state.file) {
 	      var fileName = this.state.file.name;
 	      var fileType = this.state.file.type;
-	      var fileSize = this.state.file.size;
 	    } else {
 	      var picture = this.state.url.trim();
 	    }
@@ -27616,17 +27503,16 @@
 	      email: email,
 	      bio: bio,
 	      interests: interests,
-	      addressName: addressName,
 	      address: address,
 	      neighborhoods: neighborhoods,
 	      picture: picture,
 	      fileName: fileName,
-	      fileType: fileType,
-	      fileSize: fileSize
+	      fileType: fileType
 	    }, this.loadToS3);
-	    this.setState({ firstName: '', lastName: '', email: '', bio: '', interests: '', addressName: '', address: '' });
+	    this.setState({ firstName: '', lastName: '', email: '', bio: '', interests: '', address: '' });
 	  },
 	  onFormSubmit: function onFormSubmit(newUser, callback) {
+	    this.props.toggleUserModal();
 	    if (this.state.userID) {
 	      var crudType = 'PUT';
 	      var route = '/api/user/' + this.state.userID;
@@ -27644,11 +27530,12 @@
 	        console.log(data);
 	        callback(data.signedRequest);
 	      },
-	      error: function error(data, status, jqXHR) {
+	      error: function (data, status, jqXHR) {
+	        this.props.toggleUserModal();
 	        console.log(data);
 	        console.log(status);
 	        console.log(jqXHR);
-	      }
+	      }.bind(this)
 	    });
 	  },
 	  navigateBack: function navigateBack() {

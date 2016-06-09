@@ -56,6 +56,7 @@ eventRouter.post('/event/new', (req, res) => {
           })
           .catch((err) => {throw err;})
       } else {
+        console.log(eventData)
         console.log('no file name or filetype');
         new Event(eventData).save((err, result) => {
           if (err || result === null) return res.status(500).json({msg: 'Server Error'})

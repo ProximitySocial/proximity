@@ -139,9 +139,7 @@ module.exports = React.createClass({
               <div className="eventsHeader">
                 <h2>Events</h2>
                 <div className="spacer"></div>
-                <div className="col-lg-4">
-                  <button className="btn btn-action" onClick={this.showEventModal}>Make Event</button>
-                </div>
+                <button className="btn btn-action" onClick={this.showEventModal}>Make Event</button>
               </div>
               <EventList className="row events" user={this.state.user}/>
             </div>
