@@ -15,7 +15,7 @@ function createUser(userData, res){
         if(err) {return res.status(500).json({error: err})}
         console.log('User _id: ' + result._id)
         console.log(result);
-        res.status(200).json({msg: 'user created', id: result._id, signedRequest: userData.awsData, url: userData.url})
+        res.status(200).json({msg: 'user created', id: result._id, signedRequest: userData.awsData, pic: userData.pic})
       })
     }
   })

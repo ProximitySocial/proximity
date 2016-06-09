@@ -6,6 +6,8 @@ var port = process.env.PORT
 
 Array.prototype.cleanArray = () => {
   var actual = this
+  console.log('This is the ACTUAL array: ')
+  console.log(actual)
   var newArray = new Array();
   for (var i = 0; i < actual.length; i++) {
     if (actual[i]) {
@@ -112,7 +114,7 @@ module.exports = React.createClass({
       },
       onFormSubmit: function(newUser, callback) {
         this.props.toggleUserModal()
-        if(this.state.userID){
+        if(this.props.user.update){
           var crudType = 'PUT'
           var route = '/api/user/' + this.state.userID
         } else {

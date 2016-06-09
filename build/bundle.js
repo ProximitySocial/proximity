@@ -27296,6 +27296,8 @@
 
 	Array.prototype.cleanArray = function () {
 	  var actual = undefined;
+	  console.log('This is the ACTUAL array: ');
+	  console.log(actual);
 	  var newArray = new Array();
 	  for (var i = 0; i < actual.length; i++) {
 	    if (actual[i]) {
@@ -27336,29 +27338,6 @@
 	      address: this.props.user.address
 	    });
 	  },
-	  // handleIdChange: function(e) {
-	  //   this.setState({userID: e.target.value});
-	  // },
-	  // handleFirstChange: function(e) {
-	  //   this.setState({firstName: e.target.value});
-	  // },
-	  // handleLastChange: function(e) {
-	  //   this.setState({lastName: e.target.value});
-	  // },
-	  // handleEmailChange: function(e) {
-	  //   this.setState({email: e.target.value});
-	  // },
-	  // handleBioChange: function(e) {
-	  //   this.setState({bio: e.target.value});
-	  // },
-	  // handleInterestsChange: function(e) {
-	  //   this.setState({interests: e.target.value});
-	  // },
-	  // handleAddressNameChange: function(e) {
-	  // },
-	  // handleAddressChange: function(e) {
-	  //   this.setState({address: e.target.value});
-	  // },
 	  handleImageChange: function handleImageChange(e) {
 	    var _this = this;
 
@@ -27426,11 +27405,8 @@
 	    this.setState({ firstName: '', lastName: '', email: '', bio: '', interests: '', address: '' });
 	  },
 	  onFormSubmit: function onFormSubmit(newUser, callback) {
-	    console.log(this.props.user);
-	    console.log(this.state);
-	    console.log(this.state.userID);
-	    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-	    if (this.state.userID) {
+	    this.props.toggleUserModal();
+	    if (this.props.user.update) {
 	      var crudType = 'PUT';
 	      var route = '/api/user/' + this.state.userID;
 	    } else {
@@ -27447,11 +27423,12 @@
 	        console.log(data);
 	        callback(data.signedRequest);
 	      },
-	      error: function error(data, status, jqXHR) {
+	      error: function (data, status, jqXHR) {
+	        this.props.toggleUserModal();
 	        console.log(data);
 	        console.log(status);
 	        console.log(jqXHR);
-	      }
+	      }.bind(this)
 	    });
 	  },
 	  navigateBack: function navigateBack() {
