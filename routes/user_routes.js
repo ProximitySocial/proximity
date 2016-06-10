@@ -129,6 +129,7 @@ userRouter.put('/user/:id', (req, res) => {
 // })
 
 userRouter.delete('/user/:id', (req, res) => {
+  console.log('Attempting to delete user');
   User.remove({_id: req.params.id}, (err) => {
     if (err) return res.status(500).json({msg: 'Server Error'})
     res.status(200).json({msg: 'Successfully destroyed user'})

@@ -51,13 +51,15 @@ module.exports = React.createClass({
       componentWillReceiveProps: function() {
         console.log('event form component will receive props');
         console.log(this.props.event);
-        this.setState({
-          eventID: this.props.event._id,
-          title: this.props.event.title,
-          description: this.props.event.description,
-          interestTags: this.props.event.interestTags,
-          addressName: this.props.event.addressName,
-          address: this.props.event.address})
+        if (this.props.event) {
+          this.setState({
+            eventID: this.props.event._id,
+            title: this.props.event.title,
+            description: this.props.event.description,
+            interestTags: this.props.event.interestTags,
+            addressName: this.props.event.addressName,
+            address: this.props.event.address})
+        }
       },
       handleImageChange: function(e){
         e.preventDefault();

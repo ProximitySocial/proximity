@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, Link, browserHistory, hashHistory } from 'react-router'
 const App         = require(__dirname + '/components/app.jsx')
 const Dashboard   = require(__dirname + '/components/dashboard.jsx')
 // const EventForm   = require(__dirname + '/components/event_form.jsx')
@@ -21,7 +21,7 @@ const Test = React.createClass({
 })
 
 render((
-  <Router history={browserHistory}>
+  <Router history={hashHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Dashboard}/>
       <Route path="/event/:eventID/:userID" component={EventView}/>

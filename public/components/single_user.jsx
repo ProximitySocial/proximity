@@ -24,7 +24,6 @@ module.exports = React.createClass({
 
   },
   handleInterests: function() {
-    console.log(this.props.user.interests);
     var rows = [];
     this.props.user.interests.forEach(function(interest, index) {
       rows.push(<li key={index}><a>#{interest}</a></li>);
@@ -32,12 +31,27 @@ module.exports = React.createClass({
     this.setState({interests: rows});
   },
   handleNeighborhoods: function() {
-    console.log(this.props.user.neighborhoods);
     var rows = [];
     this.props.user.neighborhoods.forEach(function(neighborhood, index) {
       rows.push(<li key={index}><a>#{neighborhood}</a></li>);
     });
     this.setState({neighborhoods: rows});
+  },
+  deleteUser: function() {
+    console.log('Initiating delete of user: ' + this.props.user._id);
+    $.ajax({
+      type: 'DELETE',
+      url: '/api/user/' + this.props.user._id,
+      dataType: 'json',
+      cache: false,
+      success: function(data){
+        console.log('Successfully deleted USER');
+        this.setState({user: ''})
+      }.bind(this),
+      error: function(xhr, status, err){
+        console.error(xhr, status, err)
+      }.bind(this)
+    })
   },
   render: function() {
     var hiddenVar = {display: 'none'}
@@ -83,6 +97,7 @@ module.exports = React.createClass({
             {this.state.neighborhoods}
           </ul>
           <button className='btn editRound' onClick={this.showUserModal}>Edit</button>
+          <button className='btn editRound' onClick={this.deleteUser}>Delete</button>
           <section className="fullModal" style={showUserModal}>
             <UserForm className="row form" toggleUserModal={this.showUserModal} user={this.state.user}/>
           </section>

@@ -89,7 +89,7 @@ module.exports = React.createClass({
         console.log(this.state)
         var firstName = this.state.firstName.trim()
         var lastName = this.state.lastName.trim()
-        var email = (email) ? this.state.email.trim() : ''
+        var email = (this.state.email) ? this.state.email.trim() : ''
         var bio = this.state.bio.trim()
 
         var interests = this.state.interests.toString().split(',').map(function(interest){return interest.trim().toLowerCase()})
