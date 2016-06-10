@@ -84,6 +84,7 @@ module.exports = React.createClass({
                   <li className="logo"><Link to='/'><span className="one">V</span><span className="two">I</span><span className="three">V</span><span className="four">A</span><span className="city">city</span></Link></li>
                   <li><Link to='/test'>Test</Link></li>
                   <li><Link to='/profile'>Profile</Link></li>
+                  <li><Link to='/admin'>Admin</Link></li>
                 </ul>
                 <div class='spacer'></div>
                 <div style={showBtn}>

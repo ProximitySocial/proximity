@@ -1,6 +1,7 @@
 const React = require('react')
 const ReactDOM = require('react-dom')
 import { Router, Route, Link, hashHistory } from 'react-router'
+const EventForm = require(__dirname + '/event_form.jsx')
 
 
 function formatDate(date) {
@@ -35,6 +36,19 @@ module.exports = React.createClass({
   componentWillMount: function(){
     this.setState({event: this.props.event,
                    image: this.props.image})
+    this.handleInterests();
+  },
+  showEventModal: function(){
+    var answer = !this.state.toggleEventModal
+    this.setState({toggleEventModal: answer})
+  },
+  handleInterests: function() {
+    console.log(this.props.event.interestTags);
+    var rows = [];
+    this.props.event.interestTags.forEach(function(interest, index) {
+      rows.push(<li key={index}><a>#{interest}</a></li>);
+    });
+    this.setState({interests: rows});
   },
   render: function() {
     // if (this.props.image) {
@@ -58,6 +72,35 @@ module.exports = React.createClass({
       var numberGoing = 1
     }
 
+    var hiddenVar = {display: 'none'}
+      var showVar = {}
+      var modalObj = { position: 'absolute',
+                       height: '100%',
+                       width: '100%',
+                       background: 'rgba(0, 0, 0, .7)',
+                       zIndex: 999,
+                       padding: 'auto',
+                       textAlign: 'center'}
+      var hide, show
+      if (this.state.toggle){
+        hide = hiddenVar
+        show = showVar
+      } else {
+        hide = showVar
+        show = hiddenVar
+      }
+
+    //Event modal
+    var hideModal, showModal
+    if (this.state.toggleEventModal){
+      showModal = modalObj
+      hideModal = hiddenVar
+    } else {
+      showModal = hiddenVar
+      hideModal = showVar
+    }
+
+
     return (
       <li><Link to={'/event/' + this.props.event._id + '/' + this.props.userID}>
         <div className="eventPicture" style={divStyle}>
@@ -68,13 +111,17 @@ module.exports = React.createClass({
         <div className="eventDetails">
           <h4><strong>@</strong>  {this.props.event.addressName}</h4>
           <p className="time"><strong>Starts in:</strong>  {(x % 24).toFixed(0)} hours  @ {hour}</p>
-          <p className="interest"><strong>Tags:</strong>  #{this.props.event.interestTags}</p>
+          <ul className="interest"><strong>Tags:</strong>  {this.state.interests}</ul>
           <p className="hood"><strong>Neighborhood:</strong>  {this.props.event.neighborhood}</p>
           <p><strong>ID:</strong>   {this.props.event._id}</p>
           <div className="eventAttCount">
             <h3>{numberGoing}</h3><p>&nbsp;&nbsp;<i>going</i></p>
           </div>
         </div></Link>
+        <button className='btn editRound' onClick={this.showEventModal}>Edit</button>
+        <section className="fullModal" style={showModal}>
+          <EventForm className="row form" toggleEventModal={this.showEventModal} event={this.state.event}/>
+        </section>
       </li>
     )
   }

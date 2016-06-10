@@ -28,7 +28,9 @@ module.exports = React.createClass({
                 email: '',
                 bio: '',
                 interests: '',
+                addressName: '',
                 address: '',
+                neighborhoods: '',
                 file: '',
                 imagePreviewUrl: '',
                 url: '',
@@ -37,16 +39,20 @@ module.exports = React.createClass({
               });
       },
       componentWillReceiveProps: function(){
-        console.log('componentWillReceiveProps')
-        this.setState({
-                        userID: this.props.user._id,
-                        firstName: this.props.user.firstName,
-                        lastName: this.props.user.lastName,
-                        email: this.props.user.email,
-                        bio: this.props.user.bio,
-                        interests: this.props.user.interests,
-                        address: this.props.user.address
-                      })
+        console.log('user form componentWillReceiveProps')
+        if (this.props.user) {
+          this.setState({
+                          userID: this.props.user._id,
+                          firstName: this.props.user.firstName,
+                          lastName: this.props.user.lastName,
+                          email: this.props.user.email,
+                          bio: this.props.user.bio,
+                          interests: this.props.user.interests,
+                          addressName: this.props.user.addressName,
+                          address: this.props.user.address,
+                          neighborhoods: this.props.user.neighborhoods
+                        })
+        }
       },
       handleImageChange: function(e){
         e.preventDefault();
@@ -85,11 +91,29 @@ module.exports = React.createClass({
         var lastName = this.state.lastName.trim()
         var email = (email) ? this.state.email.trim() : ''
         var bio = this.state.bio.trim()
-        var interests = this.state.interests.split(',').map(function(interest){
-                                                         console.log(interest)
-                                                         return interest.trim().toLowerCase()
-                                                       }).cleanArray()
-        var address = (address) ? this.state.address.trim() : ''
+
+        var interests = this.state.interests.toString().split(',').map(function(interest){return interest.trim().toLowerCase()})
+        if (interests.length > 5) {
+          //flash error Validation
+          console.log('maximum of 5 interests')
+          return
+        }
+
+        var neighborhoods = this.state.neighborhoods.toString().split(',').map(function(neighborhood){return neighborhood.trim().toLowerCase()})
+        if (neighborhoods.length > 2) {
+          //flash error Validation
+          console.log('maximum of 2 neighborhoods')
+          return
+        }
+
+        var address = '';
+        var addressName = '';
+        if (this.state.address) {
+          address = this.state.address.trim()
+        }
+        if (this.state.addressName) {
+          addressName = this.state.addressName.trim()
+        }
 
         if (this.state.file){
           var fileName = this.state.file.name
@@ -106,6 +130,7 @@ module.exports = React.createClass({
            bio: bio,
            interests: interests,
            address: address,
+           neighborhoods: neighborhoods,
            picture: picture,
            fileName: fileName,
            fileType: fileType,
@@ -183,8 +208,10 @@ module.exports = React.createClass({
               <input type="text" placeholder="golf, running, dancing, (comma seperated / 5 max)" valueLink={this.linkState('interests')} />
               <label for="Address">Address:</label>
               <input type="text" placeholder="We ask for address to select your neighborhood" valueLink={this.linkState('address')} />
+              <label for="Neighborhoods">Neighborhoods:</label>
+              <input type="text" placeholder="Belltown, Queen Anne, Capitol Hill, (comma seperated / 2 max)" valueLink={this.linkState('neighborhoods')} />
               <label for="Image">Image:</label>
-              <input type="file" onChange={this.handleImageChange} />
+              <input type="file" valueLink={this.handleImageChange} />
               <button type="submit">Submit User!</button>
             </form>
             {$imagePreview}

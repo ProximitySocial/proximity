@@ -2,7 +2,6 @@ import React from 'react'
 import { ReactDOM } from 'react-dom'
 import { Router, Route, Link, browserHistory } from 'react-router'
 const LinkedStateMixin = require('react-addons-linked-state-mixin')
-const SingleEvent = require(__dirname + '/single_event.jsx')
 
 
 function formatDate(date) {
@@ -49,8 +48,16 @@ module.exports = React.createClass({
                 fileSize: '',
                 update: false});
       },
-      componentWillReceiveProps: function(nextProps) {
-        this.setState({update: nextProps.update})
+      componentWillReceiveProps: function() {
+        console.log('event form component will receive props');
+        console.log(this.props.event);
+        this.setState({
+          eventID: this.props.event._id,
+          title: this.props.event.title,
+          description: this.props.event.description,
+          interestTags: this.props.event.interestTags,
+          addressName: this.props.event.addressName,
+          address: this.props.event.address})
       },
       handleImageChange: function(e){
         e.preventDefault();
@@ -127,13 +134,13 @@ module.exports = React.createClass({
         e.preventDefault()
         var title = this.state.title.trim()
         var description = this.state.description.trim()
-        var interestTags = this.state.interestTags.split(',').map(function(interest){return interest.trim().toLowerCase()})
-        console.log(interestTags)
+        var interestTags = this.state.interestTags.toString().split(',').map(function(interest){return interest.trim().toLowerCase()})
         if (interestTags.length > 3) {
           //flash error Validation
           console.log('maximum of 3 interests Tags')
           return
         }
+
         var address = this.state.address.trim()
         var addressName = this.state.addressName.trim()
         if (this.state.file){
@@ -233,7 +240,7 @@ module.exports = React.createClass({
                 <input type="text" placeholder="Address" valueLink={this.linkState('address')} />
                 <label for="Image">Image:</label>
                 <button onClick={this.srcImage}>Source an Image</button>
-                <input type="file" onChange={this.handleImageChange} />
+                <input type="file" valueLink={this.handleImageChange} />
                 <button type="submit" onClick={this.handleSubmit}>Submit Event!</button>
               </form>
             </section>
@@ -257,4 +264,3 @@ module.exports = React.createClass({
         )
       }
     });
-
