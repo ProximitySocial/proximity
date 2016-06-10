@@ -27,7 +27,7 @@ render((
       <Route path="/event/:eventID/:userID" component={EventView}/>
       <Route path="/profile" component={Profile}/>
       <Route path="/test" component={Test}/>
-      <Route path="/admin" component={Admin}/>
+      <Route path="/admin" component={AdminDash}/>
     </Route>
   </Router>
 ), document.getElementById('root'))

@@ -438,3 +438,36 @@ h3 {
     display: inline-block;
   }
 }
+
+div {
+  text-align: center;
+  .userEventTab{
+    display: inline-block;
+    text-align: center;
+    .usersTab
+    .eventsTab{
+      margin: 1rem;
+      display: inherit;
+    }
+  }
+}
+.eventTable,
+.userTable {
+  overflow: scroll;
+  thead,
+  tbody {
+    tr td {
+      padding: 1rem;
+      max-width: 15rem;
+      max-height: 5rem;
+      word-wrap: break;
+      overflow: scroll;
+      border: 1px solid black;
+      &.eid{
+        overflow: hidden;
+        max-width: 1rem;
+      }
+    }
+
+  }
+}

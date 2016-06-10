@@ -1,14 +1,54 @@
 import React from 'react'
 import { ReactDOM } from 'react-dom'
 import { Router, Route, Link, hashHistory } from 'react-router'
-const port = process.env.PORT || 8080
+const DisplayUser = require(__dirname + '/display_user')
 
 module.exports = React.createClass({
+  getInitialState: function() {
+    return({toggleUandE: true})
+  },
+  toggleUE: function() {
+    var bool = !this.state.toggleUandE
+    this.setState({toggleUandE: bool})
+  },
   render: function() {
+    var show, hide, btnOn, btnOff
+    if (this.state.toggleUandE){
+      show = {}
+      hide = {display: 'none'}
+      btnOn = {verticalAlign: 'middle',
+                width: '20rem',
+               marginTop: '1.4em',
+               background: '#3399ff'}
+      btnOff = {verticalAlign: 'middle',
+                width: '20rem',
+               marginTop: '1.4em',
+               background: '#CCC'}
+    } else {
+      show = {display: 'none'}
+      hide = {}
+      btnOn = {verticalAlign: 'middle',
+                width: '20rem',
+               marginTop: '1.4em',
+               background: '#CCC'}
+      btnOff = {verticalAlign: 'middle',
+                width: '20rem',
+               marginTop: '1.4em',
+               background: '#3399ff'}
+    }
+
     return (
       <div>
-        <UserTable/>
-        <EventTable/>
+        <div className="userEventTab">
+          <button className="btn btn-action usersTab" style={btnOn} onClick={this.toggleUE}>Users</button>
+          <button className="btn btn-action eventsTab" style={btnOff} onClick={this.toggleUE}>Events</button>
+        </div>
+        <div style={show}>
+          <UserTable/>
+        </div>
+        <div style={hide}>
+          <EventTable/>
+        </div>
       </div>
     )
   }
@@ -57,6 +97,7 @@ var UserTable = React.createClass({
             <th>Email</th>
             <th>Interests</th>
             <th>Neighborhoods</th>
+            <th>Pic URL</th>
           </tr>
         </thead>
         <tbody>
@@ -72,14 +113,18 @@ var UserRow = React.createClass({
     return ({user: this.props.user});
   },
   render: function() {
+    var neighborhoods = this.state.user.neighborhoods.join(', ')
+    var interests = this.state.user.interests.join(', ')
+
     return (
       <tr className="userRow">
         <td>{this.state.user._id}</td>
         <td>{this.state.user.firstName}</td>
         <td>{this.state.user.lastName}</td>
         <td>{this.state.user.email}</td>
-        <td>{this.state.user.interests}</td>
-        <td>{this.state.user.neighborhoods}</td>
+        <td>{interests}</td>
+        <td>{neighborhoods}</td>
+        <td><a href={this.state.user.pic} target="_blank">{this.state.user.pic}</a></td>
       </tr>
     )
   }
@@ -122,13 +167,15 @@ var EventTable = React.createClass({
       <table className="eventTable">
         <thead>
           <tr>
-            <th>Event ID</th>
+            <th className='eid'>Event ID</th>
             <th>Title</th>
             <th>Description</th>
             <th>Neighborhood</th>
             <th>Start Time</th>
             <th>Tags</th>
+            <th># Going</th>
             <th>Attendees</th>
+            <th>picture URL</th>
             <th>Creator</th>
           </tr>
         </thead>
@@ -149,13 +196,15 @@ var EventRow = React.createClass({
   render: function() {
     return (
       <tr className="eventRow">
-        <td>{this.state.event._id}</td>
+        <td className="eid">{this.state.event._id}</td>
         <td>{this.state.event.title}</td>
         <td>{this.state.event.description}</td>
         <td>{this.state.event.neighborhood}</td>
         <td>{this.state.event.startTime}</td>
         <td>{this.state.event.interestTags}</td>
+        <td>{this.state.event._attendees.length}</td>
         <td>{this.state.event._attendees}</td>
+        <td><a href={this.state.event.picture} target="_blank">{this.state.event.picture}</a></td>
         <td>{this.state.event._creator}</td>
       </tr>
     )

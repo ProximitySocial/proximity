@@ -93,7 +93,7 @@
 	    _react2.default.createElement(_reactRouter.Route, { path: '/event/:eventID/:userID', component: EventView }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: Profile }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/test', component: Test }),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/admin', component: Admin })
+	    _react2.default.createElement(_reactRouter.Route, { path: '/admin', component: AdminDash })
 	  )
 	), document.getElementById('root'));
 
@@ -27928,7 +27928,7 @@
 /* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	'use strict';
 
 	var _react = __webpack_require__(1);
 
@@ -27940,17 +27940,71 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var port = process.env.PORT || 8080;
+	// const DisplayUser = require('./display_user')
 
 	module.exports = _react2.default.createClass({
 	  displayName: 'exports',
 
+	  getInitialState: function getInitialState() {
+	    return { toggleUandE: true };
+	  },
+	  toggleUE: function toggleUE() {
+	    var bool = !this.state.toggleUandE;
+	    this.setState({ toggleUandE: bool });
+	  },
 	  render: function render() {
+	    var show, hide, btnOn, btnOff;
+	    if (this.state.toggleUandE) {
+	      show = {};
+	      hide = { display: 'none' };
+	      btnOn = { verticalAlign: 'middle',
+	        width: '20rem',
+	        marginTop: '1.4em',
+	        background: '#3399ff' };
+	      btnOff = { verticalAlign: 'middle',
+	        width: '20rem',
+	        marginTop: '1.4em',
+	        background: '#CCC' };
+	    } else {
+	      show = { display: 'none' };
+	      hide = {};
+	      btnOn = { verticalAlign: 'middle',
+	        width: '20rem',
+	        marginTop: '1.4em',
+	        background: '#CCC' };
+	      btnOff = { verticalAlign: 'middle',
+	        width: '20rem',
+	        marginTop: '1.4em',
+	        background: '#3399ff' };
+	    }
+
 	    return _react2.default.createElement(
 	      'div',
 	      null,
-	      _react2.default.createElement(UserTable, null),
-	      _react2.default.createElement(EventTable, null)
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'userEventTab' },
+	        _react2.default.createElement(
+	          'button',
+	          { className: 'btn btn-action usersTab', style: btnOn, onClick: this.toggleUE },
+	          'Users'
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { className: 'btn btn-action eventsTab', style: btnOff, onClick: this.toggleUE },
+	          'Events'
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { style: show },
+	        _react2.default.createElement(UserTable, null)
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { style: hide },
+	        _react2.default.createElement(EventTable, null)
+	      )
 	    );
 	  }
 	});
@@ -28028,6 +28082,11 @@
 	            'th',
 	            null,
 	            'Neighborhoods'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Pic URL'
 	          )
 	        )
 	      ),
@@ -28047,6 +28106,9 @@
 	    return { user: this.props.user };
 	  },
 	  render: function render() {
+	    var neighborhoods = this.state.user.neighborhoods.join(', ');
+	    var interests = this.state.user.interests.join(', ');
+
 	    return _react2.default.createElement(
 	      'tr',
 	      { className: 'userRow' },
@@ -28073,12 +28135,21 @@
 	      _react2.default.createElement(
 	        'td',
 	        null,
-	        this.state.user.interests
+	        interests
 	      ),
 	      _react2.default.createElement(
 	        'td',
 	        null,
-	        this.state.user.neighborhoods
+	        neighborhoods
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        _react2.default.createElement(
+	          'a',
+	          { href: this.state.user.pic, target: '_blank' },
+	          this.state.user.pic
+	        )
 	      )
 	    );
 	  }
@@ -28130,7 +28201,7 @@
 	          null,
 	          _react2.default.createElement(
 	            'th',
-	            null,
+	            { className: 'eid' },
 	            'Event ID'
 	          ),
 	          _react2.default.createElement(
@@ -28161,7 +28232,17 @@
 	          _react2.default.createElement(
 	            'th',
 	            null,
+	            '# Going'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
 	            'Attendees'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'picture URL'
 	          ),
 	          _react2.default.createElement(
 	            'th',
@@ -28191,7 +28272,7 @@
 	      { className: 'eventRow' },
 	      _react2.default.createElement(
 	        'td',
-	        null,
+	        { className: 'eid' },
 	        this.state.event._id
 	      ),
 	      _react2.default.createElement(
@@ -28222,7 +28303,21 @@
 	      _react2.default.createElement(
 	        'td',
 	        null,
+	        this.state.event._attendees.length
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
 	        this.state.event._attendees
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        _react2.default.createElement(
+	          'a',
+	          { href: this.state.event.picture, target: '_blank' },
+	          this.state.event.picture
+	        )
 	      ),
 	      _react2.default.createElement(
 	        'td',
@@ -28232,7 +28327,6 @@
 	    );
 	  }
 	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
 /* 242 */
