@@ -1,7 +1,7 @@
 import React from 'react'
 import { ReactDOM } from 'react-dom'
 import { Router, Route, Link, hashHistory } from 'react-router'
-const DisplayUser = require(__dirname + '/display_user')
+const DisplayUser = require(__dirname + '/display_user.jsx')
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -112,6 +112,15 @@ var UserRow = React.createClass({
   getInitialState: function() {
     return ({user: this.props.user});
   },
+  showUser: function(){
+    console.log('showUser')
+  },
+  editUser: function(){
+    console.log('editUser')
+  },
+  deleteUser: function(){
+    console.log('deleteUser')
+  },
   render: function() {
     var neighborhoods = this.state.user.neighborhoods.join(', ')
     var interests = this.state.user.interests.join(', ')
@@ -125,6 +134,9 @@ var UserRow = React.createClass({
         <td>{interests}</td>
         <td>{neighborhoods}</td>
         <td><a href={this.state.user.pic} target="_blank">{this.state.user.pic}</a></td>
+        <td><button className="btn btn-action" onClick={this.showUser}>Show</button></td>
+        <td><button className="btn btn-action" onClick={this.editUser}>Edit</button></td>
+        <td><button className="btn btn-action" onClick={this.deleteUser}>Delete</button></td>
       </tr>
     )
   }
@@ -193,19 +205,34 @@ var EventRow = React.createClass({
   getInitialState: function() {
     return ({event: this.props.event});
   },
+  showEvent: function(){
+    console.log('showEvent')
+  },
+  editEvent: function(){
+    console.log('editEvent')
+  },
+  deleteEvent: function(){
+    console.log('deleteEvent')
+  },
   render: function() {
+    var interestTags = this.state.event.interestTags.join(', ')
+    var attendees = this.state.event._attendees.join(', ')
+
     return (
       <tr className="eventRow">
         <td className="eid">{this.state.event._id}</td>
         <td>{this.state.event.title}</td>
-        <td>{this.state.event.description}</td>
+        <td className='eDescrip'>{this.state.event.description}</td>
         <td>{this.state.event.neighborhood}</td>
         <td>{this.state.event.startTime}</td>
-        <td>{this.state.event.interestTags}</td>
+        <td>{interestTags}</td>
         <td>{this.state.event._attendees.length}</td>
-        <td>{this.state.event._attendees}</td>
+        <td>{attendees}</td>
         <td><a href={this.state.event.picture} target="_blank">{this.state.event.picture}</a></td>
         <td>{this.state.event._creator}</td>
+        <td><button className="btn btn-action" onClick={this.showEvent}>Show</button></td>
+        <td><button className="btn btn-action" onClick={this.editEvent}>Edit</button></td>
+        <td><button className="btn btn-action" onClick={this.deleteEvent}>Delete</button></td>
       </tr>
     )
   }

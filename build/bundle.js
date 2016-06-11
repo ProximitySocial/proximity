@@ -27233,6 +27233,7 @@
 
 	    var hour = formatDate(this.props.event.startTime);
 	    var day = x;
+
 	    if (this.props.event._attendees) {
 	      var numberGoing = this.props.event._attendees.length;
 	    } else {
@@ -27940,7 +27941,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// const DisplayUser = require('./display_user')
+	var DisplayUser = __webpack_require__(231);
 
 	module.exports = _react2.default.createClass({
 	  displayName: 'exports',
@@ -28105,6 +28106,15 @@
 	  getInitialState: function getInitialState() {
 	    return { user: this.props.user };
 	  },
+	  showUser: function showUser() {
+	    console.log('showUser');
+	  },
+	  editUser: function editUser() {
+	    console.log('editUser');
+	  },
+	  deleteUser: function deleteUser() {
+	    console.log('deleteUser');
+	  },
 	  render: function render() {
 	    var neighborhoods = this.state.user.neighborhoods.join(', ');
 	    var interests = this.state.user.interests.join(', ');
@@ -28150,6 +28160,21 @@
 	          { href: this.state.user.pic, target: '_blank' },
 	          this.state.user.pic
 	        )
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { className: 'btn btn-action', onClick: this.showUser },
+	        'Show'
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { className: 'btn btn-action', onClick: this.editUser },
+	        'Edit'
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { className: 'btn btn-action', onClick: this.deleteUser },
+	        'Delete'
 	      )
 	    );
 	  }
@@ -28266,7 +28291,19 @@
 	  getInitialState: function getInitialState() {
 	    return { event: this.props.event };
 	  },
+	  showEvent: function showEvent() {
+	    console.log('showEvent');
+	  },
+	  editEvent: function editEvent() {
+	    console.log('editEvent');
+	  },
+	  deleteEvent: function deleteEvent() {
+	    console.log('deleteEvent');
+	  },
 	  render: function render() {
+	    var interestTags = this.state.event.interestTags.join(', ');
+	    var attendees = this.state.event._attendees.join(', ');
+
 	    return _react2.default.createElement(
 	      'tr',
 	      { className: 'eventRow' },
@@ -28282,7 +28319,7 @@
 	      ),
 	      _react2.default.createElement(
 	        'td',
-	        null,
+	        { className: 'eDescrip' },
 	        this.state.event.description
 	      ),
 	      _react2.default.createElement(
@@ -28298,7 +28335,7 @@
 	      _react2.default.createElement(
 	        'td',
 	        null,
-	        this.state.event.interestTags
+	        interestTags
 	      ),
 	      _react2.default.createElement(
 	        'td',
@@ -28308,7 +28345,7 @@
 	      _react2.default.createElement(
 	        'td',
 	        null,
-	        this.state.event._attendees
+	        attendees
 	      ),
 	      _react2.default.createElement(
 	        'td',
@@ -28323,6 +28360,21 @@
 	        'td',
 	        null,
 	        this.state.event._creator
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { className: 'btn btn-action', onClick: this.showEvent },
+	        'Show'
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { className: 'btn btn-action', onClick: this.editEvent },
+	        'Edit'
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { className: 'btn btn-action', onClick: this.deleteEvent },
+	        'Delete'
 	      )
 	    );
 	  }

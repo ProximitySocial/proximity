@@ -81,6 +81,7 @@ module.exports = React.createClass({
 
     var hour = formatDate(this.props.event.startTime)
     var day = x
+
     if(this.props.event._attendees) {
       var numberGoing = this.props.event._attendees.length
     } else {
@@ -96,14 +97,14 @@ module.exports = React.createClass({
                        zIndex: 999,
                        padding: 'auto',
                        textAlign: 'center'}
-      var hide, show
-      if (this.state.toggle){
-        hide = hiddenVar
-        show = showVar
-      } else {
-        hide = showVar
-        show = hiddenVar
-      }
+    var hide, show
+    if (this.state.toggle){
+      hide = hiddenVar
+      show = showVar
+    } else {
+      hide = showVar
+      show = hiddenVar
+    }
 
     //Event modal
     var hideModal, showModal
